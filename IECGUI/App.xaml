@@ -43,8 +43,18 @@
                 <view:Iec61850MonitorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:MqttMonitorViewModel}">
+                <view:MqttMonitorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:IecConfigViewModel}">
+                <view:IecConfigView/>
+            </DataTemplate>
 
 
+            <DataTemplate DataType="{x:Type vm:ReportViewerViewModel}">
+                <view:ReportViewerView/>
+            </DataTemplate>
 
         </ResourceDictionary>
 

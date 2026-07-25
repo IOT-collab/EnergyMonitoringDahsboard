@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("mzillgit")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.*")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12f91a4f3457387355fda3a4359e720a1276cec3")]
 [assembly: System.Reflection.AssemblyProductAttribute("report_new_dataset")]
 [assembly: System.Reflection.AssemblyTitleAttribute("report_new_dataset")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.*")]

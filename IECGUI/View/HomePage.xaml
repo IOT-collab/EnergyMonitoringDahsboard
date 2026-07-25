@@ -7,7 +7,128 @@
              mc:Ignorable="d" 
              d:DesignHeight="930" d:DesignWidth="1920"
              Background="Transparent">
+    <UserControl.Resources>
+
+        <Style x:Key="GlassCardButton"
+       TargetType="Button">
+
+            <Setter Property="Width" Value="380"/>
+            <Setter Property="Height" Value="140"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="#55FFFFFF"/>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+
+                    <ControlTemplate TargetType="Button">
+
+                        <Border x:Name="GlassBorder"
+                        CornerRadius="15"
+                        BorderBrush="#80FFFFFF"
+                        BorderThickness="1"
+                        Background="{TemplateBinding Background}">
+
+                            <Border.Effect>
+
+                                <DropShadowEffect BlurRadius="25"
+                                          ShadowDepth="4"
+                                          Opacity="0.35"/>
+
+                            </Border.Effect>
+
+                            <Grid>
+
+                                <!-- Top Glass Reflection -->
+
+                                <Border Height="45"
+                                VerticalAlignment="Top"
+                                Margin="8"
+                                CornerRadius="20"
+                                Opacity="0.35">
+
+                                    <Border.Background>
+
+                                        <LinearGradientBrush StartPoint="0,0"
+                                                     EndPoint="0,1">
+
+                                            <GradientStop Color="White"
+                                                  Offset="0"/>
+
+                                            <GradientStop Color="#00FFFFFF"
+                                                  Offset="1"/>
+
+                                        </LinearGradientBrush>
+
+                                    </Border.Background>
+
+                                </Border>
+
+                                <!-- Content -->
+
+                                <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+
+                            </Grid>
+
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+
+                            <!-- Mouse Over -->
+
+                            <Trigger Property="IsMouseOver"
+                             Value="True">
+
+                                <Setter TargetName="GlassBorder"
+                                Property="Background"
+                                Value="#77FFFFFF"/>
+
+                                <Setter TargetName="GlassBorder"
+                                Property="BorderBrush"
+                                Value="#FFFFFFFF"/>
+
+                            </Trigger>
+
+                            <!-- Click -->
+
+                            <Trigger Property="IsPressed"
+                             Value="True">
+
+                                <Setter TargetName="GlassBorder"
+                                Property="RenderTransform">
+
+                                    <Setter.Value>
+
+                                        <ScaleTransform ScaleX="0.97"
+                                                ScaleY="0.97"/>
+
+                                    </Setter.Value>
+
+                                </Setter>
+
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+
+    </UserControl.Resources>
     <Grid Width="1920" Height="930">
+       
+
         <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power1.jpg"
             Stretch="UniformToFill"
             HorizontalAlignment="Center"
@@ -16,17 +137,68 @@
                 <BlurEffect Radius="20"/>
             </Image.Effect>
         </Image>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="350"/>
+                <RowDefinition Height="350"/>
+            </Grid.RowDefinitions>
+      
 
 
-        <StackPanel Orientation="Horizontal" Margin="100">
-            <Button Content="SLD View" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding SldViewCommand}" Foreground="White" Background="Black"/>
-            <Button Content="Energy Monitor" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding EnergyViewCommand}" Foreground="White" Background="Black"/>
-            <Button Content="GaugeView" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding GaugeViewCommand}" Foreground="White" Background="Black"/>
-            <Button Content="Config View" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfigViewCommand}" Foreground="White" Background="Black"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="100">
+                <Button Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding SldViewCommand}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE968;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="SLD View"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding EnergyViewCommand}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE945;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Energy Monitor"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button  Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding GaugeViewCommand}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE912;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="GaugeView"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button  Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfigViewCommand}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Device Config"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
 
-        </StackPanel>
-
-
+            </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="100">
+                <Button  Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ProtRelayMonitorViewCommand}" >
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7F4;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Relay Monitor"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button  Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding MqttViewCommad}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE774;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Remote View"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button  Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ReportViewerCommand}" >
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE9D2;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Reports"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button  Style="{StaticResource GlassButton.Ghost}" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding AlarmViewCommand}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7BA;" FontSize="42" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Alarms"  FontSize="30"  Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
 
     </Grid>
 </UserControl>

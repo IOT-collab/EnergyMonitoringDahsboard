@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "x5nNAqGymTM=",
+  "dgSpecHash": "jiudvVRwalI=",
   "success": true,
-  "projectFilePath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\tls_client_example\\tls_client_example.csproj",
+  "projectFilePath": "D:\\Project 2026\\EnergyMonitoring\\tls_client_example\\tls_client_example.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\iec61850dotnet\\1.6.1.1\\iec61850dotnet.1.6.1.1.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\mqttnet\\5.2.0.1603\\mqttnet.5.2.0.1603.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",

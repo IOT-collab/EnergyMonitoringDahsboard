@@ -58,13 +58,13 @@
                             </Border.Background>
 
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Border Width="120" Height="120" 
+                                <Border Width="380" Height="380" 
                                      CornerRadius="60" 
-                                     BorderBrush="#33FFFFFF" 
+                                     BorderBrush="Transparent" 
                                      BorderThickness="4"
                                      Margin="0,0,0,30">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="pack://application:,,,/IECGUI.Visuals;component/Images/vertexlogo.png" Stretch="UniformToFill"/>
+                                        <ImageBrush ImageSource="pack://application:,,,/IECGUI.Visuals;component/Images/vertexlogo.png" Stretch="Uniform"/>
                                     </Border.Background>
                                 </Border>
 

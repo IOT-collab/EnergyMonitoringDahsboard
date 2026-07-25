@@ -1,0 +1,6 @@
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Communication\obj\Debug\net8.0\Communication.csproj.AssemblyReference.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Communication\obj\Debug\net8.0\Communication.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Communication\obj\Debug\net8.0\Communication.AssemblyInfoInputs.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Communication\obj\Debug\net8.0\Communication.AssemblyInfo.cs
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Communication\obj\Debug\net8.0\Communication.csproj.CoreCompileInputs.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Communication\obj\Debug\net8.0\Communication.sourcelink.json

@@ -1,0 +1,5 @@
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\server_example_access_control\obj\Debug\net8.0\server_example_access_control.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\server_example_access_control\obj\Debug\net8.0\server_example_access_control.AssemblyInfoInputs.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\server_example_access_control\obj\Debug\net8.0\server_example_access_control.AssemblyInfo.cs
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\server_example_access_control\obj\Debug\net8.0\server_example_access_control.csproj.CoreCompileInputs.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\server_example_access_control\obj\Debug\net8.0\server_example_access_control.sourcelink.json

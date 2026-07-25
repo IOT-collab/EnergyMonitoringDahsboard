@@ -12,7 +12,7 @@
     <Grid>
 
         <!-- LAYER 1 : Background Image -->
-        <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power3.jpg"
+        <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power4.jpg"
                Stretch="Fill">
 
             <Image.Effect>
@@ -41,7 +41,7 @@
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center">
 
-                <Button Content="+ PAGE"
+                <!--<Button Content="+ PAGE"
                         Width="120"
                         Height="40"
                         Margin="10" Command="{Binding AddPageCommand}"/>
@@ -66,15 +66,15 @@
                         Height="40"
                         Margin="10" Command="{Binding RelayPage}"/>
 
-                <Button Content="EXPORT PDF"
+                <Button Content="MQTT Browser"
                         Width="120"
                         Height="40"
-                        Margin="10" Command="{Binding ExportPdfCommand}"/>
+                        Margin="10" Command="{Binding MqttBrowserCommand}"/>-->
 
                 <Button Content="BACK"
                         Width="120"
                         Height="40"
-                        Margin="10" Command="{Binding BackCommand}"/>
+                        Margin="10" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}"/>
 
                 <TextBlock Text=" "
                            FontSize="36"

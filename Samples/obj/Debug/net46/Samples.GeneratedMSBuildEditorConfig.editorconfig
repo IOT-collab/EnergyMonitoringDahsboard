@@ -1,6 +1,6 @@
 is_global = true
 build_property.RootNamespace = Samples
-build_property.ProjectDir = D:\Project 2026\EnergyMonitoring\Samples\
+build_property.ProjectDir = D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\Samples\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false

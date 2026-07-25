@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup />
+  <PropertyGroup>
+    <_LastSelectedProfileId>D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Update="Controls\AnalogGauge.xaml.cs">
       <SubType>Code</SubType>
@@ -20,7 +22,13 @@
     <Compile Update="View\Iec61850MonitorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\IecConfigView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\LoginView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\MqttMonitorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

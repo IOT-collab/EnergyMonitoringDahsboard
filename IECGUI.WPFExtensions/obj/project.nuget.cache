@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7cd37GqrOXo=",
+  "dgSpecHash": "nwLRjRB0Bbk=",
   "success": true,
-  "projectFilePath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj",
+  "projectFilePath": "D:\\Project 2026\\EnergyMonitoring\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.3\\microsoft.extensions.configuration.10.0.3.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.3\\microsoft.extensions.configuration.abstractions.10.0.3.nupkg.sha512",
@@ -12,6 +12,7 @@
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.135\\microsoft.xaml.behaviors.wpf.1.1.135.nupkg.sha512",
+    "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\nmodbus\\3.0.83\\nmodbus.3.0.83.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\nmodbus.serial\\3.0.83\\nmodbus.serial.3.0.83.nupkg.sha512",

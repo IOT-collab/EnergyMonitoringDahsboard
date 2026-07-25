@@ -10,24 +10,57 @@
     <UserControl.Resources>
         <conv:ProtocolToVisibilityConverter x:Key="IsTcp" TargetProtocol="ModbusTcp"/>
         <conv:ProtocolToVisibilityConverter x:Key="IsRtu" TargetProtocol="ModbusRtu"/>
+       
     </UserControl.Resources>
-    <Grid Margin="5" Background="White" Height="930" Width="1920">
+
+
+    <Grid Margin="0">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#27283D" Offset="0"/>
+                <GradientStop Color="#222334" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="850"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+
+            <Border Height="70">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#9B3DFF"/>
+                        <GradientStop Color="#FF5EB8" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+
+            <TextBlock
+                    Text="Meter Configuration"
+                    FontSize="34"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+
+        </Grid>
 
 
 
 
-        <TabControl Background="Transparent">
+        <TabControl Grid.Row="1" Background="Transparent">
             <TabControl.Resources>
 
                 <!-- SCADA Tab Style -->
                 <Style TargetType="TabItem">
 
+                    <Setter Property="Background" Value="#2E3656"/>
                     <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Background" Value="#0F5BC4"/>
-                    <Setter Property="BorderBrush" Value="#3D7EFF"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="FontSize" Value="24"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="BorderBrush" Value="#4A5A88"/>
+                    <Setter Property="FontSize" Value="20"/>
                     <Setter Property="Padding" Value="20,8"/>
 
                     <Setter Property="Template">
@@ -62,13 +95,13 @@
                                     <Trigger Property="IsSelected" Value="False">
                                         <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#1C4DA1"/>
+                                        Value="#3B7CFF"/>
                                     </Trigger>
 
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#2A6BD8"/>
+                                        Value="#5A95FF"/>
                                     </Trigger>
 
                                 </ControlTemplate.Triggers>
@@ -90,33 +123,33 @@
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Content="Back to Main Menu" Command="{Binding MenuCommand}"/>
+                    <Button Grid.Row="0" Content="🏠 Main Menu" Style="{StaticResource GlassButton.Cyan}" Height="50" Width="230" FontSize="20" Command="{Binding MenuCommand}"/>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border BorderBrush="Gray"  Grid.Row="1" Grid.Column="0"
-                                BorderThickness="1" Height="450" Width="250"
+                        <Border     Background="#31344B"   BorderBrush="#505A85" CornerRadius="12"    Padding="15"  Grid.Row="1" Grid.Column="0"
+                                BorderThickness="1" Height="700" Width="320"
                                 Margin="5" HorizontalAlignment="Right">
 
                             <DockPanel Grid.Row="1">
 
-                                <Button DockPanel.Dock="Bottom" FontSize="20"
-                                Content="Delete Meter"
+                                <Button DockPanel.Dock="Bottom" FontSize="20" Style="{StaticResource GlassButton.Ghost}"
+                                Content="🗑 Delete Meter"
                                 Height="35"
                                 Margin="5"
                                 Command="{Binding DeleteMeterCommand}"/>
 
-                                <Button DockPanel.Dock="Bottom" FontSize="20"
-                                Content="Add Meter"
+                                <Button DockPanel.Dock="Bottom" FontSize="20" Style="{StaticResource GlassButton.Ghost}"
+                                Content="➕ Add Meter"
                                 Height="35"
                                 Margin="5"
                                 Command="{Binding AddMeterCommand}"/>
 
 
 
-                                <ListBox ItemsSource="{Binding Meters}"
+                                <ListBox ItemsSource="{Binding Meters}" Background="#40456B" BorderThickness="0" Foreground="White"
                                  SelectedItem="{Binding SelectedMeter}">
 
                                     <ListBox.ItemTemplate>
@@ -136,25 +169,25 @@
 
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="1" Height="450" Width="250" HorizontalAlignment="Left" Margin="5"  BorderBrush="Black"  BorderThickness="2"  Padding="5">
+                        <Border Grid.Row="1" Grid.Column="1" Height="700" Width="320" HorizontalAlignment="Left" Margin="5"   Background="#31344B"   BorderBrush="#505A85" CornerRadius="12"  BorderThickness="2"  Padding="5">
                             <StackPanel>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0"> 
-                                    <TextBlock Text="Protocol" VerticalAlignment="Center" FontSize="20" Margin="0,0,8,0" Foreground="Black"/>
-                                    <ComboBox Width="160" Height="35" FontSize="18"
+                                    <TextBlock Text="Protocol" VerticalAlignment="Center" FontSize="20" Margin="0,0,8,0" Foreground="White"/>
+                                    <ComboBox Width="160" Height="35" FontSize="18" Background="#40456B" Foreground="Black" BorderBrush="#6A7AB5"
                                               ItemsSource="{Binding Protocols}"
                                               SelectedItem="{Binding SelectedMeter.Communication.Protocol, Mode=TwoWay}" />
                                 </StackPanel>
 
-                                <TextBlock Text="Meter Name" Margin="0,5,0,0" FontSize="20" Foreground="Black"/>
+                                <TextBlock Text="Meter Name" Margin="0,5,0,0" FontSize="20" Foreground="White"/>
                                 <TextBox Text="{Binding SelectedMeter.MeterName}" Margin="0,10,0,0" FontSize="20"/>
                                 <StackPanel Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsRtu}}">
 
-                                    <TextBlock Margin="0,5,0,0" Text="COM Port" FontSize="20" Foreground="Black"/>
+                                    <TextBlock Margin="0,5,0,0" Text="COM Port" FontSize="20" Foreground="White"/>
 
                                     <!-- Changed: COM port selection via ComboBox bound to available ports -->
                                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                        <ComboBox Width="200" Height="35"
+                                        <ComboBox Width="200" Height="35" Background="#40456B" Foreground="Black" BorderBrush="#6A7AB5"
                                             IsEditable="True"
                                             ItemsSource="{Binding AvailableComPorts}"
                                             SelectedItem="{Binding SelectedMeter.Communication.ComPort, Mode=TwoWay}"
@@ -163,7 +196,7 @@
                                             Command="{Binding RefreshComPortsCommand}" VerticalAlignment="Center"/>
                                     </StackPanel>
 
-                                    <TextBlock Margin="0,10,0,0" Text="Baud Rate" FontSize="20" Foreground="Black"/>
+                                    <TextBlock Margin="0,10,0,0" Text="Baud Rate" FontSize="20" Foreground="White"/>
 
                                     <!-- In the meter details panel, change Baud Rate and Slave ID textboxes to ComboBoxes -->
                                     <ComboBox ItemsSource="{Binding DataContext.BaudRates, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -176,18 +209,18 @@
                                 <!-- TCP specific: IP + Port fields -->
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0"
                                             Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsTcp}}">
-                                    <TextBlock Text="IP" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="Black"/>
+                                    <TextBlock Text="IP" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="White"/>
                                     <TextBox Text="{Binding SelectedMeter.Communication.IpAddress, Mode=TwoWay}" Width="120" FontSize="18" />
-                                    <TextBlock Text="Port" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="Black"/>
+                                    <TextBlock Text="Port" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="White"/>
                                     <TextBox Text="{Binding SelectedMeter.Communication.TcpPort, Mode=TwoWay}" Width="60" FontSize="18" />
                                 </StackPanel>
 
-                                <TextBlock Margin="0,10,0,0" Text="Slave ID" FontSize="20" Foreground="Black"/>
+                                <TextBlock Margin="0,10,0,0" Text="Slave ID" FontSize="20" Foreground="White"/>
                                 <ComboBox ItemsSource="{Binding DataContext.SlaveIds, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                           SelectedItem="{Binding SelectedMeter.Communication.SlaveId, Mode=TwoWay}"
-                                          Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
+                                          Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" Background="#40456B" Foreground="Black" BorderBrush="#6A7AB5"/>
 
-                                <Button Margin="0,10,0,0"  Height="40"   Content="Save Configuration" Command="{Binding SaveCommand}" FontSize="20"/>
+                                <Button Margin="0,10,0,0"  Height="60" Width="250"  Style="{StaticResource GlassButton.Blue}"  Content="💾 Save Configuration" Command="{Binding SaveCommand}" FontSize="20"/>
 
                             </StackPanel>
                         </Border>
@@ -221,36 +254,42 @@
                     <!-- Toolbar -->
 
                     <StackPanel Orientation="Horizontal">
-                        <ComboBox ItemsSource="{Binding Meters}" DisplayMemberPath="MeterName"
-                                 SelectedItem="{Binding SelectedMeter, Mode=TwoWay}" Width="Auto"
-                                  Margin="5"/>
+                        <ComboBox ItemsSource="{Binding Meters}"  Style="{StaticResource GlassComboBox}"
+                                  SelectedItem="{Binding SelectedMeter, Mode=TwoWay}" Width="Auto" 
+                                  Margin="5">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MeterName}" Foreground="White"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                        <Button Content="Add"
+                        <Button Content="Add" Foreground="White" Background="LimeGreen" Style="{StaticResource GlassButton}"
                                 Width="90"
                                 Margin="5"
                                 Command="{Binding AddRegisterCommand}"/>
 
-                        <Button Content="Edit"
+                        <Button Content="Edit" Foreground="White" Style="{StaticResource GlassButton.Purple}"
                                 Width="90"
                                 Margin="5"
                                 Command="{Binding EditRegisterCommand}"/>
 
-                        <Button Content="Delete"
+                        <Button Content="Delete" Foreground="White" Style="{StaticResource GlassButton.Red}"
                                 Width="90"
                                 Margin="5"
                                 Command="{Binding DeleteRegisterCommand}"/>
 
-                        <Button Content="Save"
+                        <Button Content="Save" Foreground="White" Background="LimeGreen" Style="{StaticResource GlassButton}"
                                 Width="90"
                                 Margin="5"
                                 Command="{Binding SaveRegisterCommand}"/>
 
-                        <Button Content="Load Default"
+                        <Button Content="Load Default" Foreground="White" Style="{StaticResource GlassButton.Cyan}"
                                 Width="150"
                                 Margin="5"/>
                         <Button Content="Main Menu"
                                 Width="150"
-                                Margin="5" Command="{Binding MenuCommand}"/>
+                                Margin="5" Command="{Binding MenuCommand}" Foreground="White" Style="{StaticResource GlassButton.Blue}"/>
 
                     </StackPanel>
 
@@ -270,8 +309,35 @@
                               HeadersVisibility="Column"
 
                               RowHeight="32"
+                              Background="#31344B"
+
+                            Foreground="White"
+
+                            RowBackground="#31344B"
+
+                            AlternatingRowBackground="#383D58"
+
+                            GridLinesVisibility="None"
+
+                            BorderThickness="0"                          
 
                               FontSize="16">
+
+                        <DataGrid.ColumnHeaderStyle>
+
+                            <Style TargetType="DataGridColumnHeader">
+
+                                <Setter Property="Background" Value="#3A4670"/>
+
+                                <Setter Property="Foreground" Value="White"/>
+
+                                <Setter Property="FontWeight" Value="Bold"/>
+
+                                <Setter Property="Height" Value="40"/>
+
+                            </Style>
+
+                        </DataGrid.ColumnHeaderStyle>
 
                         <DataGrid.Columns>
 

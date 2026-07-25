@@ -18,7 +18,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="CadetBlue">
+    <Grid Background="#2A2A3E">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
@@ -42,11 +42,11 @@
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center">
 
-                    <Button Content="Energy Monitor" Width="100" Command="{Binding HomeCommand}"/>
+                    <!--<Button Content="Energy Monitor" Width="100" Command="{Binding HomeCommand}"/>
                     <Button Content="Gauge View" Width="100" Command="{Binding AlarmCommand}"/>
                     <Button Content="Relay Status" Width="100"  Command="{Binding EventsCommand}"/>
-                    <Button Content="Meter Config" Width="100" Command="{Binding TrendingCommand}"/>
-                    <Button Content="Menu" Width="100" Command="{Binding MenuCommand}"/>
+                    <Button Content="Meter Config" Width="100" Command="{Binding TrendingCommand}"/>-->
+                    <Button Content="Menu" Margin="1500,0,0,0" Width="100" Height="50" Command="{Binding MenuCommand}" Background="DarkCyan" Style="{StaticResource GlassButton.Blue}"/>
                 </StackPanel>
 
             </DockPanel>
@@ -56,41 +56,41 @@
         <!-- Generator Summary -->
         <UniformGrid Grid.Row="1"
                      Columns="5"                    
-                     Margin="10">
+                     Margin="10" Background="#2A2A3E" >
 
-            <GroupBox Header="G1" >
+            <GroupBox Header="G1" Foreground="White"  >
                 <StackPanel >
-                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}" />
-                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}" />
+                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}"  Background="Transparent"/>
+                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
+                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="G2" >
+            <GroupBox Header="G2" Foreground="White">
                 <StackPanel>
-                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}"/>
+                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
+                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
+                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="G3">
+            <GroupBox Header="G3" Foreground="White">
                 <StackPanel>
-                    <TextBlock Text="Load : 3.9 MW" Foreground="White" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Frequency : 49.5 Hz" Foreground="White" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Voltage : 10.5 MV" Foreground="White" Style="{StaticResource ColumnHeaderStyle}"/>
+                    <TextBlock Text="Load : 3.9 MW" Foreground="White" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
+                    <TextBlock Text="Frequency : 49.5 Hz" Foreground="White" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
+                    <TextBlock Text="Voltage : 10.5 MV" Foreground="White" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="G4" >
+            <GroupBox Header="G4" Foreground="White" >
                 <StackPanel>
-                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}"/>
+                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
+                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
+                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="G5" >
+            <GroupBox Header="G5" Foreground="White" >
                 <StackPanel>
-                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}"/>
-                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}"/>
+                    <TextBlock Text="Load : 3.9 MW" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
+                    <TextBlock Text="Frequency : 49.5 Hz" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
+                    <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
                 </StackPanel>
             </GroupBox>
         </UniformGrid>
@@ -101,7 +101,7 @@
                 BorderBrush="Gray"
                 BorderThickness="1">
 
-            <Canvas Background="Black">
+            <Canvas Background="#2A2A3E">
 
                 <!-- Main Bus -->
                 <Line X1="148" Y1="300" X2="800" Y2="300" Stroke="{Binding Feeder5LineColor}" StrokeThickness="5"/>
@@ -120,7 +120,7 @@
                 <Line X1="798" Y1="350" X2="850" Y2="350" Stroke="{Binding Feeder5LineColor}" StrokeThickness="5"/>
                 <Line X1="950" Y1="350" X2="950" Y2="300" Stroke="{Binding Feeder6LineColor}" StrokeThickness="5"/>
                 <Line X1="900" Y1="350" X2="950" Y2="350" Stroke="{Binding Feeder6LineColor}" StrokeThickness="5"/>
-                <Button Command="{Binding BCBRKOPEN}" Width="180" Height="90" Background="Transparent" Canvas.Left="780" Canvas.Top="280" Cursor="Hand" />
+                <Button  Style="{StaticResource GlassButton.Blue}" Command="{Binding BCBRKOPEN}" Width="180" Height="90" Background="Transparent" Canvas.Left="780" Canvas.Top="280" Cursor="Hand" />
                 <TextBox Text="Bus Coupler" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="820" Canvas.Top="250"/>
 
 
@@ -129,8 +129,8 @@
                 <Line X1="180" Y1="200" X2="200" Y2="250" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen10}"/>
                 <Line X1="200" Y1="200" X2="200" Y2="250" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose10}"/>
                 <Line X1="200" Y1="100" X2="200" Y2="200" Stroke="{Binding Feeder1LineColor}" StrokeThickness="5"/>
-                <Line X1="200" Y1="250" X2="200" Y2="300" Stroke="{Binding Feeder1LineColor}" StrokeThickness="5"/>                
-                <Button  Command="{Binding INCBRK1OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="170" Canvas.Top="195" />
+                <Line X1="200" Y1="250" X2="200" Y2="300" Stroke="{Binding Feeder1LineColor}" StrokeThickness="5"/>
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK1OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="170" Canvas.Top="195" />
                 <TextBox Text="Incommer-1 UPPCL" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="120" Canvas.Top="70"/>
                 
                 <controls:TriangleIndicator Canvas.Left="191" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down" Visibility="{Binding Feeder1arrowVisible}"/>
@@ -142,7 +142,7 @@
                 <Line X1="400" Y1="200" X2="400" Y2="250" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose11}"/>
                 <Line X1="400" Y1="100" X2="400" Y2="200" Stroke="{Binding Feeder2LineColor}" StrokeThickness="5"/>
                 <Line X1="400" Y1="250" X2="400" Y2="300" Stroke="{Binding Feeder2LineColor}" StrokeThickness="5"/>
-                <Button Command="{Binding INCBRK2OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="370" Canvas.Top="195" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK2OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="370" Canvas.Top="195" />
                 <controls:TriangleIndicator Canvas.Left="391" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <TextBox Text="Incommer-2 DG Panel" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="320" Canvas.Top="70"/>
                 <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="300" Width="60" Height="60"/>
@@ -153,7 +153,7 @@
                 <Line X1="1150" Y1="200" X2="1150" Y2="250" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose12}"/>
                 <Line X1="1150" Y1="100" X2="1150" Y2="200" Stroke="{Binding Feeder3LineColor}" StrokeThickness="5"/>
                 <Line X1="1150" Y1="250" X2="1150" Y2="300" Stroke="{Binding Feeder3LineColor}" StrokeThickness="5"/>
-                <Button Command="{Binding INCBRK3OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1115" Canvas.Top="195" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK3OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1115" Canvas.Top="195" />
                 <controls:TriangleIndicator Canvas.Left="1141" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <TextBox Text="Incommer-3 UPPCL" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1070" Canvas.Top="70"/>
                 <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="1200" Width="60" Height="60"/>
@@ -165,7 +165,7 @@
                 <Line X1="1400" Y1="200" X2="1400" Y2="250" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose14}"/>
                 <Line X1="1400" Y1="100" X2="1400" Y2="200" Stroke="{Binding Feeder4LineColor}" StrokeThickness="5"/>
                 <Line X1="1400" Y1="250" X2="1400" Y2="300" Stroke="{Binding Feeder4LineColor}" StrokeThickness="5"/>
-                <Button Command="{Binding INCBRK4OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1365" Canvas.Top="195" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK4OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1365" Canvas.Top="195" />
                 <controls:TriangleIndicator Canvas.Left="1391" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <TextBox Text="Incommer-4 DG Panel" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1320" Canvas.Top="70"/>
                 <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="1450" Width="60" Height="60"/>
@@ -176,7 +176,7 @@
                 <controls:TriangleIndicator Canvas.Left="141" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <Line X1="130" Y1="400" X2="150" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen1}"/>
                 <Line X1="150" Y1="400" X2="150" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose1}"/>
-                <Button Command="{Binding OUTBRK1OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="120" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}" Command="{Binding OUTBRK1OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="120" Canvas.Top="400" />
                 <TextBox Text="Outgoing-1" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="110" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="141" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -187,7 +187,7 @@
                 <controls:TriangleIndicator Canvas.Left="291" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>                
                 <Line X1="280" Y1="400" X2="300" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen2}"/>
                 <Line X1="300" Y1="400" X2="300" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose2}"/>
-                <Button Command="{Binding OUTBRK2OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="270" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK2OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="270" Canvas.Top="400" />
                 <TextBox Text="Outgoing-2" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="250" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="291" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -197,7 +197,7 @@
                 <controls:TriangleIndicator Canvas.Left="441" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>                
                 <Line X1="430" Y1="400" X2="450" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen3}"/>
                 <Line X1="450" Y1="400" X2="450" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose3}"/>
-                <Button Command="{Binding OUTBRK3OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="420" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK3OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="420" Canvas.Top="400" />
                 <TextBox Text="Outgoing-3" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="400" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="441" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -207,7 +207,7 @@
                 <controls:TriangleIndicator Canvas.Left="591" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <Line X1="580" Y1="400" X2="600" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen4}"/>
                 <Line X1="600" Y1="400" X2="600" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose4}"/>
-                <Button Command="{Binding OUTBRK4OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="570" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK4OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="570" Canvas.Top="400" />
                 <TextBox Text="Outgoing-4" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="550" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="591" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -227,7 +227,7 @@
                 <controls:TriangleIndicator Canvas.Left="1041" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <Line X1="1030" Y1="400" X2="1050" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen6}"/>
                 <Line X1="1050" Y1="400" X2="1050" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose6}"/>
-                <Button Command="{Binding OUTBRK6OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1020" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK6OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1020" Canvas.Top="400" />
                 <TextBox Text="Outgoing-6" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1010" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="1041" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -237,7 +237,7 @@
                 <controls:TriangleIndicator Canvas.Left="1191" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <Line X1="1180" Y1="400" X2="1200" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen7}"/>
                 <Line X1="1200" Y1="400" X2="1200" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose7}"/>
-                <Button Command="{Binding OUTBRK7OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1170" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK7OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1170" Canvas.Top="400" />
                 <TextBox Text="Outgoing-7" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1150" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="1191" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -248,7 +248,7 @@
                 <controls:TriangleIndicator Canvas.Left="1341" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <Line X1="1330" Y1="400" X2="1350" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen8}"/>
                 <Line X1="1350" Y1="400" X2="1350" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose8}"/>
-                <Button Command="{Binding OUTBRK8OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1320" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK8OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1320" Canvas.Top="400" />
                 <TextBox Text="Outgoing-8" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1300" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="1341" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
 
@@ -258,7 +258,7 @@
                 <controls:TriangleIndicator Canvas.Left="1491" Canvas.Top="350" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <Line X1="1480" Y1="400" X2="1500" Y2="450" Stroke="LimeGreen" StrokeThickness="3" Visibility="{Binding breakerstatusopen9}"/>
                 <Line X1="1500" Y1="400" X2="1500" Y2="450" Stroke="Red" StrokeThickness="3" Visibility="{Binding breakerstatusclose9}"/>
-                <Button Command="{Binding OUTBRK9OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1470" Canvas.Top="400" />
+                <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding OUTBRK9OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1470" Canvas.Top="400" />
                 <TextBox Text="Outgoing-9" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1460" Canvas.Top="560"/>
                 <controls:TriangleIndicator Canvas.Left="1491" Canvas.Top="550" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
             </Canvas>

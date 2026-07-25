@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\control\\control.csproj": {}
+    "D:\\Project 2026\\EnergyMonitoring\\control\\control.csproj": {}
   },
   "projects": {
-    "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\control\\control.csproj": {
+    "D:\\Project 2026\\EnergyMonitoring\\control\\control.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\control\\control.csproj",
+        "projectUniqueName": "D:\\Project 2026\\EnergyMonitoring\\control\\control.csproj",
         "projectName": "control",
-        "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\control\\control.csproj",
+        "projectPath": "D:\\Project 2026\\EnergyMonitoring\\control\\control.csproj",
         "packagesPath": "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\",
-        "outputPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\control\\obj\\",
+        "outputPath": "D:\\Project 2026\\EnergyMonitoring\\control\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,8 +33,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC61850forCSharp\\IEC61850.NET.csproj": {
-                "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC61850forCSharp\\IEC61850.NET.csproj"
+              "D:\\Project 2026\\EnergyMonitoring\\IEC61850forCSharp\\IEC61850.NET.csproj": {
+                "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IEC61850forCSharp\\IEC61850.NET.csproj"
               }
             }
           }
@@ -92,14 +92,14 @@
         }
       }
     },
-    "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC61850forCSharp\\IEC61850.NET.csproj": {
+    "D:\\Project 2026\\EnergyMonitoring\\IEC61850forCSharp\\IEC61850.NET.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC61850forCSharp\\IEC61850.NET.csproj",
+        "projectUniqueName": "D:\\Project 2026\\EnergyMonitoring\\IEC61850forCSharp\\IEC61850.NET.csproj",
         "projectName": "iec61850dotnet",
-        "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC61850forCSharp\\IEC61850.NET.csproj",
+        "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IEC61850forCSharp\\IEC61850.NET.csproj",
         "packagesPath": "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\",
-        "outputPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC61850forCSharp\\obj\\",
+        "outputPath": "D:\\Project 2026\\EnergyMonitoring\\IEC61850forCSharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

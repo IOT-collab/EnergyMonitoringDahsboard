@@ -106,6 +106,8 @@ namespace IECGUI.ViewModel
 
         public ICommand RelayPage { get; }
 
+        public ICommand MqttBrowserCommand { get; }
+
         private readonly SafePoller _liveDataTimer;
 
         public ObservableCollection<MeterViewModel> Meters { get; }
@@ -123,6 +125,7 @@ namespace IECGUI.ViewModel
             //_meterService.Connect("COM6", 19200, 10);
             BackCommand = new RelayCommand(NavigateToHome);
             RelayPage = new RelayCommand(NavigateToRelayPage);
+            MqttBrowserCommand = new RelayCommand(NavigateToMQTTPage);
 
             INC1AMP = 0.0;
             INC2AMP = 0.0;
@@ -135,8 +138,14 @@ namespace IECGUI.ViewModel
 
         private void NavigateToHome()
         {
-            _navigation.NavigateTo<Dashboard1ViewModel>();
+            _navigation.NavigateTo<HomePageViewModel>();
         }
+
+        private void NavigateToMQTTPage()
+        {
+            _navigation.NavigateTo<MqttMonitorViewModel>();
+        }
+        
 
         private void NavigateToRelayPage()
         {

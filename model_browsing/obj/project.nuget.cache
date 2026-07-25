@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TVj4XfIxbCM=",
+  "dgSpecHash": "ddaU/qnADpE=",
   "success": true,
-  "projectFilePath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\model_browsing\\model_browsing.csproj",
+  "projectFilePath": "D:\\Project 2026\\EnergyMonitoring\\model_browsing\\model_browsing.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

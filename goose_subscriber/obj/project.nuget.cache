@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NnJTpY07Cu0=",
+  "dgSpecHash": "MKw29PXz6O4=",
   "success": true,
-  "projectFilePath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\goose_subscriber\\goose_subscriber.csproj",
+  "projectFilePath": "D:\\Project 2026\\EnergyMonitoring\\goose_subscriber\\goose_subscriber.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\10.0.9\\microsoft.extensions.dependencyinjection.10.0.9.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.9\\microsoft.extensions.dependencyinjection.abstractions.10.0.9.nupkg.sha512",

@@ -126,6 +126,19 @@
           "Microsoft.WindowsDesktop.App.WPF"
         ]
       },
+      "MQTTnet/4.3.7.1207": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/MQTTnet.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/MQTTnet.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.4": {
         "type": "package",
         "compile": {
@@ -1389,6 +1402,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "MQTTnet": "4.3.7.1207",
           "Microsoft.Extensions.Configuration": "10.0.3",
           "Microsoft.Extensions.DependencyInjection": "10.0.9",
           "NModbus": "3.0.83",
@@ -1629,6 +1643,41 @@
         "microsoft.xaml.behaviors.wpf.1.1.135.nupkg.sha512",
         "microsoft.xaml.behaviors.wpf.nuspec",
         "tools/Install.ps1"
+      ]
+    },
+    "MQTTnet/4.3.7.1207": {
+      "sha512": "ah7aHXoedWp5m5a4zy2u4phOEVj0QFYzOb5tFKQeV8RRBrxp+1QREF4ymZuG8D+hzB2dhtrrG81WxTFv0PzOeQ==",
+      "type": "package",
+      "path": "mqttnet/4.3.7.1207",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/MQTTnet.dll",
+        "lib/net452/MQTTnet.xml",
+        "lib/net461/MQTTnet.dll",
+        "lib/net461/MQTTnet.xml",
+        "lib/net48/MQTTnet.dll",
+        "lib/net48/MQTTnet.xml",
+        "lib/net5.0/MQTTnet.dll",
+        "lib/net5.0/MQTTnet.xml",
+        "lib/net6.0/MQTTnet.dll",
+        "lib/net6.0/MQTTnet.xml",
+        "lib/net7.0/MQTTnet.dll",
+        "lib/net7.0/MQTTnet.xml",
+        "lib/netcoreapp3.1/MQTTnet.dll",
+        "lib/netcoreapp3.1/MQTTnet.xml",
+        "lib/netstandard1.3/MQTTnet.dll",
+        "lib/netstandard1.3/MQTTnet.xml",
+        "lib/netstandard2.0/MQTTnet.dll",
+        "lib/netstandard2.0/MQTTnet.xml",
+        "lib/netstandard2.1/MQTTnet.dll",
+        "lib/netstandard2.1/MQTTnet.xml",
+        "lib/uap10.0.10240/MQTTnet.dll",
+        "lib/uap10.0.10240/MQTTnet.pri",
+        "lib/uap10.0.10240/MQTTnet.xml",
+        "mqttnet.4.3.7.1207.nupkg.sha512",
+        "mqttnet.nuspec",
+        "nuget.png"
       ]
     },
     "Newtonsoft.Json/13.0.4": {
@@ -2588,11 +2637,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj",
+      "projectUniqueName": "D:\\Project 2026\\EnergyMonitoring\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj",
       "projectName": "IECGUI.WPFExtensions",
-      "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj",
+      "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj",
       "packagesPath": "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\",
-      "outputPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IECGUI.WPFExtensions\\obj\\",
+      "outputPath": "D:\\Project 2026\\EnergyMonitoring\\IECGUI.WPFExtensions\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2614,8 +2663,8 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "projectReferences": {
-            "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC.Shared\\IEC.Shared.csproj": {
-              "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\IEC.Shared\\IEC.Shared.csproj"
+            "D:\\Project 2026\\EnergyMonitoring\\IEC.Shared\\IEC.Shared.csproj": {
+              "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IEC.Shared\\IEC.Shared.csproj"
             }
           }
         }

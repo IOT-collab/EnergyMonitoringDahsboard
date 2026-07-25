@@ -1,4 +1,6 @@
-﻿using IECGUI.Services;
+﻿using IEC.Shared.Services;
+using IECGUI.Services;
+using IPCSoftware.Common.CommonExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using IEC.Shared.Services;
 
 namespace IECGUI.ViewModel
 {
     public class MainWindowViewModel : BaseViewModel
     {
+
+        // Live System Time Property
+        private string _systemTime;
+        public string SystemTime
+        {
+            get => _systemTime;
+            set => SetProperty(ref _systemTime, value);
+        }
+
+        private readonly SafePoller _liveDataTimer;
+        public string AppVersion => "23.40.32";
 
         public INavigationService Navigation { get; }
 
@@ -29,6 +41,24 @@ namespace IECGUI.ViewModel
             LogoutCommand = new RelayCommand(ExecuteLogout);
 
             Navigation.NavigateTo<LoginViewModel>();
+            _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(1000), PollAsync, ex => Console.WriteLine(ex.Message));
+            _liveDataTimer.Start();
+
+            // Set initial time immediately
+            SystemTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
+        }
+
+        private async Task PollAsync(Dictionary<int, object> parameters)
+        {
+            try
+            {
+                SystemTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
+            }
+            catch
+            {
+
+            }
+
         }
 
         private void ExecuteCloseApp()

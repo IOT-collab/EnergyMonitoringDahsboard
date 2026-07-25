@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cM5szdIoKPA=",
+  "dgSpecHash": "2ALLWMQFbZQ=",
   "success": true,
-  "projectFilePath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\client_example_setting_groups\\client_example_setting_groups.csproj",
+  "projectFilePath": "D:\\Project 2026\\EnergyMonitoring\\client_example_setting_groups\\client_example_setting_groups.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

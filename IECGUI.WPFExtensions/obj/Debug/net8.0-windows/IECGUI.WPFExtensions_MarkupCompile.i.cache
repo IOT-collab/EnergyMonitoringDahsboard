@@ -4,7 +4,7 @@
 library
 C#
 .cs
-D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\
+D:\Project 2026\EnergyMonitoring\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\
 IECGUI.Common.WPFExtensions
 none
 false
@@ -13,7 +13,7 @@ TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR
 31439695464
 
 27-596917394
-210-1829024799
+211366986967
 Controls\OeeProgressBar.xaml;Controls\PieChart.xaml;Controls\TrendChart.xaml;
 
 False

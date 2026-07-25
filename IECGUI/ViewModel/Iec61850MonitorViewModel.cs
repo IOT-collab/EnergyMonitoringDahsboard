@@ -1,8 +1,9 @@
-﻿// IECGUI/ViewModel/Iec61850MonitorViewModel.cs
-using IEC.Shared.IECInterface;
-using IEC.Shared.Models;
-using IEC.Shared.Services;
+﻿using IEC.Shared.IECInterface;
+using IEC.Shared.IECModels;
+using IEC.Shared.IECServices;
 using IECGUI.Services;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -12,9 +13,11 @@ namespace IECGUI.ViewModel
     {
         private readonly IIec61850MeterService _service;
         private readonly INavigationService _navigation;
-        private readonly DispatcherTimer _pollTimer;
+        private readonly IecConfigManagerService _configManager;
 
-        // ── Connection Status ──────────────────────────
+        private DispatcherTimer _pollTimer;
+
+        // ── Connection Status ──────────────────────────────────
         private bool _isOnline;
         public bool IsOnline
         {
@@ -29,110 +32,144 @@ namespace IECGUI.ViewModel
             set { _statusMessage = value; OnPropertyChanged(); }
         }
 
-        // ── Frequency ─────────────────────────────────
-        private float _hz;
-        public float Hz
+        // ── Multi Relay Readings (DataGrid source) ─────────────
+        public ObservableCollection<RelayReadingModel> RelayReadings { get; }
+            = new ObservableCollection<RelayReadingModel>();
+
+        // ── Selected Relay (Detail Panel) ──────────────────────
+        private RelayReadingModel _selectedRelay;
+        public RelayReadingModel SelectedRelay
         {
-            get => _hz;
-            set { _hz = value; OnPropertyChanged(); }
+            get => _selectedRelay;
+            set { _selectedRelay = value; OnPropertyChanged(); }
         }
 
-        // ── Phase Voltages (PhV) ───────────────────────
-        private float _phV_A, _phV_B, _phV_C, _phV_Neut;
-        public float PhV_A { get => _phV_A; set { _phV_A = value; OnPropertyChanged(); } }
-        public float PhV_B { get => _phV_B; set { _phV_B = value; OnPropertyChanged(); } }
-        public float PhV_C { get => _phV_C; set { _phV_C = value; OnPropertyChanged(); } }
-        public float PhV_Neut { get => _phV_Neut; set { _phV_Neut = value; OnPropertyChanged(); } }
-
-        // ── Line Voltages (PPV) ────────────────────────
-        private float _ppV_AB, _ppV_BC, _ppV_CA;
-        public float PPV_AB { get => _ppV_AB; set { _ppV_AB = value; OnPropertyChanged(); } }
-        public float PPV_BC { get => _ppV_BC; set { _ppV_BC = value; OnPropertyChanged(); } }
-        public float PPV_CA { get => _ppV_CA; set { _ppV_CA = value; OnPropertyChanged(); } }
-
-        // ── Currents (A) ───────────────────────────────
-        private float _a_PhsA, _a_PhsB, _a_PhsC, _a_Neut;
-        public float A_PhsA { get => _a_PhsA; set { _a_PhsA = value; OnPropertyChanged(); } }
-        public float A_PhsB { get => _a_PhsB; set { _a_PhsB = value; OnPropertyChanged(); } }
-        public float A_PhsC { get => _a_PhsC; set { _a_PhsC = value; OnPropertyChanged(); } }
-        public float A_Neut { get => _a_Neut; set { _a_Neut = value; OnPropertyChanged(); } }
-
-        // ── Power ──────────────────────────────────────
-        private float _totW, _totVA, _totVAr, _totPF;
-        public float TotW { get => _totW; set { _totW = value; OnPropertyChanged(); } }
-        public float TotVA { get => _totVA; set { _totVA = value; OnPropertyChanged(); } }
-        public float TotVAr { get => _totVAr; set { _totVAr = value; OnPropertyChanged(); } }
-        public float TotPF { get => _totPF; set { _totPF = value; OnPropertyChanged(); } }
-
-        // ── Commands ───────────────────────────────────
+        // ── Commands ───────────────────────────────────────────
         public ICommand BackCommand { get; }
+        public ICommand ConfigurationCommand { get; }
+        public ICommand ConnectCommand { get; }
+        public ICommand DisconnectCommand { get; }
+
 
         public Iec61850MonitorViewModel(
             INavigationService navigation,
-            IIec61850MeterService service)
+            IIec61850MeterService service,
+            IecConfigManagerService configManager)
         {
             _navigation = navigation;
             _service = service;
+            _configManager = configManager;
 
             BackCommand = new RelayCommand(() =>
-                _navigation.NavigateTo<EnergyMonitorViewModel2>());
+                _navigation.NavigateTo<HomePageViewModel>());
 
-            // Connect to relay
+            ConfigurationCommand = new RelayCommand(() =>
+                _navigation.NavigateTo<IecConfigViewModel>());
+
+
+            ConnectCommand = new RelayCommand(async () => await ConnectAsync());
+            DisconnectCommand = new RelayCommand(async () => await DisconnectAsync());
+
+           
+        }
+        private async Task ConnectAsync()
+        {
+            if (!IsOnline)
+            {
+                await InitializeAsync();
+            }
+        }
+
+        private async Task DisconnectAsync()
+        {
+            Cleanup();
+            IsOnline = false;
+            StatusMessage = "Disconnected";
+            RelayReadings.Clear();
+        }
+        private async Task InitializeAsync()
+        {
             try
             {
-                _service.Connect("172.168.1.2", 102);
-                StatusMessage = "Connected to Relay";
+                var config = _configManager.Load();
+
+                if (!config.Relays.Any())
+                {
+                    config.Relays.Add(IecDefaultConfig.GetDefault());
+                    _configManager.Save(config);
+                }
+
+                StatusMessage = "Connecting to relays...";
+
+                await _service.ConnectAllAsync(config.Relays);
+
+                // Pre-populate rows so UI shows relay names immediately
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (var relay in config.Relays.Where(r => r.IsEnabled))
+                    {
+                        RelayReadings.Add(new RelayReadingModel
+                        {
+                            RelayId = relay.RelayId,
+                            RelayName = relay.RelayName,
+                            IsOnline = false
+                        });
+                    }
+
+                    SelectedRelay = RelayReadings.FirstOrDefault();
+                });
+
                 IsOnline = true;
+                StatusMessage = $"Connected — {config.Relays.Count(r => r.IsEnabled)} relay(s)";
+
+                _pollTimer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(
+                        config.Relays.Any() ? config.Relays.Min(r => r.PollIntervalMs) : 3000)
+                };
+                _pollTimer.Tick += async (s, e) => await PollAsync();
+                _pollTimer.Start();
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Connection Failed: {ex.Message}";
                 IsOnline = false;
+                StatusMessage = $"Init Failed: {ex.Message}";
             }
-
-            // Start polling every 1 second
-            _pollTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(1)
-            };
-            _pollTimer.Tick += async (s, e) => await PollAsync();
-            _pollTimer.Start();
         }
 
         private async Task PollAsync()
         {
-            var reading = await _service.ReadAsync();
-
-            if (!reading.IsOnline)
+            try
             {
-                IsOnline = false;
-                StatusMessage = $"Error: {reading.ErrorMessage}";
-                return;
+                var results = await _service.ReadAllAsync();
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (var result in results)
+                    {
+                        var existing = RelayReadings
+                            .FirstOrDefault(r => r.RelayId == result.Key);
+
+                        if (existing != null)
+                        {
+                            // Update IN-PLACE — object reference stays same
+                            // DataGrid row stays selected, detail panel stays visible
+                            existing.UpdateFrom(result.Value);
+                        }
+                    }
+
+                    IsOnline = RelayReadings.Any(r => r.IsOnline);
+                    StatusMessage = IsOnline ? "Live" : "Connection Lost";
+                });
             }
-
-            IsOnline = true;
-            StatusMessage = "Live";
-
-            Hz = reading.Hz;
-
-            PhV_A = reading.PhV_A;
-            PhV_B = reading.PhV_B;
-            PhV_C = reading.PhV_C;
-            PhV_Neut = reading.PhV_Neut;
-
-            PPV_AB = reading.PPV_AB;
-            PPV_BC = reading.PPV_BC;
-            PPV_CA = reading.PPV_CA;
-
-            A_PhsA = reading.A_PhsA;
-            A_PhsB = reading.A_PhsB;
-            A_PhsC = reading.A_PhsC;
-            A_Neut = reading.A_Neut;
-
-            TotW = reading.TotW;
-            TotVA = reading.TotVA;
-            TotVAr = reading.TotVAr;
-            TotPF = reading.TotPF;
+            catch (Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    IsOnline = false;
+                    StatusMessage = $"Poll Error: {ex.Message}";
+                });
+            }
         }
 
         public void Cleanup()

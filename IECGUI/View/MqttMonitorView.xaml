@@ -1,0 +1,117 @@
+﻿<UserControl x:Class="IECGUI.View.MqttMonitorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:IECGUI.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="930" d:DesignWidth="1920"
+             Background="#1E1E2E">
+
+    <UserControl.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="690"/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0">
+            <Button Content="◄ Back" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Blue}"
+                    Width="100" Height="35" DockPanel.Dock="Left"
+                    Foreground="White" Background="#3D5A80"/>
+            <Button Content="Connect" Command="{Binding ConnectCommand}" Style="{StaticResource GlassButton.Green}"
+                    Width="100" Height="35" DockPanel.Dock="Right"
+                    Foreground="White" Background="#27AE60" Margin="5,0"/>
+            <Button Content="Disconnect" Command="{Binding DisconnectCommand}" Style="{StaticResource GlassButton.Red}"
+                    Width="100" Height="35" DockPanel.Dock="Right"
+                    Foreground="White" Background="#C0392B"/>
+            <TextBlock Text="MQTT — Remote Meter Monitor"
+                       Foreground="White" FontSize="22" FontWeight="Bold"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </DockPanel>
+
+        <!-- Status -->
+        <Border Grid.Row="1" CornerRadius="5" Margin="0,5"
+                Background="{Binding IsConnected,
+                    Converter={StaticResource BoolToColorConverter}}">
+            <TextBlock Text="{Binding StatusMessage}"
+                       Foreground="White" FontSize="14"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- Live Readings DataGrid -->
+        <DataGrid Grid.Row="2" Margin="0,10"
+                  ItemsSource="{Binding LiveReadings}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  Background="#2A2A3E"
+                  Foreground="White"
+                  RowBackground="#2A2A3E"
+                  AlternatingRowBackground="#323250"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  FontSize="14">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#3D5A80"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="8,5"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Station" Width="100"
+                    Binding="{Binding StationId}"/>
+                <DataGridTextColumn Header="Meter" Width="80"
+                    Binding="{Binding MeterId}"/>
+                <DataGridTextColumn Header="V-A (V)" Width="80"
+                    Binding="{Binding VoltageA, StringFormat='{}{0:F2}'}"/>
+                <DataGridTextColumn Header="V-B (V)" Width="80"
+                    Binding="{Binding VoltageB, StringFormat='{}{0:F2}'}"/>
+                <DataGridTextColumn Header="V-C (V)" Width="80"
+                    Binding="{Binding VoltageC, StringFormat='{}{0:F2}'}"/>
+                <DataGridTextColumn Header="I-A (A)" Width="80"
+                    Binding="{Binding CurrentA, StringFormat='{}{0:F3}'}"/>
+                <DataGridTextColumn Header="I-B (A)" Width="80"
+                    Binding="{Binding CurrentB, StringFormat='{}{0:F3}'}"/>
+                <DataGridTextColumn Header="I-C (A)" Width="80"
+                    Binding="{Binding CurrentC, StringFormat='{}{0:F3}'}"/>
+                <DataGridTextColumn Header="kW" Width="80"
+                    Binding="{Binding TotalActivePower, StringFormat='{}{0:F2}'}"/>
+                <DataGridTextColumn Header="PF" Width="60"
+                    Binding="{Binding PowerFactor, StringFormat='{}{0:F3}'}"/>
+                <DataGridTextColumn Header="Hz" Width="70"
+                    Binding="{Binding Frequency, StringFormat='{}{0:F2}'}"/>
+                <DataGridTextColumn Header="Last Update" Width="120"
+                    Binding="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Message Log -->
+        <Border Grid.Row="3" Background="#0D0D1A"
+                BorderBrush="#3D5A80" BorderThickness="1"
+                CornerRadius="5" Padding="5">
+            <StackPanel>
+                <TextBlock Text="Message Log"
+                           Foreground="Gray" FontSize="11" Margin="0,0,0,3"/>
+                <ListBox ItemsSource="{Binding MessageLog}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Foreground="#00FF88"
+                         FontFamily="Consolas"
+                         FontSize="11"
+                         MaxHeight="120"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -12,6 +12,12 @@ namespace IEC.Shared.IECInterface
         bool IsConnected { get; }
         void Connect(string hostname, int port = 102);
         Task<RelayReadingModel> ReadAsync();
+
+        Task ConnectAllAsync(List<RelayConfig> relays);
+        Task<Dictionary<int, RelayReadingModel>> ReadAllAsync();
+        Task<RelayReadingModel> ReadOneAsync(int relayId);
         void Disconnect();
+
+      
     }
 }

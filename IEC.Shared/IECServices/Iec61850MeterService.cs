@@ -1,89 +1,215 @@
 ﻿using IEC.Shared.IECInterface;
-using IEC.Shared.Models;
+using IEC.Shared.IECModels;
 using IEC61850.Client;
 using IEC61850.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IEC.Shared.IECModels;
 
 namespace IEC.Shared.IECServices
 {
     public class Iec61850MeterService : IIec61850MeterService
     {
-        private IedConnection _con;
-        private string _hostname;
-        private int _port;
-        private readonly object _lock = new object();
-
-        public bool IsConnected { get; private set; }
-
-        public void Connect(string hostname, int port = 102)
+        // Ek relay = ek connection
+        private class RelayConnection
         {
-            _hostname = hostname;
-            _port = port;
-
-            _con = new IedConnection();
-            _con.Connect(hostname, port);
-            IsConnected = true;
+            public RelayConfig Config { get; set; }
+            public IedConnection Connection { get; set; }
+            public bool IsConnected { get; set; }
+            public string LastError { get; set; }
+            public readonly object Lock = new object();
         }
 
-        public Task<RelayReadingModel> ReadAsync()
+        // RelayId → Connection
+        private readonly Dictionary<int, RelayConnection> _connections = new();
+
+        public bool IsConnected => _connections.Values.Any(c => c.IsConnected);
+
+        // ── Single Relay (purana method — backward compatible) ──
+        public void Connect(string hostname, int port = 102)
+        {
+            var singleRelay = new RelayConfig
+            {
+                RelayId = 1,
+                RelayName = "Default Relay",
+                IPAddress = hostname,
+                Port = port,
+                IsEnabled = true,
+                LogicalNodes = new List<LnConfig>
+                {
+                    new LnConfig
+                    {
+                        LogicalDevice = "IED_1234MEAS",
+                        LogicalNode   = "MMXU1",
+                        FC            = "MX"
+                    }
+                }
+            };
+
+            ConnectSingle(singleRelay);
+        }
+
+        // ── Multi Relay Connect ─────────────────────────────────
+        public async Task ConnectAllAsync(List<RelayConfig> relays)
+        {
+            var tasks = relays
+                .Where(r => r.IsEnabled)
+                .Select(r => Task.Run(() => ConnectSingle(r)));
+
+            await Task.WhenAll(tasks);
+        }
+
+        private void ConnectSingle(RelayConfig config)
+        {
+            try
+            {
+                var con = new IedConnection();
+                con.Connect(config.IPAddress, config.Port);
+
+                _connections[config.RelayId] = new RelayConnection
+                {
+                    Config = config,
+                    Connection = con,
+                    IsConnected = true
+                };
+
+                Console.WriteLine($"[IEC61850] Connected: {config.RelayName} ({config.IPAddress})");
+            }
+            catch (Exception ex)
+            {
+                _connections[config.RelayId] = new RelayConnection
+                {
+                    Config = config,
+                    IsConnected = false,
+                    LastError = ex.Message
+                };
+
+                Console.WriteLine($"[IEC61850] Failed: {config.RelayName} — {ex.Message}");
+            }
+        }
+
+        // ── Read All Relays ─────────────────────────────────────
+        public async Task<Dictionary<int, RelayReadingModel>> ReadAllAsync()
+        {
+            try
+            {
+                var tasks = _connections.Values
+                    .Select(async conn =>
+                    {
+                        var reading = await ReadFromConnection(conn);
+                        return (conn.Config.RelayId, reading);
+                    });
+
+                var results = await Task.WhenAll(tasks);
+
+                return results.ToDictionary(r => r.RelayId, r => r.reading);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[READ ALL ERROR] {ex.Message}");
+                return new Dictionary<int, RelayReadingModel>();
+            }
+        }
+
+        // ── Read Single Relay by ID ─────────────────────────────
+        public Task<RelayReadingModel> ReadOneAsync(int relayId)
+        {
+            if (!_connections.TryGetValue(relayId, out var conn))
+                return Task.FromResult(new RelayReadingModel
+                {
+                    IsOnline = false,
+                    ErrorMessage = $"Relay ID {relayId} not found"
+                });
+
+            return ReadFromConnection(conn);
+        }
+
+        // ── Core Read Logic — Config Driven ────────────────────
+        private Task<RelayReadingModel> ReadFromConnection(RelayConnection conn)
         {
             return Task.Run(() =>
             {
-                lock (_lock)
+                if (conn == null)
+                    return new RelayReadingModel
+                    {
+                        IsOnline = false,
+                        ErrorMessage = "Connection is null"
+                    };
+                lock (conn.Lock)
                 {
-                    try
-                    {
-                        MmsValue mmxu = _con.ReadValue(
-                            "IED_1234MEAS/MMXU1",
-                            FunctionalConstraint.MX);
-
-                        return new RelayReadingModel
-                        {
-                            IsOnline = true,
-
-                            // DO[0..3] = TotPF, TotVA, TotVAr, TotW
-                            TotPF = GetDirectValue(mmxu.GetElement(3)),
-                            TotVA = GetDirectValue(mmxu.GetElement(0)),
-                            TotVAr = GetDirectValue(mmxu.GetElement(1)),
-                            TotW = GetDirectValue(mmxu.GetElement(2)),
-
-                            // DO[4] = Hz
-                            Hz = GetDirectValue(mmxu.GetElement(4)),
-
-                            // DO[5] = PPV
-                            PPV_AB = GetPhaseValue(mmxu.GetElement(5).GetElement(0)),
-                            PPV_BC = GetPhaseValue(mmxu.GetElement(5).GetElement(1)),
-                            PPV_CA = GetPhaseValue(mmxu.GetElement(5).GetElement(2)),
-
-                            // DO[6] = PhV
-                            PhV_Neut = GetPhaseValue(mmxu.GetElement(6).GetElement(0)),
-                            PhV_A = GetPhaseValue(mmxu.GetElement(6).GetElement(1)),
-                            PhV_B = GetPhaseValue(mmxu.GetElement(6).GetElement(2)),
-                            PhV_C = GetPhaseValue(mmxu.GetElement(6).GetElement(3)),
-
-                            // DO[7] = A (Current)
-                            A_Neut = GetPhaseValue(mmxu.GetElement(7).GetElement(0)),
-                            A_PhsA = GetPhaseValue(mmxu.GetElement(7).GetElement(1)),
-                            A_PhsB = GetPhaseValue(mmxu.GetElement(7).GetElement(2)),
-                            A_PhsC = GetPhaseValue(mmxu.GetElement(7).GetElement(3)),
-                        };
-                    }
-                    catch (Exception ex)
-                    {
-                        IsConnected = false;
+                    if (!conn.IsConnected)
                         return new RelayReadingModel
                         {
                             IsOnline = false,
+                            ErrorMessage = conn.LastError
+                        };
+
+                    try
+                    {
+                        var reading = new RelayReadingModel
+                        {
+                            IsOnline = true,
+                            RelayId = conn.Config.RelayId,
+                            RelayName = conn.Config.RelayName
+                        };
+
+                        // Har configured LN ke liye read karo
+                        foreach (var lnConfig in conn.Config.LogicalNodes)
+                        {
+                            string path = $"{lnConfig.LogicalDevice}/{lnConfig.LogicalNode}";
+                            FunctionalConstraint fc = ParseFC(lnConfig.FC);
+
+                            MmsValue lnValue = conn.Connection.ReadValue(path, fc);
+
+                            // Har configured DO mapping ke liye value extract karo
+                            foreach (var mapping in lnConfig.Mappings.Where(m => m.IsEnabled))
+                            {
+                                try
+                                {
+                                    float value = ExtractValue(lnValue, mapping);
+                                    reading.Values[mapping.ParameterName] = value;
+                                }
+                                catch (Exception ex)
+                                {
+                                    reading.Values[mapping.ParameterName] = float.NaN;
+                                    Console.WriteLine(
+                                        $"[READ ERROR] {mapping.ParameterName}: {ex.Message}");
+                                }
+                            }
+                        }
+
+                        return reading;
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.IsConnected = false;
+                        conn.LastError = ex.Message;
+
+                        return new RelayReadingModel
+                        {
+                            IsOnline = false,
+                            RelayId = conn.Config.RelayId,
+                            RelayName = conn.Config.RelayName,
                             ErrorMessage = ex.Message
                         };
                     }
                 }
             });
+        }
+
+        // ── Value Extraction — Config se ───────────────────────
+        private float ExtractValue(MmsValue lnValue, DoMappingConfig mapping)
+        {
+            MmsValue doVal = lnValue.GetElement(mapping.DOIndex);
+
+            if (mapping.ValueType == IECModels.ValueType.Direct)
+            {
+                // eg: Hz, TotW, TotPF
+                return GetDirectValue(doVal);
+            }
+            else
+            {
+                // eg: PhV.phsA, PPV.phsAB, A.phsA
+                MmsValue phaseChild = doVal.GetElement(mapping.PhaseIndex);
+                return GetPhaseValue(phaseChild);
+            }
         }
 
         private float GetDirectValue(MmsValue doVal)
@@ -101,12 +227,30 @@ namespace IEC.Shared.IECServices
                                     .ToDouble();
         }
 
+        private FunctionalConstraint ParseFC(string fc) => fc switch
+        {
+            "MX" => FunctionalConstraint.MX,
+            "ST" => FunctionalConstraint.ST,
+            "CF" => FunctionalConstraint.CF,
+            "DC" => FunctionalConstraint.DC,
+            _ => FunctionalConstraint.MX
+        };
+
+        // ── Disconnect ──────────────────────────────────────────
         public void Disconnect()
         {
-            try { _con?.Release(); } catch { }
-            IsConnected = false;
+            foreach (var conn in _connections.Values)
+            {
+                try { conn.Connection?.Release(); } catch { }
+                conn.IsConnected = false;
+            }
+            _connections.Clear();
         }
 
         public void Dispose() => Disconnect();
+
+        // ── Backward compatible single ReadAsync ────────────────
+        public Task<RelayReadingModel> ReadAsync()
+            => ReadOneAsync(1);
     }
 }

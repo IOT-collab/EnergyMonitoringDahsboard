@@ -1,0 +1,5 @@
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\log_server\obj\Debug\net8.0\log_server.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\log_server\obj\Debug\net8.0\log_server.AssemblyInfoInputs.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\log_server\obj\Debug\net8.0\log_server.AssemblyInfo.cs
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\log_server\obj\Debug\net8.0\log_server.csproj.CoreCompileInputs.cache
+D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\log_server\obj\Debug\net8.0\log_server.sourcelink.json

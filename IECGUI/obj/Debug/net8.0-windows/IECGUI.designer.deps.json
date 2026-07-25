@@ -66,6 +66,14 @@
           }
         }
       },
+      "MQTTnet/4.3.7.1207": {
+        "runtime": {
+          "lib/net7.0/MQTTnet.dll": {
+            "assemblyVersion": "4.3.7.1207",
+            "fileVersion": "4.3.7.1207"
+          }
+        }
+      },
       "Newtonsoft.Json/13.0.4": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
@@ -374,6 +382,13 @@
       "sha512": "sha512-r8qBEXmQfORso2+MVHnt8PSH4761zJ0SIxgQTSEDVLU97EN2FZdG6/ZCYUPhQy+OrPKgnpYBCAs3PS6Bs7wRsg==",
       "path": "microsoft.xaml.behaviors.wpf/1.1.135",
       "hashPath": "microsoft.xaml.behaviors.wpf.1.1.135.nupkg.sha512"
+    },
+    "MQTTnet/4.3.7.1207": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ah7aHXoedWp5m5a4zy2u4phOEVj0QFYzOb5tFKQeV8RRBrxp+1QREF4ymZuG8D+hzB2dhtrrG81WxTFv0PzOeQ==",
+      "path": "mqttnet/4.3.7.1207",
+      "hashPath": "mqttnet.4.3.7.1207.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.4": {
       "type": "package",

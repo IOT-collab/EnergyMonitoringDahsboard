@@ -6,35 +6,83 @@ using System.Threading.Tasks;
 
 namespace IEC.Shared.IECModels
 {
-    public class RelayReadingModel
+   
+    public class RelayReadingModel : ObservableObjectVM  // must implement INotifyPropertyChanged
     {
-        public bool IsOnline { get; set; }
-        public string ErrorMessage { get; set; }
+        private bool _isOnline;
+        public bool IsOnline
+        {
+            get => _isOnline;
+            set { _isOnline = value; OnPropertyChanged(); }
+        }
 
-        // Frequency
-        public float Hz { get; set; }
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set { _errorMessage = value; OnPropertyChanged(); }
+        }
 
-        // Phase Voltages (Phase to Neutral)
-        public float PhV_Neut { get; set; }
-        public float PhV_A { get; set; }
-        public float PhV_B { get; set; }
-        public float PhV_C { get; set; }
+        private int _relayId;
+        public int RelayId
+        {
+            get => _relayId;
+            set { _relayId = value; OnPropertyChanged(); }
+        }
 
-        // Line Voltages (Phase to Phase)
-        public float PPV_AB { get; set; }
-        public float PPV_BC { get; set; }
-        public float PPV_CA { get; set; }
+        private string _relayName;
+        public string RelayName
+        {
+            get => _relayName;
+            set { _relayName = value; OnPropertyChanged(); }
+        }
 
-        // Currents
-        public float A_Neut { get; set; }
-        public float A_PhsA { get; set; }
-        public float A_PhsB { get; set; }
-        public float A_PhsC { get; set; }
+        private Dictionary<string, float> _values = new();
+        public Dictionary<string, float> Values
+        {
+            get => _values;
+            set { _values = value; OnPropertyChanged(); }
+        }
 
-        // Power
-        public float TotW { get; set; }
-        public float TotVA { get; set; }
-        public float TotVAr { get; set; }
-        public float TotPF { get; set; }
+        // Convenience properties
+        public float Hz => Values.GetValueOrDefault("Hz");
+        public float PhV_A => Values.GetValueOrDefault("PhV_A");
+        public float PhV_B => Values.GetValueOrDefault("PhV_B");
+        public float PhV_C => Values.GetValueOrDefault("PhV_C");
+        public float PPV_AB => Values.GetValueOrDefault("PPV_AB");
+        public float PPV_BC => Values.GetValueOrDefault("PPV_BC");
+        public float PPV_CA => Values.GetValueOrDefault("PPV_CA");
+        public float A_PhsA => Values.GetValueOrDefault("A_PhsA");
+        public float A_PhsB => Values.GetValueOrDefault("A_PhsB");
+        public float A_PhsC => Values.GetValueOrDefault("A_PhsC");
+        public float TotW => Values.GetValueOrDefault("TotW");
+        public float TotVA => Values.GetValueOrDefault("TotVA");
+        public float TotVAr => Values.GetValueOrDefault("TotVAr");
+        public float TotPF => Values.GetValueOrDefault("TotPF");
+
+        // Update properties in-place — no new object, no selection reset
+        public void UpdateFrom(RelayReadingModel source)
+        {
+            IsOnline = source.IsOnline;
+            ErrorMessage = source.ErrorMessage;
+            Values = source.Values;
+
+            // Notify all convenience properties at once
+            OnPropertyChanged(nameof(Hz));
+            OnPropertyChanged(nameof(PhV_A));
+            OnPropertyChanged(nameof(PhV_B));
+            OnPropertyChanged(nameof(PhV_C));
+            OnPropertyChanged(nameof(PPV_AB));
+            OnPropertyChanged(nameof(PPV_BC));
+            OnPropertyChanged(nameof(PPV_CA));
+            OnPropertyChanged(nameof(A_PhsA));
+            OnPropertyChanged(nameof(A_PhsB));
+            OnPropertyChanged(nameof(A_PhsC));
+            OnPropertyChanged(nameof(TotW));
+            OnPropertyChanged(nameof(TotVA));
+            OnPropertyChanged(nameof(TotVAr));
+            OnPropertyChanged(nameof(TotPF));
+        }
     }
+
 }
