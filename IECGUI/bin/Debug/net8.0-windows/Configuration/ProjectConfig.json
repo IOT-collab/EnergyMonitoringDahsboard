@@ -1,0 +1,163 @@
+{
+  "ProjectName": "New Project",
+  "Meters": [
+    {
+      "MeterId": 1,
+      "MeterName": "EM6436",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM6",
+        "BaudRate": 19200,
+        "Parity": "Even",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 10,
+        "IpAddress": null,
+        "TcpPort": 502
+      },
+      "Registers": [
+        {
+          "ParameterName": "Current B",
+          "RegisterAddress": 3002,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current A",
+          "RegisterAddress": 3000,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current C",
+          "RegisterAddress": 3004,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3026,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 3028,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3030,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Frequency",
+          "RegisterAddress": 3036,
+          "IsEnabled": true,
+          "Unit": "Hz",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "TotalActivePower",
+          "RegisterAddress": 3058,
+          "IsEnabled": true,
+          "Unit": "Kw",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "TotalReactivePower",
+          "RegisterAddress": 3068,
+          "IsEnabled": true,
+          "Unit": "KVAR",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "TotalApparentPower",
+          "RegisterAddress": 3076,
+          "IsEnabled": true,
+          "Unit": "KVA",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "TotalPowerFactor",
+          "RegisterAddress": 3084,
+          "IsEnabled": true,
+          "Unit": "",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        }
+      ]
+    },
+    {
+      "MeterId": 2,
+      "MeterName": "EM6400NG",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM6",
+        "BaudRate": 19200,
+        "Parity": "Even",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 11,
+        "IpAddress": null,
+        "TcpPort": 502
+      },
+      "Registers": []
+    },
+    {
+      "MeterId": 3,
+      "MeterName": "Meter-3",
+      "Communication": {
+        "Protocol": "ModbusTcp",
+        "ComPort": "COM6",
+        "BaudRate": 19200,
+        "Parity": "Even",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 1,
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": [
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 5,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        }
+      ]
+    }
+  ]
+}

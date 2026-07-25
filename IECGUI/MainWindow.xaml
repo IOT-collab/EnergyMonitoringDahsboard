@@ -1,0 +1,475 @@
+﻿<Window x:Class="IECGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IECGUI"
+        mc:Ignorable="d"
+        WindowState="Maximized" WindowStyle="None" ResizeMode="NoResize"
+        Title="MainWindow" Height="1080" Width="1920">
+    <Viewbox Stretch="Uniform">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="930" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Width="1920" Height="100" VerticalAlignment="Center"  Panel.ZIndex="100">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="1,0" EndPoint="1,1">
+                        <GradientStop Color="DarkViolet" Offset="0"/>
+                        <GradientStop Color="PaleVioletRed" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.Effect>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="4" Opacity="0.3" BlurRadius="10"/>
+                </Grid.Effect>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ContentControl x:Name="RibbonHost" Grid.Column="0" VerticalAlignment="Stretch"/>
+                  
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" >
+
+                    <Button Command="{Binding LogoutCommand}" ToolTip="Logout" Width="80" Height="80" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                        <Grid>
+                            <Ellipse Fill="#33FFFFFF" Width="70" Height="70"/>
+                            <Path Data="{StaticResource Icon_Logout}" Fill="White" Height="32" Width="32" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="40">
+                                                <ContentPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.8"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Command="{Binding CloseAppCommand}" 
+                        ToolTip="Close Application"
+                        Width="80" Height="50"
+                        Background="Transparent" 
+                        Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border" Background="{TemplateBinding Background}">
+                                    <Path x:Name="icon"
+                                      Data="M 10,10 L 30,30 M 30,10 L 10,30"
+                                      Stroke="White"
+                                      StrokeThickness="3"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#E81123"/>
+                                        <Setter TargetName="icon" Property="Stroke" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#B90D1C"/>
+                                        <Setter TargetName="icon" Property="Opacity" Value="0.8"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1"  Width="Auto" VerticalAlignment="Center" >                
+                <ContentControl Content="{Binding Navigation.CurrentView}"  />
+            </Grid>
+            <!--<Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="559*"/>
+                    <ColumnDefinition Width="1361*"/>
+                </Grid.ColumnDefinitions>
+
+
+                
+
+                <Border Grid.Column="0" Grid.ColumnSpan="3"
+                    VerticalAlignment="Bottom"
+                    Panel.ZIndex="999"
+                    Background="{Binding AlarmBannerColor}"
+                    BorderThickness="0,2,0,0"
+                    BorderBrush="#B71C1C">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Height" Value="0"/>
+                            <Setter Property="Visibility" Value="Collapsed"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAlarmBannerVisible}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0" To="70" Duration="0:0:0.4">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+                    --><!--<Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="⚠️" FontSize="32" Foreground="White" VerticalAlignment="Center" Margin="30,0">
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.3" Duration="0:0:0.5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
+                    </TextBlock>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="CRITICAL SYSTEM ALARM" Foreground="White" Opacity="0.8" FontSize="12" FontWeight="Bold" />
+                        <TextBlock Text="{Binding AlarmBannerTotalMessage}" Foreground="White" FontSize="24" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="2" 
+                            Command="{Binding CloseAlarmBannerCommand}"
+                            Content="✕"
+                            Width="60" 
+                            Background="Transparent" BorderThickness="0"
+                            Foreground="White" FontSize="24" FontWeight="Bold"
+                            Cursor="Hand" Margin="0,0,20,0"/>
+                </Grid>--><!--
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="⚠️" FontSize="32" Foreground="White" VerticalAlignment="Center" Margin="30,0">
+                            <TextBlock.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0.3" Duration="0:0:0.5"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </TextBlock.Triggers>
+                        </TextBlock>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="CRITICAL SYSTEM ALARM" Foreground="White" Opacity="0.8" FontSize="12" FontWeight="Bold" />
+                            <TextBlock Text="{Binding AlarmBannerTotalMessage}" Foreground="White" FontSize="24" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" 
+            Orientation="Horizontal" 
+            VerticalAlignment="Center" 
+            Margin="0,0,20,0">
+
+                            --><!--<Button Content="ACK"
+            Command="{Binding AcknowledgeCommand}" 
+            
+            CommandParameter="{Binding CurrentAlarm}" 
+            
+            Background="#FFC107" BorderThickness="0"
+            Foreground="Black" FontSize="14" FontWeight="Bold"
+            Width="80" Height="40"
+            Margin="0,0,10,0"
+            Cursor="Hand"/>--><!--
+
+                            <Button Command="{Binding CloseAlarmBannerCommand}"
+            Content="✕"
+            Width="40" 
+            Background="Transparent" BorderThickness="0"
+            Foreground="White" FontSize="24" FontWeight="Bold"
+            Cursor="Hand"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+
+                <Border Grid.Column="1" Background="#99000000" Panel.ZIndex="9" Grid.ColumnSpan="2">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsSidebarOpen}" Value="True"/>
+                                        <Condition Binding="{Binding IsSidebarDocked}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+                </Border>
+
+                --><!--<Border x:Name="SideMenu"
+                    Width="310"
+                    Background="#1E4FA8"
+                    BorderBrush="#1E4FA4"
+                    BorderThickness="0,0,1,0"
+                    Panel.ZIndex="10">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="Grid.Column" Value="0"/>
+                            <Setter Property="Grid.ColumnSpan" Value="2"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSidebarOpen}" Value="False">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform X="-360"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSidebarOpen}" Value="True">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.3">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSidebarDocked}" Value="True">
+                                    <Setter Property="Grid.Column" Value="0"/>
+                                    <Setter Property="Grid.ColumnSpan" Value="1"/>
+                                    <Setter Property="Effect" Value="{x:Null}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="120"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+
+                        -->
+                <!--<Border Grid.Row="0" BorderBrush="#333" BorderThickness="0,0,0,1" Margin="10,0">
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="MENU" Foreground="White" FontSize="30" FontWeight="Bold"/>
+                                </StackPanel>
+
+                                <ToggleButton IsChecked="{Binding IsSidebarDocked}"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          Margin="0,10,0,0"
+                                          Width="40" Height="40"
+                                          ToolTip="Dock Sidebar">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border x:Name="border" Background="Transparent" CornerRadius="5">
+                                                <TextBlock x:Name="icon" Text="📌" FontSize="20" Foreground="White" 
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="#33FFFFFF"/>
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="White"/>
+                                                    <Setter TargetName="icon" Property="Foreground" Value="#1E4FA8"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                            </Grid>
+                        </Border>-->
+                <!--
+
+                       
+                    </Grid>
+                </Border>--><!--
+            </Grid>-->
+
+            <!-- ================= FOOTER (Row 2) ================= -->
+            <Border Grid.Row="2" Width="1920" VerticalAlignment="Top"  Panel.ZIndex="100">
+                <Grid>
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                            <GradientStop Color="DarkViolet" Offset="0"/>
+                            <GradientStop Color="PaleVioletRed" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                        -->
+                    <!-- STATUS INDICATOR -->
+                    <!--
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                            -->
+                    <!-- 1. The Dot (Ellipse) -->
+                    <!--
+                            <Ellipse Width="16" Height="16" Margin="0,0,8,0">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#2EE36B"/>
+                                        -->
+                    <!-- Default: Connected -->
+                    <!--
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding PLCConnected}" Value="False">
+                                                <Setter Property="Fill" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+
+                            -->
+                    <!-- 2. The Text -->
+                    <!--
+                            <TextBlock FontSize="20" FontWeight="Bold" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="PLC CONNECTED"/>
+                                        <Setter Property="Foreground" Value="#2EE36B"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding PLCConnected}" Value="False">
+                                                <Setter Property="Text" Value="PLC DISCONNECTED"/>
+                                                <Setter Property="Foreground" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+
+                            <Ellipse Width="16" Height="16" Margin="20,0,8,0">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#2EE36B"/>
+                                        -->
+                    <!-- Default: Connected -->
+                    <!--
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                                <Setter Property="Fill" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+
+                            <TextBlock FontSize="20" FontWeight="Bold" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="SERVICE CONNECTED"/>
+                                        <Setter Property="Foreground" Value="#2EE36B"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                                <Setter Property="Text" Value="SERVICE DISCONNECTED"/>
+                                                <Setter Property="Foreground" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+
+                            <Ellipse Width="16" Height="16" Margin="20,0,8,0">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="#2EE36B"/>
+                                        -->
+                    <!-- Default: Connected -->
+                    <!--
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding MacMiniConnected}" Value="False">
+                                                <Setter Property="Fill" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+
+                            <TextBlock FontSize="20" FontWeight="Bold" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="MAC MINI CONNECTED"/>
+                                        <Setter Property="Foreground" Value="#2EE36B"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding MacMiniConnected}" Value="False">
+                                                <Setter Property="Text" Value="MAC MINI DISCONNECTED"/>
+                                                <Setter Property="Foreground" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+
+
+                            <TextBlock FontSize="20"  Margin="20,0,8,0"  Foreground ="#2EE36B" Text="CURRENT MODE:" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBlock FontSize="20"  Margin="0,0,8,0"  Foreground ="#2EE36B" Text="{Binding CurrentMachineMode}" FontWeight="Bold" VerticalAlignment="Center"/>
+
+
+
+
+                        </StackPanel>
+                    </StackPanel>-->
+
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+
+                        <TextBlock Text="{Binding SystemTime}" Typography.NumeralAlignment="Tabular" Foreground="#AAAAAA" Margin="0,0,20,0" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                        <TextBlock Margin="0,0,20,0" Text="{Binding AppVersion}" Foreground="#AAAAAA" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                    </StackPanel >
+
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Viewbox>
+</Window>

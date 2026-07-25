@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)native\iec61850.dll"
+          Link="iec61850.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest"
+          Condition="Exists('$(MSBuildThisFileDirectory)native\iec61850.dll')" />
+  </ItemGroup>
+</Project>

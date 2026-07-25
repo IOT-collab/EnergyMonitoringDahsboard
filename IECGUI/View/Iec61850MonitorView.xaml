@@ -1,0 +1,240 @@
+﻿<UserControl x:Class="IECGUI.View.Iec61850MonitorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:IECGUI.Common.WPFExtensions.Behaviors;assembly=IECGUI.WPFExtensions"
+             xmlns:converters="clr-namespace:IECGUI.Converters"
+             xmlns:local="clr-namespace:IECGUI.View"
+             mc:Ignorable="d" 
+             Background="#1E1E2E"
+             d:DesignHeight="930" d:DesignWidth="1920">
+
+    <UserControl.Resources>
+        <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <!-- Header -->
+            <RowDefinition Height="40"/>
+            <!-- Status Bar -->
+            <RowDefinition Height="940"/>
+            <!-- Content -->
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0">
+            <Button Content="◄ Back"
+                    Command="{Binding BackCommand}"
+                    Width="100" Height="35"
+                    DockPanel.Dock="Left"
+                    Foreground="White" Background="#3D5A80"/>
+            <TextBlock Text="IEC 61850 — Protection Relay Monitor"
+                       Foreground="White" FontSize="22"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </DockPanel>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="1" CornerRadius="5" Margin="0,5"
+                Background="{Binding IsOnline , Converter={StaticResource BoolToColorConverter}}">
+            <TextBlock Text="{Binding StatusMessage}"
+                       Foreground="White" FontSize="14"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="2" Margin="10,30,10,10" Height="400" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Column 1: Voltage -->
+            <Border Grid.Column="0" Background="#2A2A3E"
+                    CornerRadius="10" Margin="5" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="⚡ VOLTAGE"
+                               Foreground="#00D4FF"
+                               FontSize="16" FontWeight="Bold"
+                               Margin="0,0,0,15"/>
+
+                    <TextBlock Text="Phase to Neutral (V)"
+                               Foreground="Gray" FontSize="12"/>
+                    <Separator Background="#3A3A5E" Margin="0,5"/>
+
+                    <!-- PhV values -->
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Ph-A" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding PhV_A, StringFormat='{}{0:F2} V'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Ph-B" Foreground="#FFE66D" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding PhV_B, StringFormat='{}{0:F2} V'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Ph-C" Foreground="#4ECDC4" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   Text="{Binding PhV_C, StringFormat='{}{0:F2} V'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+                    </Grid>
+
+                    <TextBlock Text="Line to Line (V)"
+                               Foreground="Gray" FontSize="12"
+                               Margin="0,15,0,0"/>
+                    <Separator Background="#3A3A5E" Margin="0,5"/>
+
+                    <!-- PPV values -->
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="AB" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding PPV_AB, StringFormat='{}{0:F2} V'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="BC" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding PPV_BC, StringFormat='{}{0:F2} V'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="CA" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   Text="{Binding PPV_CA, StringFormat='{}{0:F2} V'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Column 2: Current + Frequency -->
+            <Border Grid.Column="1" Background="#2A2A3E"
+                    CornerRadius="10" Margin="5" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="⚡ CURRENT &amp; FREQUENCY"
+                               Foreground="#FFE66D"
+                               FontSize="16" FontWeight="Bold"
+                               Margin="0,0,0,15"/>
+
+                    <TextBlock Text="Current (A)"
+                               Foreground="Gray" FontSize="12"/>
+                    <Separator Background="#3A3A5E" Margin="0,5"/>
+
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Ph-A" Foreground="#FF6B6B" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding A_PhsA, StringFormat='{}{0:F3} A'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Ph-B" Foreground="#FFE66D" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding A_PhsB, StringFormat='{}{0:F3} A'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Ph-C" Foreground="#4ECDC4" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   Text="{Binding A_PhsC, StringFormat='{}{0:F3} A'}"
+                                   Foreground="White" FontSize="18" FontWeight="Bold"/>
+                    </Grid>
+
+                    <!-- Frequency -->
+                    <TextBlock Text="Frequency"
+                               Foreground="Gray" FontSize="12"
+                               Margin="0,20,0,0"/>
+                    <Separator Background="#3A3A5E" Margin="0,5"/>
+
+                    <TextBlock Text="{Binding Hz, StringFormat='{}{0:F2} Hz'}"
+                               Foreground="#00FF88"
+                               FontSize="32" FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,10"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Column 3: Power -->
+            <Border Grid.Column="2" Background="#2A2A3E"
+                    CornerRadius="10" Margin="5" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="⚡ POWER"
+                               Foreground="#FF6B6B"
+                               FontSize="16" FontWeight="Bold"
+                               Margin="0,0,0,15"/>
+
+                    <Separator Background="#3A3A5E" Margin="0,5"/>
+
+                    <!-- Power values -->
+                    <Grid Margin="0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="45"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Active" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding TotW, StringFormat='{}{0:F2}'}"
+                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="kW" Foreground="Gray" VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Apparent" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding TotVA, StringFormat='{}{0:F2}'}"
+                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="kVA" Foreground="Gray" VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Reactive" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   Text="{Binding TotVAr, StringFormat='{}{0:F2}'}"
+                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="kVAr" Foreground="Gray" VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Power Factor" Foreground="Silver" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1"
+                                   Text="{Binding TotPF, StringFormat='{}{0:F3}'}"
+                                   Foreground="#00D4FF" FontSize="22" FontWeight="Bold"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,56 @@
+<UserControl x:Class="IECGUI.Common.WPFExtensions.Controls.TrendChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <Grid>
+        <!-- Title -->
+        <TextBlock x:Name="TitleBlock"
+                   Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   Margin="5"
+                   VerticalAlignment="Top"
+                   HorizontalAlignment="Left"/>
+
+        <!-- Left Y-Axis Label -->
+        <TextBlock x:Name="YAxisLabel"
+                   Text="{Binding YAxisText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   Foreground="#AAAAAA"
+                   FontSize="13"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   Margin="0,0,5,0">
+            <TextBlock.LayoutTransform>
+                <RotateTransform Angle="-90"/>
+            </TextBlock.LayoutTransform>
+        </TextBlock>
+
+        <!-- Chart Canvas -->
+        <Canvas x:Name="PlotCanvas"
+                Margin="45 10 30 25"
+                Background="Transparent"/>
+
+        <!-- X-Axis -->
+        <TextBlock x:Name="XAxisLabel"
+                   Text="{Binding XAxisText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom"
+                   Foreground="#AAAAAA"
+                   FontSize="13"
+                   Margin="0 0 0 5"/>
+
+        <!-- Tooltip -->
+        <!--<Border x:Name="TooltipBox"
+                Visibility="Collapsed"
+                Background="{DynamicResource PageBackgroundBrush}"
+                BorderBrush="White"
+                BorderThickness="1"
+                Padding="5"
+                CornerRadius="6">
+            <TextBlock x:Name="TooltipText" Foreground="White"/>
+        </Border>-->
+    </Grid>
+</UserControl>
+

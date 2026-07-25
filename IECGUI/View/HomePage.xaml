@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="IECGUI.View.HomePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IECGUI.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="930" d:DesignWidth="1920"
+             Background="Transparent">
+    <Grid Width="1920" Height="930">
+        <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power1.jpg"
+            Stretch="UniformToFill"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image.Effect>
+                <BlurEffect Radius="20"/>
+            </Image.Effect>
+        </Image>
+
+
+        <StackPanel Orientation="Horizontal" Margin="100">
+            <Button Content="SLD View" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding SldViewCommand}" Foreground="White" Background="Black"/>
+            <Button Content="Energy Monitor" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding EnergyViewCommand}" Foreground="White" Background="Black"/>
+            <Button Content="GaugeView" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding GaugeViewCommand}" Foreground="White" Background="Black"/>
+            <Button Content="Config View" FontSize="50" FontWeight="Bold" Height="150" Width="400" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding ConfigViewCommand}" Foreground="White" Background="Black"/>
+
+        </StackPanel>
+
+
+
+    </Grid>
+</UserControl>

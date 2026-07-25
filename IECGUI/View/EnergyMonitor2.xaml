@@ -1,0 +1,281 @@
+﻿<UserControl x:Class="IECGUI.View.EnergyMonitor2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IECGUI.View"
+             xmlns:Controls="clr-namespace:IECGUI.Controls"
+             mc:Ignorable="d" 
+             Background="#0A0F1C"
+             d:DesignHeight="930" d:DesignWidth="1920">
+
+    <Grid>
+
+        <!-- LAYER 1 : Background Image -->
+        <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power3.jpg"
+               Stretch="Fill">
+
+            <Image.Effect>
+                <BlurEffect Radius="15"/>
+            </Image.Effect>
+
+        </Image>
+
+        <!-- LAYER 2 : Dark Overlay -->
+        <Rectangle Fill="#AA000000"/>
+
+        <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="860"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- TOP TOOLBAR -->
+        <Border Grid.Row="0"
+                Background="#111827"
+                BorderBrush="#00BFFF"
+                BorderThickness="0,0,0,1">
+
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+
+                <Button Content="+ PAGE"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding AddPageCommand}"/>
+
+                <Button Content="SAVE"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding SaveCommand}"/>
+
+                <Button Content="LOAD"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding LoadCommand}"/>
+
+                <Button Content="DELETE"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding DeleteCommand}"/>
+
+                <Button Content="RELAY STATUS"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding RelayPage}"/>
+
+                <Button Content="EXPORT PDF"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding ExportPdfCommand}"/>
+
+                <Button Content="BACK"
+                        Width="120"
+                        Height="40"
+                        Margin="10" Command="{Binding BackCommand}"/>
+
+                <TextBlock Text=" "
+                           FontSize="36"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           Margin="50,0,0,0"
+                           VerticalAlignment="Center"/>
+
+            </StackPanel>
+
+        </Border>
+
+        <!-- MAIN AREA -->
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="1700"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT TOOLBOX -->
+            <Border Grid.Column="0"
+                    Background="#0F172A"
+                    BorderBrush="#00BFFF"
+                    BorderThickness="1">
+
+                <ScrollViewer>
+
+                    <StackPanel Margin="10">
+
+                        <TextBlock Text="Basic Widgets"
+                                   Foreground="White"
+                                   FontSize="18"
+                                   Margin="5"/>
+
+                        <Button Content="Button Widgets"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Button Content="Lamp Widgets"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Button Content="Knobs"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Button Content="Utilities"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Button Content="Charts"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Separator Margin="10"/>
+
+                        <TextBlock Text="AI Widgets"
+                                   Foreground="White"
+                                   FontSize="18"
+                                   Margin="5"/>
+
+                        <Button Content="AI Trend"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Button Content="Prediction"
+                                Height="40"
+                                Margin="5"/>
+
+                        <Button Content="Anomaly Detector"
+                                Height="40"
+                                Margin="5"/>
+
+                    </StackPanel>
+
+                </ScrollViewer>
+
+            </Border>
+
+            <ScrollViewer Grid.Column="1">
+
+                    <StackPanel Margin="10">
+
+                        <!-- CURRENT GAUGES -->
+                        <Border BorderBrush="DodgerBlue"
+                                BorderThickness="0"
+                                CornerRadius="10"
+                                Padding="10"
+                                Width="1650"
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,20">
+
+                            <StackPanel>
+
+                                <TextBlock Text="CURRENT MONITORING"
+                                           Foreground="White"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"/>
+
+                                <WrapPanel>
+
+                                    <Controls:AnalogGauge Width="250"
+                                          Height="180"
+                                          Title="Incommer 1 Current"
+                                          Unit="A"
+                                          MinValue="0"
+                                          MaxValue="500"
+                                          Value="{Binding INC1AMP}" />
+
+                                    <Controls:AnalogGauge Width="250"
+                                          Height="180"
+                                          Title="Incommer 2 Current"
+                                          Unit="A"
+                                          MinValue="0"
+                                          MaxValue="500"
+                                          Value="{Binding INC2AMP}" />
+
+                                    <Controls:AnalogGauge Width="250"
+                                          Height="180"
+                                          Title="Incommer 3 Current"
+                                          Unit="A"
+                                          MinValue="0"
+                                          MaxValue="500"
+                                          Value="{Binding INC3AMP}" />
+
+                                    <Controls:DigitalMeterCard Width="250"
+                                          Height="180" Value="{Binding INC1AMP,StringFormat={}{0:F2}}" 
+                                          CurrentBrush="{Binding Brush1}" Padding="5,5" Margin="100,5,5,5" />
+
+                                    <Controls:DigitalMeterCard Width="250"
+                                          Height="180" Value="{Binding INC2AMP,StringFormat={}{0:F2}}" 
+                                          CurrentBrush="{Binding Brush2}" Padding="5,5" Margin="100,5,5,5"  />
+
+
+
+                                </WrapPanel>
+
+                            </StackPanel>
+
+                        </Border>
+
+                        <!-- VOLTAGE GAUGES -->
+                        <Border BorderBrush="Orange"
+                                BorderThickness="0"
+                                CornerRadius="10"
+                                Width="800"
+                                HorizontalAlignment="Left"
+                                Padding="10">
+
+                            <StackPanel>
+
+                                <TextBlock Text="VOLTAGE MONITORING"
+                                           Foreground="White"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"/>
+
+                                <WrapPanel>
+
+                                    <Controls:AnalogGauge Width="250"
+                                          Height="180"
+                                          Title="Incommer 1 Voltage"
+                                          Unit="KV"
+                                          MinValue="0"
+                                          MaxValue="50"
+                                          Value="{Binding INC1VOLT}" />
+
+                                    <Controls:AnalogGauge Width="250"
+                                          Height="180"
+                                          Title="Incommer 2 Voltage"
+                                          Unit="KV"
+                                          MinValue="0"
+                                          MaxValue="50"
+                                          Value="{Binding INC2VOLT}" />
+
+                                    <Controls:AnalogGauge Width="250"
+                                          Height="180"
+                                          Title="Incommer 3 Voltage"
+                                          Unit="KV"
+                                          MinValue="0"
+                                          MaxValue="50"
+                                          Value="{Binding INC3VOLT}" />
+
+
+  
+
+                                </WrapPanel>
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </StackPanel>
+                
+
+                </ScrollViewer>
+
+            </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>
