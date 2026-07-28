@@ -55,6 +55,10 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.1, )"
+            },
             "MQTTnet": {
               "target": "Package",
               "version": "[4.3.7.1207, )"

@@ -37,15 +37,23 @@ namespace IECGUI.ViewModel
                 _selectedFormat = value;
                 OnPropertyChanged(nameof(SelectedFormat));
                 OnPropertyChanged(nameof(SelectedColumnsView));
-                if (value != null)
+                SelectedColumns.Clear();
+                if (value != null && value.SelectedColumns != null)
                 {
-                    ReportName = value.Name;
-                    SelectedColumns.Clear();
                     foreach (var col in value.SelectedColumns)
-                        SelectedColumns.Add(col);
-                    // Notify that SelectedColumns has been updated to trigger UI sync
-                    OnPropertyChanged(nameof(SelectedColumns));
+                    {
+                        // If saved column contains sheet prefix like "[Meter]VoltageA", normalize to show matching available item when possible
+                        var normalized = NormalizeSavedColumn(col);
+                        // prefer exact AvailableColumns entry if present
+                        var match = AvailableColumns.FirstOrDefault(a => string.Equals(a, normalized, System.StringComparison.OrdinalIgnoreCase))
+                                    ?? AvailableColumns.FirstOrDefault(a => normalized.EndsWith(a, System.StringComparison.OrdinalIgnoreCase))
+                                    ?? normalized;
+                        SelectedColumns.Add(match);
+                    }
+                    // reflect only valid selections in the stored selected set
+                    value.SelectedColumns = SelectedColumns.ToList();
                 }
+                OnPropertyChanged(nameof(SelectedColumns));
             }
         }
 
@@ -70,32 +78,33 @@ namespace IECGUI.ViewModel
         public ReportConfigViewModel(INavigationService navigation)
         {
             _navigation = navigation;
-            // Use exact CSV header column names (matching ProductionDataLogger output)
+
+            // New energy-meter columns (replace old production columns)
             var columns = new List<string>
             {
                 "Timestamp",
-                "2D_Code",
-                "OEE",
-                "Availability",
-                "Performance",
-                "Quality",
-                "Total_IN",
-                "OK",
-                "NG",
-                "Uptime",
-                "Downtime",
-                "TotalTime",
-                "CT"
+                "VoltageA",
+                "VoltageB",
+                "VoltageC",
+                "CurrentA",
+                "CurrentB",
+                "CurrentC",
+                "ActivePower",
+                "ReactivePower",
+                "ApparentPower",
+                "Frequency",
+                "PowerFactor"
             };
 
-            // Add station-specific columns (for 13 stations, 0..12) matching CSV header format
-            for (int i = 0; i < 13; i++)
-            {
-                columns.Add($"St{i}_result");
-                columns.Add($"St{i}_X");
-                columns.Add($"St{i}_Y");
-                columns.Add($"St{i}_Z");
-            }
+            // If you still need station-type CSV columns, add here as required.
+            // Example for legacy station columns (remove if not needed):
+            // for (int i = 0; i < 13; i++)
+            // {
+            //     columns.Add($"St{i}_result");
+            //     columns.Add($"St{i}_X");
+            //     columns.Add($"St{i}_Y");
+            //     columns.Add($"St{i}_Z");
+            // }
 
             AvailableColumns = new ObservableCollection<string>(columns);
             SaveCommand = new RelayCommand(SaveFormat);
@@ -104,9 +113,55 @@ namespace IECGUI.ViewModel
             EditCommand = new RelayCommand(EditFormat, () => SelectedFormat != null);
             BackCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
             RemoveColumnCommand = new RelayCommand(RemoveSelectedColumn, () => SelectedColumnToRemove != null);
+
             LoadReportFormats();
 
+            // Clean existing saved formats so they only contain columns that match current AvailableColumns
+            bool changed = CleanAndNormalizeSavedFormats();
+            if (changed) SaveReportFormats();
+
             SelectedColumns.CollectionChanged += (s, e) => OnPropertyChanged(nameof(SelectedColumnsView));
+        }
+
+        private bool CleanAndNormalizeSavedFormats()
+        {
+            bool anyChange = false;
+            foreach (var fmt in ReportFormats)
+            {
+                if (fmt.SelectedColumns == null) continue;
+                var original = fmt.SelectedColumns.ToList();
+                var newList = new List<string>();
+                foreach (var col in original)
+                {
+                    var normalized = NormalizeSavedColumn(col);
+                    var match = AvailableColumns.FirstOrDefault(a => string.Equals(a, normalized, System.StringComparison.OrdinalIgnoreCase))
+                                ?? AvailableColumns.FirstOrDefault(a => normalized.EndsWith(a, System.StringComparison.OrdinalIgnoreCase));
+                    if (match != null)
+                    {
+                        newList.Add(match);
+                    }
+                    // else drop unknown legacy column
+                }
+
+                if (!newList.SequenceEqual(original, StringComparer.OrdinalIgnoreCase))
+                {
+                    fmt.SelectedColumns = newList;
+                    anyChange = true;
+                }
+            }
+            return anyChange;
+        }
+
+        private static string NormalizeSavedColumn(string saved)
+        {
+            if (string.IsNullOrWhiteSpace(saved)) return saved ?? string.Empty;
+            // If saved column contains a sheet prefix like "[Meter]VoltageA", strip prefix
+            var idx = saved.IndexOf(']');
+            if (idx >= 0 && saved.StartsWith("["))
+            {
+                return saved.Substring(idx + 1).Trim();
+            }
+            return saved.Trim();
         }
 
         private void SaveFormat()
@@ -154,7 +209,7 @@ namespace IECGUI.ViewModel
                 ReportName = SelectedFormat.Name;
                 SelectedColumns.Clear();
                 foreach (var col in SelectedFormat.SelectedColumns)
-                    SelectedColumns.Add(col);
+                    SelectedColumns.Add(NormalizeSavedColumn(col));
                 OnPropertyChanged(nameof(SelectedColumnsView));
             }
         }
@@ -163,23 +218,17 @@ namespace IECGUI.ViewModel
         {
             if (SelectedFormat != null && SelectedColumnToRemove != null)
             {
-                // Remove from the selected format's columns
                 SelectedFormat.SelectedColumns.Remove(SelectedColumnToRemove);
-
-                // Also remove from SelectedColumns collection for UI sync
                 if (SelectedColumns.Contains(SelectedColumnToRemove))
                     SelectedColumns.Remove(SelectedColumnToRemove);
-
                 SelectedColumnToRemove = null;
                 SaveReportFormats();
                 OnPropertyChanged(nameof(SelectedColumnsView));
             }
             else if (SelectedFormat == null && SelectedColumnToRemove != null)
             {
-                // Remove from current selection (before saving)
                 if (SelectedColumns.Contains(SelectedColumnToRemove))
                     SelectedColumns.Remove(SelectedColumnToRemove);
-
                 SelectedColumnToRemove = null;
                 OnPropertyChanged(nameof(SelectedColumnsView));
             }

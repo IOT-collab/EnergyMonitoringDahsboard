@@ -13,7 +13,7 @@ D:\Project 2026\EnergyMonitoring\IECGUI\App.xaml
 21-1776284207
 
 46673651195
-214133525159
+221-373781861
 Controls\AnalogGauge.xaml;Controls\DigitalMeterCard.xaml;Controls\Indicator.xaml;Controls\SevenSegMeter.xaml;Controls\TriangleIndicator.xaml;Controls\VerticalProgressBar.xaml;MainWindow.xaml;Resources\ButtonStyle.xaml;Resources\Icons.xaml;View\Dashbaord1.xaml;View\EnergyMonitor2.xaml;View\EnergyMonitorView.xaml;View\HomePage.xaml;View\Iec61850MonitorView.xaml;View\IecConfigView.xaml;View\LoginView.xaml;View\MeterConfigView.xaml;View\MqttMonitorView.xaml;View\RelayCard.xaml;View\ReportConfigView.xaml;View\ReportViewerView.xaml;
 
 True

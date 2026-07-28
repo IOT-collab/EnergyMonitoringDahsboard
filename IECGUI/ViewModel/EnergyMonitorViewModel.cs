@@ -5,7 +5,7 @@ using IPCSoftware.Common.CommonExtensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
+using IEC.Shared.Services.Logging;
 
 namespace IECGUI.ViewModel
 {
@@ -25,6 +26,8 @@ namespace IECGUI.ViewModel
         private readonly SafePoller _liveDataTimer;
 
         private readonly IMultiEnergyMeterService _multiEnergyMeterService;
+
+        private EnergyLoggingService? _energyLogger;
 
         private readonly ConfigurationManagerService _config;
 
@@ -45,6 +48,9 @@ namespace IECGUI.ViewModel
 
             _multiEnergyMeterService = multiEnergyMeterService;
             _navigation = navigation;
+
+            _energyLogger = new EnergyLoggingService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data"));
+
 
             _config = config;
 
@@ -91,6 +97,10 @@ namespace IECGUI.ViewModel
                {
                    vm.MeterStatus = "Connected";
                }
+
+                // start CSV logging using meter names currently in UI
+                var meterNames = Meters.Select(m => m.MeterName).Where(n => !string.IsNullOrWhiteSpace(n)).ToList();
+                _energyLogger?.Start(meterNames);
             }
             catch (Exception ex)
             {
@@ -226,6 +236,30 @@ namespace IECGUI.ViewModel
                         }
                     }
                 }
+
+
+                var loggerReadings = new Dictionary<string, IDictionary<string, object>>();
+                foreach (var vm in Meters)
+                {
+                    var values = new Dictionary<string, object>
+                    {
+                        ["VoltageA"] = vm.VoltageA_N,
+                        ["VoltageB"] = vm.VoltageB_N,
+                        ["VoltageC"] = vm.VoltageC_N,
+                        ["CurrentA"] = vm.CurrentA,
+                        ["CurrentB"] = vm.CurrentB,
+                        ["CurrentC"] = vm.CurrentC,
+                        ["ActivePower"] = vm.TotalActivePower,
+                        ["ReactivePower"] = vm.TotalReactivePower,
+                        ["ApparentPower"] = vm.TotalApparentPower,
+                        ["Frequency"] = vm.Frequency,
+                        ["PowerFactor"] = vm.TotalPowerFactor
+                    };
+                    loggerReadings[vm.MeterName ?? $"Meter_{Guid.NewGuid():N}"] = values;
+                }
+                _energyLogger?.AppendReadings(loggerReadings);
+
+
             }
             catch (Exception ex)
             {
@@ -254,6 +288,8 @@ namespace IECGUI.ViewModel
             try
             {
                await  _multiEnergyMeterService.DisconnectAll();
+
+                _energyLogger?.Stop();
             }
             catch (Exception ex)
             {

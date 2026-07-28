@@ -53,7 +53,7 @@
 
         </Border>
 
-        <!-- Generator Summary -->
+        <!-- Generator Summary --><!--
         <UniformGrid Grid.Row="1"
                      Columns="5"                    
                      Margin="10" Background="#2A2A3E" >
@@ -93,7 +93,7 @@
                     <TextBlock Text="Voltage : 10.5 MV" Style="{StaticResource ColumnHeaderStyle}" Background="Transparent" />
                 </StackPanel>
             </GroupBox>
-        </UniformGrid>
+        </UniformGrid>-->
 
         <!-- Mimic Area -->
         <Border Grid.Row="2"
