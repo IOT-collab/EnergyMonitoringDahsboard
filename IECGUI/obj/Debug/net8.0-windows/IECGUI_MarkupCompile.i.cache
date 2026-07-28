@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 D:\Project 2026\EnergyMonitoring\IECGUI\App.xaml
-201932983409
+21-1776284207
 
-42-108957062
+46673651195
 214133525159
-Controls\AnalogGauge.xaml;Controls\DigitalMeterCard.xaml;Controls\Indicator.xaml;Controls\SevenSegMeter.xaml;Controls\TriangleIndicator.xaml;Controls\VerticalProgressBar.xaml;MainWindow.xaml;Resources\ButtonStyle.xaml;Resources\Icons.xaml;View\Dashbaord1.xaml;View\EnergyMonitor2.xaml;View\EnergyMonitorView.xaml;View\HomePage.xaml;View\Iec61850MonitorView.xaml;View\IecConfigView.xaml;View\LoginView.xaml;View\MeterConfigView.xaml;View\MqttMonitorView.xaml;View\RelayCard.xaml;View\ReportViewerView.xaml;
+Controls\AnalogGauge.xaml;Controls\DigitalMeterCard.xaml;Controls\Indicator.xaml;Controls\SevenSegMeter.xaml;Controls\TriangleIndicator.xaml;Controls\VerticalProgressBar.xaml;MainWindow.xaml;Resources\ButtonStyle.xaml;Resources\Icons.xaml;View\Dashbaord1.xaml;View\EnergyMonitor2.xaml;View\EnergyMonitorView.xaml;View\HomePage.xaml;View\Iec61850MonitorView.xaml;View\IecConfigView.xaml;View\LoginView.xaml;View\MeterConfigView.xaml;View\MqttMonitorView.xaml;View\RelayCard.xaml;View\ReportConfigView.xaml;View\ReportViewerView.xaml;
 
-False
+True
 

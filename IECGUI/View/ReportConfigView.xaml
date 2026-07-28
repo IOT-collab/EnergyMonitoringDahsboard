@@ -1,0 +1,280 @@
+﻿<UserControl x:Class="IECGUI.View.ReportConfigView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
+            xmlns:helpers="clr-namespace:IECGUI.Converters"
+            xmlns:behaviors="clr-namespace:IECGUI.Common.WPFExtensions.Behaviors;assembly=IECGUI.WPFExtensions"
+            xmlns:extConv="clr-namespace:IECGUI.Common.WPFExtensions.Convertors;assembly=IECGUI.WPFExtensions"           
+            mc:Ignorable="d"
+            d:DesignHeight="1080" d:DesignWidth="1920"
+            Background="#27283D">
+
+ <UserControl.Resources>
+        <!-- converters from the WPF extensions assembly -->
+        <extConv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <!-- Modern Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#27283D"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="BorderBrush" Value="#27283B"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" BlurRadius="15" ShadowDepth="4" Opacity="0.05"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Input Label Style -->
+        <Style x:Key="HmiLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- ComboBox Style -->
+        <Style x:Key="HmiComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#F9FAFB"/>
+        </Style>
+
+        <!-- Custom Thick ScrollBar for Touch -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="#F3F4F6"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Width" Value="30"/>
+                </Trigger>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Height" Value="30"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--<helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>-->
+      
+  <!-- ListBox Item Style with Borders -->
+        <Style x:Key="BorderedListBoxItem" TargetType="ListBoxItem">
+   <Setter Property="Padding" Value="15,10"/>
+  <Setter Property="BorderBrush" Value="#CCCCCC"/>
+         <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Background" Value="White"/>
+    <Setter Property="Template">
+        <Setter.Value>
+   <ControlTemplate TargetType="ListBoxItem">
+    <Border Background="{TemplateBinding Background}"
+         BorderBrush="{TemplateBinding BorderBrush}"
+             BorderThickness="{TemplateBinding BorderThickness}"
+   Padding="{TemplateBinding Padding}">
+         <ContentPresenter/>
+  </Border>
+         <ControlTemplate.Triggers>
+     <Trigger Property="IsMouseOver" Value="True">
+ <Setter Property="Background" Value="#EAF3FF"/>
+          </Trigger>
+   <Trigger Property="IsSelected" Value="True">
+               <Setter Property="Background" Value="#CCE4FF"/>
+   </Trigger>
+        </ControlTemplate.Triggers>
+   </ControlTemplate>
+                </Setter.Value>
+    </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Viewbox Stretch="Uniform">
+      <Grid Width="1920" Height="1080">
+        <Grid.RowDefinitions>
+ <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+     </Grid.RowDefinitions>
+
+        <!-- Header -->
+<TextBlock Grid.Row="0" 
+ Text="Report Format Configuration" 
+    FontSize="48" 
+     FontWeight="Bold"
+            Foreground="White"
+     Margin="40,30,0,30"/>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="40,0">
+      <Grid>
+    <Grid.ColumnDefinitions>
+    <ColumnDefinition Width="*"/>
+       <ColumnDefinition Width="40"/>
+       <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="40"/>
+              <ColumnDefinition Width="*"/>
+   </Grid.ColumnDefinitions>
+
+      <!-- Left Column: Saved Reports -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" BorderBrush="White" BorderThickness="3" Padding="5" Background="LightGray">
+       <StackPanel >
+                            <TextBlock Text="Saved Report Formats" FontSize="32" FontWeight="Bold" Margin="0,0,0,30" />
+       
+         <TextBlock Text="Select a report to view or edit" Style="{StaticResource HmiLabelStyle}" Foreground="White"/>
+         <Border BorderBrush="#CCCCCC" BorderThickness="2" CornerRadius="4">
+     <ListBox ItemsSource="{Binding ReportFormats}" 
+              SelectedItem="{Binding SelectedFormat}" 
+         DisplayMemberPath="Name" 
+      Height="400"
+      FontSize="24"
+    BorderThickness="0"
+          ItemContainerStyle="{StaticResource BorderedListBoxItem}"/>
+      </Border>
+
+         <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <Button Content="New" 
+  Command="{Binding NewCommand}"
+    Width="150" Height="50"
+         FontSize="22" FontWeight="SemiBold"
+         Background="#1976D2" Foreground="White"
+     BorderThickness="0" Margin="0,0,15,0">
+                 <Button.Resources>
+        <Style TargetType="Border">
+<Setter Property="CornerRadius" Value="6"/>
+       </Style>
+    </Button.Resources>
+     </Button>
+        <Button Content="Delete" 
+             Command="{Binding DeleteCommand}"
+       Width="150" Height="50"
+  FontSize="22" FontWeight="SemiBold"
+        Background="#D32F2F" Foreground="White"
+       BorderThickness="0">
+           <Button.Resources>
+      <Style TargetType="Border">
+       <Setter Property="CornerRadius" Value="6"/>
+     </Style>
+                    </Button.Resources>
+            </Button>
+          </StackPanel>
+            </StackPanel>
+      </Border>
+
+ <!-- Middle Column: Column Selection -->
+      <Border Grid.Column="2" Style="{StaticResource CardStyle}"  BorderBrush="White" BorderThickness="3" Padding="5" Background="LightGray">
+          <StackPanel>
+         <TextBlock Text="Report Details" FontSize="32" FontWeight="Bold" Margin="0,0,0,30"/>
+
+      <StackPanel Margin="0,0,0,20">
+          <TextBlock Text="Report Name" Style="{StaticResource HmiLabelStyle}"/>
+         <TextBox Text="{Binding ReportName, UpdateSourceTrigger=PropertyChanged}" Height="50" FontSize="30" />
+             </StackPanel>
+
+        <TextBlock Text="Available Columns" Style="{StaticResource HmiLabelStyle}"/>
+    <TextBlock Text="Select columns to include in this report format" 
+  FontSize="18" Foreground="#888888" Margin="0,0,0,10"/>
+       
+        <Border BorderBrush="#CCCCCC" BorderThickness="2" CornerRadius="4">
+ <ListBox ItemsSource="{Binding AvailableColumns}" 
+  SelectionMode="Multiple"     behaviors:ListBoxSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedColumns, Mode=TwoWay}"
+         Height="380"
+                FontSize="22"
+              BorderThickness="0"
+       Background="#FAFAFA"
+        ItemContainerStyle="{StaticResource BorderedListBoxItem}">
+        <ListBox.ItemTemplate>
+             <DataTemplate>
+                <Grid Height="30">
+           <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="40"/>
+     <ColumnDefinition Width="*"/>
+     </Grid.ColumnDefinitions>
+<TextBlock Grid.Column="0"
+             Text="✔"
+   Foreground="#1976D2"
+      FontSize="20"
+          FontWeight="Bold"
+     VerticalAlignment="Center"
+       HorizontalAlignment="Center"
+          Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+    <TextBlock Grid.Column="1"
+     Text="{Binding}"
+         VerticalAlignment="Center"/>
+       </Grid>
+               </DataTemplate>
+    </ListBox.ItemTemplate>
+</ListBox>
+      </Border>
+
+       <TextBlock Text="{Binding SelectedColumns.Count, StringFormat='Selected: {0} columns'}" 
+  FontSize="20" Foreground="#666666" Margin="0,10,0,0"/>
+    </StackPanel>
+   </Border>
+
+                <!-- Right Column: Selected Columns Preview -->
+                    <Border Grid.Column="4" Style="{StaticResource CardStyle}"  BorderBrush="White" BorderThickness="3" Padding="5" Background="LightGray">
+         <StackPanel>
+      <TextBlock Text="Selected Columns" FontSize="32" FontWeight="Bold" Margin="0,0,0,30"/>
+
+       <TextBlock Text="Report Name" Style="{StaticResource HmiLabelStyle}"/>
+   <TextBox Text="{Binding SelectedFormat.Name, Mode=OneWay}" 
+         IsReadOnly="True"  Background="#F5F5F5" FontSize="30" Height="50" />
+
+        <TextBlock Text="Columns in this report" Style="{StaticResource HmiLabelStyle}" Margin="0,20,0,0"/>
+     <Border BorderBrush="#CCCCCC" BorderThickness="2" CornerRadius="4">
+       <ListBox ItemsSource="{Binding SelectedColumnsView}" 
+  Height="380"
+      FontSize="22"
+       BorderThickness="0"
+  Background="#FAFAFA"
+     ItemContainerStyle="{StaticResource BorderedListBoxItem}"/>
+    </Border>
+
+          <TextBlock Text="{Binding SelectedColumnsView.Count, StringFormat='Total: {0} columns', FallbackValue='Total: 0 columns'}" 
+   FontSize="20" Foreground="#666666" Margin="0,10,0,0"/>
+     </StackPanel>
+          </Border>
+ </Grid>
+        </ScrollViewer>
+
+        <!-- Footer with Save/Cancel Buttons -->
+        <Border Grid.Row="2" Background="Transparent" BorderBrush="#E0E0E0" BorderThickness="0,0,0,0" Padding="25" >
+ <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Back"     Command="{Binding BackCommand}" Width="200" Height="70" Style="{StaticResource GlassButton}"
+                   FontSize="24" FontWeight="Bold" Background="#F5F5F5" Foreground="#555555"  Margin="0,0,30,0" BorderThickness="0">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="Clear Selection" 
+        Command="{Binding NewCommand}"  Style="{StaticResource GlassButton}"
+     Width="200" Height="70"
+  FontSize="24" FontWeight="SemiBold"
+               Background="#F5F5F5" Foreground="#555555"
+     BorderBrush="#CCCCCC" BorderThickness="2"
+          Margin="0,0,30,0">
+ <Button.Resources>
+     <Style TargetType="Border">
+          <Setter Property="CornerRadius" Value="8"/>
+              </Style>
+   </Button.Resources>
+   </Button>
+
+           <Button Content="Save Report Format"     Command="{Binding SaveCommand}" Width="280" Height="70" Style="{StaticResource GlassButton}"
+                   FontSize="24" FontWeight="Bold"     Background="#007ACC" Foreground="White"    BorderThickness="0">
+   <Button.Resources>
+          <Style TargetType="Border">
+      <Setter Property="CornerRadius" Value="8"/>
+               </Style>
+        </Button.Resources>
+      </Button>
+     </StackPanel>
+        </Border>
+      </Grid>
+    </Viewbox>
+</UserControl>

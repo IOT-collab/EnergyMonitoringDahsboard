@@ -1,19 +1,20 @@
 ﻿
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\App.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Controls\AnalogGauge.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Controls\DigitalMeterCard.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Controls\Indicator.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Controls\SevenSegMeter.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Controls\TriangleIndicator.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\Controls\VerticalProgressBar.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\MainWindow.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\Dashbaord1.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\EnergyMonitor2.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\EnergyMonitorView.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\HomePage.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\Iec61850MonitorView.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\LoginView.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\MeterConfigView.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\MqttMonitorView.xaml;;
-FD:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IECGUI\View\RelayCard.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\App.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\Controls\AnalogGauge.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\Controls\DigitalMeterCard.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\Controls\Indicator.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\Controls\SevenSegMeter.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\Controls\TriangleIndicator.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\Controls\VerticalProgressBar.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\MainWindow.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\Dashbaord1.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\EnergyMonitor2.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\EnergyMonitorView.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\HomePage.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\Iec61850MonitorView.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\LoginView.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\MeterConfigView.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\MqttMonitorView.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\RelayCard.xaml;;
+FD:\Project 2026\EnergyMonitoring\IECGUI\View\ReportConfigView.xaml;;
 

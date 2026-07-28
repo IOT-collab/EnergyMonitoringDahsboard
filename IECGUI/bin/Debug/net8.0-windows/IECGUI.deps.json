@@ -17,7 +17,7 @@
           "System.Threading.Tasks": "4.3.0",
           "System.Threading.Tasks.Extensions": "4.6.3",
           "System.Threading.Timer": "4.3.0",
-          "iec61850dotnet.Reference": "1.0.9700.32138"
+          "iec61850dotnet.Reference": "1.0.9705.24371"
         },
         "runtime": {
           "IECGUI.dll": {}
@@ -417,10 +417,10 @@
           }
         }
       },
-      "iec61850dotnet.Reference/1.0.9700.32138": {
+      "iec61850dotnet.Reference/1.0.9705.24371": {
         "runtime": {
           "iec61850dotnet.dll": {
-            "assemblyVersion": "1.0.9700.32138",
+            "assemblyVersion": "1.0.9705.24371",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -703,7 +703,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "iec61850dotnet.Reference/1.0.9700.32138": {
+    "iec61850dotnet.Reference/1.0.9705.24371": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

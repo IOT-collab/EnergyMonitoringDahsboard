@@ -56,6 +56,10 @@
                 <view:ReportViewerView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:ReportConfigViewModel}">
+                <view:ReportConfigView/>
+            </DataTemplate>
+
         </ResourceDictionary>
 
     </Application.Resources>

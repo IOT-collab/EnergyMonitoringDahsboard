@@ -53,7 +53,7 @@ namespace IECGUI.View {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/IECGUI;V1.0.0.0;component/view/iec61850monitorview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/IECGUI;component/view/iec61850monitorview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\Iec61850MonitorView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

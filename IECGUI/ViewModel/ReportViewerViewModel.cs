@@ -65,6 +65,8 @@ namespace IECGUI.ViewModel
         public ICommand LoadDataCommand { get; }
         public ICommand ExportCsvCommand { get; }
         public ICommand RefreshFormatsCommand { get; }
+
+        public ICommand ConfigViewCommand { get; }
         public DataTable ReportDataTable { get; set; } = new DataTable();
 
         private readonly string _configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "ReportFormats.json");
@@ -76,6 +78,7 @@ namespace IECGUI.ViewModel
             LoadDataCommand = new RelayCommand(LoadData);
             ExportCsvCommand = new RelayCommand(ExportToCsv);
             RefreshFormatsCommand = new RelayCommand(RefreshFormats);
+            ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ReportConfigViewModel>());
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
             _navigation = navigation;
             string appFolder = AppDomain.CurrentDomain.BaseDirectory;

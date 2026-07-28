@@ -10,3 +10,15 @@ D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IEC61850forCSharp\obj\Deb
 D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.sourcelink.json
 D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.dll
 D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.pdb
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850.dll
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850dotnet.deps.json
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850dotnet.dll
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850dotnet.pdb
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.csproj.AssemblyReference.cache
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.AssemblyInfoInputs.cache
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.AssemblyInfo.cs
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.csproj.CoreCompileInputs.cache
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.sourcelink.json
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.dll
+D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.pdb

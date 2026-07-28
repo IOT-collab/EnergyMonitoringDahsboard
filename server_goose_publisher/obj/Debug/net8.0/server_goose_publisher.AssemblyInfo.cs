@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright ©  2021")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12f91a4f3457387355fda3a4359e720a1276cec3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+488412abcb14a5fe62ea762944d5d38e8ad7fc34")]
 [assembly: System.Reflection.AssemblyProductAttribute("server_goose_publisher")]
 [assembly: System.Reflection.AssemblyTitleAttribute("server_goose_publisher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
