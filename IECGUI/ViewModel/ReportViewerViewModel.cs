@@ -86,8 +86,8 @@ namespace IECGUI.ViewModel
             ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ReportConfigViewModel>());
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
             _navigation = navigation;
-            string appFolder = AppDomain.CurrentDomain.BaseDirectory;
-            _prodCsvFolder = Path.Combine(appFolder, "Data");
+       
+            _prodCsvFolder = Path.Combine(AppPaths.Data);
         }
 
         private void RefreshFormats()
@@ -122,99 +122,128 @@ namespace IECGUI.ViewModel
 
         private void LoadData()
         {
-            // Refresh formats before loading to get latest
-            RefreshFormats();
-
-            ReportDataTable = new DataTable();
-            _perMeterTables.Clear();
-            TotalRowsLoaded = 0;
-
-            if (SelectedReportFormat == null || SelectedReportFormat.SelectedColumns == null || !SelectedReportFormat.SelectedColumns.Any())
+            try
             {
-                MessageBox.Show("No report format or columns selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                OnPropertyChanged(nameof(ReportDataTable));
-                return;
-            }
+                // Refresh formats before loading to get latest
+                RefreshFormats();
 
-            // Prepare main DataTable using selected columns
-            foreach (var col in SelectedReportFormat.SelectedColumns)
-                ReportDataTable.Columns.Add(col);
+                ReportDataTable = new DataTable();
+                _perMeterTables.Clear();
+                TotalRowsLoaded = 0;
 
-            // iterate date range and load either CSV or Excel files
-            for (var date = DateFrom.Date; date <= DateTo.Date; date = date.AddDays(1))
-            {
-                // 1) CSV (legacy) file
-                var csvPath = Path.Combine(_prodCsvFolder, $"Production_{date:yyyyMMdd}.csv");
-                if (File.Exists(csvPath))
+
+                if (!Directory.Exists(_prodCsvFolder))
                 {
-                    AppendRowsFromCsv(csvPath, ReportDataTable, SelectedReportFormat.SelectedColumns);
-                    continue;
+                    Directory.CreateDirectory(_prodCsvFolder);
+
+                    MessageBox.Show(
+                        "No report files found.",
+                        "Report Viewer",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    return;
                 }
 
-                // 2) Excel files produced by logger: try pattern "Energy_{date}*.xlsx"
-                var files = Directory.GetFiles(_prodCsvFolder, $"Energy_{date:yyyyMMdd}*.xlsx");
-                foreach (var file in files)
+                if (SelectedReportFormat == null || SelectedReportFormat.SelectedColumns == null || !SelectedReportFormat.SelectedColumns.Any())
                 {
-                    try
+                    MessageBox.Show("No report format or columns selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    OnPropertyChanged(nameof(ReportDataTable));
+                    return;
+                }
+
+                // Prepare main DataTable using selected columns
+                foreach (var col in SelectedReportFormat.SelectedColumns)
+                    ReportDataTable.Columns.Add(col);
+
+                // iterate date range and load either CSV or Excel files
+                for (var date = DateFrom.Date; date <= DateTo.Date; date = date.AddDays(1))
+                {
+                    // 1) CSV (legacy) file
+                    var csvPath = Path.Combine(_prodCsvFolder, $"Production_{date:yyyyMMdd}.csv");
+                    if (File.Exists(csvPath))
                     {
-                        using var wb = new XLWorkbook(file);
-                        foreach (var ws in wb.Worksheets)
+                        AppendRowsFromCsv(csvPath, ReportDataTable, SelectedReportFormat.SelectedColumns);
+                        continue;
+                    }
+
+                    // 2) Excel files produced by logger: try pattern "Energy_{date}*.xlsx"
+                    var files = Directory.GetFiles(_prodCsvFolder, $"Energy_{date:yyyyMMdd}*.xlsx");
+                    foreach (var file in files)
+                    {
+                        try
                         {
-                            var sheetName = ws.Name;
-                            // ensure per-meter table exists
-                            if (!_perMeterTables.TryGetValue(sheetName, out var dt))
+                            using var wb = new XLWorkbook(file);
+                            foreach (var ws in wb.Worksheets)
                             {
-                                dt = new DataTable(sheetName);
-                                foreach (var col in SelectedReportFormat.SelectedColumns)
-                                    dt.Columns.Add(col);
-                                _perMeterTables[sheetName] = dt;
-                            }
-
-                            // determine header row (assume first used row)
-                            var firstRow = ws.FirstRowUsed();
-                            if (firstRow == null) continue;
-                            var headerCells = firstRow.CellsUsed().Select(c => NormalizeHeader(c.GetString().Trim())).ToArray();
-
-                            var lastRow = ws.LastRowUsed();
-                            if (lastRow == null || lastRow.RowNumber() <= firstRow.RowNumber()) continue;
-
-                            for (int r = firstRow.RowNumber() + 1; r <= lastRow.RowNumber(); r++)
-                            {
-                                var row = ws.Row(r);
-                                var dataRow = ReportDataTable.NewRow();
-                                var perMeterRow = dt.NewRow();
-
-                                for (int ci = 0; ci < SelectedReportFormat.SelectedColumns.Count; ci++)
+                                var sheetName = ws.Name;
+                                // ensure per-meter table exists
+                                if (!_perMeterTables.TryGetValue(sheetName, out var dt))
                                 {
-                                    var colName = SelectedReportFormat.SelectedColumns.ElementAt(ci);
-                                    // try case-insensitive header match
-                                    int hdrIndex = Array.FindIndex(headerCells, h => string.Equals(h, colName, StringComparison.OrdinalIgnoreCase)
-                                                                                     || string.Equals(h.Replace("_",""), colName.Replace("_",""), StringComparison.OrdinalIgnoreCase)
-                                                                                     || h.EndsWith(colName, StringComparison.OrdinalIgnoreCase));
-                                    string value = string.Empty;
-                                    if (hdrIndex >= 0)
-                                    {
-                                        var cell = row.Cell(hdrIndex + 1);
-                                        value = cell?.GetString() ?? string.Empty;
-                                    }
-                                    dataRow[colName] = value;
-                                    perMeterRow[colName] = value;
+                                    dt = new DataTable(sheetName);
+                                    foreach (var col in SelectedReportFormat.SelectedColumns)
+                                        dt.Columns.Add(col);
+                                    _perMeterTables[sheetName] = dt;
                                 }
 
-                                ReportDataTable.Rows.Add(dataRow);
-                                dt.Rows.Add(perMeterRow);
+                                // determine header row (assume first used row)
+                                var firstRow = ws.FirstRowUsed();
+                                if (firstRow == null) continue;
+                                var headerCells = firstRow.CellsUsed().Select(c => NormalizeHeader(c.GetString().Trim())).ToArray();
+
+                                var lastRow = ws.LastRowUsed();
+                                if (lastRow == null || lastRow.RowNumber() <= firstRow.RowNumber()) continue;
+
+                                for (int r = firstRow.RowNumber() + 1; r <= lastRow.RowNumber(); r++)
+                                {
+                                    var row = ws.Row(r);
+                                    var dataRow = ReportDataTable.NewRow();
+                                    var perMeterRow = dt.NewRow();
+
+                                    for (int ci = 0; ci < SelectedReportFormat.SelectedColumns.Count; ci++)
+                                    {
+                                        var colName = SelectedReportFormat.SelectedColumns.ElementAt(ci);
+                                        // try case-insensitive header match
+                                        int hdrIndex = Array.FindIndex(headerCells, h => string.Equals(h, colName, StringComparison.OrdinalIgnoreCase)
+                                                                                         || string.Equals(h.Replace("_", ""), colName.Replace("_", ""), StringComparison.OrdinalIgnoreCase)
+                                                                                         || h.EndsWith(colName, StringComparison.OrdinalIgnoreCase));
+                                        string value = string.Empty;
+                                        if (hdrIndex >= 0)
+                                        {
+                                            var cell = row.Cell(hdrIndex + 1);
+                                            value = cell?.GetString() ?? string.Empty;
+                                        }
+                                        dataRow[colName] = value;
+                                        perMeterRow[colName] = value;
+                                    }
+
+                                    ReportDataTable.Rows.Add(dataRow);
+                                    dt.Rows.Add(perMeterRow);
+                                }
                             }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Failed to read Excel file {file}: {ex.Message}");
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Failed to read Excel file {file}: {ex.Message}");
-                    }
                 }
+
+
+
+                TotalRowsLoaded = ReportDataTable.Rows.Count;
+                OnPropertyChanged(nameof(ReportDataTable));
             }
 
-            TotalRowsLoaded = ReportDataTable.Rows.Count;
-            OnPropertyChanged(nameof(ReportDataTable));
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.ToString(),
+                    "Load Report Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         // helper to append rows from CSV into DataTable

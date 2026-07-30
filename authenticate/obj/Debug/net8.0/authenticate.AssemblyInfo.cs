@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("mzillgit")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.*")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee1e436ff5baa900cb2cdd3268bd3018d2548d46")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3a7753e9b354ef84f235a5133da6bd4bac591f3")]
 [assembly: System.Reflection.AssemblyProductAttribute("authenticate")]
 [assembly: System.Reflection.AssemblyTitleAttribute("authenticate")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.*")]

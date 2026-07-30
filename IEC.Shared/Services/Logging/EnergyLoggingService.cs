@@ -18,7 +18,7 @@ namespace IEC.Shared.Services.Logging
 
         public EnergyLoggingService(string dataFolder)
         {
-            _dir = string.IsNullOrWhiteSpace(dataFolder) ? AppDomain.CurrentDomain.BaseDirectory : dataFolder;
+            _dir = string.IsNullOrWhiteSpace(dataFolder) ? AppPaths.Logs : dataFolder;
         }
 
         public void Start(IEnumerable<string> meterNames, string fileName = null)

@@ -14,11 +14,12 @@
           "IECGUI.Visuals": "1.0.0",
           "IECGUI.WPFExtensions": "1.0.0",
           "Microsoft.Extensions.DependencyInjection": "10.0.9",
+          "System.IO.Ports": "10.0.9",
           "System.Threading": "4.3.0",
           "System.Threading.Tasks": "4.3.0",
           "System.Threading.Tasks.Extensions": "4.6.3",
           "System.Threading.Timer": "4.3.0",
-          "iec61850dotnet.Reference": "1.0.9705.28260"
+          "iec61850dotnet.Reference": "1.0.9707.31184"
         },
         "runtime": {
           "IECGUI.dll": {}
@@ -496,10 +497,10 @@
           }
         }
       },
-      "iec61850dotnet.Reference/1.0.9705.28260": {
+      "iec61850dotnet.Reference/1.0.9707.31184": {
         "runtime": {
           "iec61850dotnet.dll": {
-            "assemblyVersion": "1.0.9705.28260",
+            "assemblyVersion": "1.0.9707.31184",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -838,7 +839,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "iec61850dotnet.Reference/1.0.9705.28260": {
+    "iec61850dotnet.Reference/1.0.9707.31184": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

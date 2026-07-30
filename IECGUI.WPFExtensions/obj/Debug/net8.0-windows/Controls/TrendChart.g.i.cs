@@ -84,7 +84,7 @@ namespace IECGUI.Common.WPFExtensions.Controls {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/IECGUI.WPFExtensions;component/controls/trendchart.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/IECGUI.WPFExtensions;V1.0.0.0;component/controls/trendchart.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Controls\TrendChart.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
