@@ -1,14 +1,9 @@
 ﻿using IEC.Shared.IECModels;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Windows;
-
 
 namespace IEC.Shared.IECServices
 {
@@ -16,62 +11,168 @@ namespace IEC.Shared.IECServices
     {
         private readonly string _configFilePath;
 
-        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            PropertyNameCaseInsensitive = true
-        };
+        private readonly JsonSerializerOptions _jsonOptions =
+            new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true
+            };
+
+        //---------------------------------------------------------
 
         public IecConfigManagerService()
         {
-            
-            string appFolder = AppDomain.CurrentDomain.BaseDirectory;
-            _configFilePath = Path.Combine(appFolder, "iec61850_config.json");
+            _configFilePath = GetConfigFilePath();
         }
 
-        // ── Load ──────────────────────────────────────────────
+        //---------------------------------------------------------
+        // Load
+        //---------------------------------------------------------
+
         public IecConfigRoot Load()
         {
             try
             {
                 if (!File.Exists(_configFilePath))
                 {
-                
-                    var defaultConfig = new IecConfigRoot();
-                    defaultConfig.Relays.Add(IecDefaultConfig.GetDefault());
-                    Save(defaultConfig);
-                    return defaultConfig;
+                    var config = new IecConfigRoot();
+                    config.Relays.Add(IecDefaultConfig.GetDefault());
+
+                    Save(config);
+
+                    return config;
                 }
 
                 string json = File.ReadAllText(_configFilePath);
-                return JsonSerializer.Deserialize<IecConfigRoot>(json, _jsonOptions)
-                       ?? new IecConfigRoot();
+
+                return JsonSerializer.Deserialize<IecConfigRoot>(
+                    json,
+                    _jsonOptions)
+                    ?? new IecConfigRoot();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[IecConfig] Load failed: {ex.Message}");
+                MessageBox.Show(
+                    ex.Message,
+                    "IEC Configuration",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
                 return new IecConfigRoot();
             }
         }
 
-        // ── Save ──────────────────────────────────────────────
-        public void Save(IecConfigRoot config)
+        //---------------------------------------------------------
+        // Save
+        //---------------------------------------------------------
+
+        public bool Save(IecConfigRoot config)
         {
             try
             {
-                string json = JsonSerializer.Serialize(config, _jsonOptions);
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(_configFilePath)!);
+
+                string json =
+                    JsonSerializer.Serialize(
+                        config,
+                        _jsonOptions);
+
                 File.WriteAllText(_configFilePath, json);
-                Console.WriteLine($"[IecConfig] Saved to: {_configFilePath}");
-                MessageBox.Show($"[IecConfig] Saved to: {_configFilePath}");
+
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[IecConfig] Save failed: {ex.Message}");
-                MessageBox.Show($"[IecConfig] Save failed: {ex.Message}");
+                MessageBox.Show(
+                    $"Unable to save IEC configuration.\n\n{ex.Message}",
+                    "IEC Configuration",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return false;
             }
         }
 
-        
+        //---------------------------------------------------------
+        // Configuration Path
+        //---------------------------------------------------------
+
+        private string GetConfigFilePath()
+        {
+            //-----------------------------------------------------
+            // Visual Studio Development
+            //-----------------------------------------------------
+
+            try
+            {
+                DirectoryInfo? dir =
+                    new DirectoryInfo(AppContext.BaseDirectory);
+
+                while (dir != null)
+                {
+                    if (dir.GetFiles("*.sln").Any())
+                    {
+                        string folder =
+                            Path.Combine(
+                                dir.FullName,
+                                "Configuration");
+
+                        Directory.CreateDirectory(folder);
+
+                        return Path.Combine(
+                            folder,
+                            "iec61850_config.json");
+                    }
+
+                    dir = dir.Parent;
+                }
+            }
+            catch
+            {
+            }
+
+            //-----------------------------------------------------
+            // Installed Application
+            //-----------------------------------------------------
+
+            string configFolder =
+                Path.Combine(
+                    Environment.GetFolderPath(
+                        Environment.SpecialFolder.CommonApplicationData),
+                    "VEMT",
+                    "Configuration");
+
+            Directory.CreateDirectory(configFolder);
+
+            string userConfig =
+                Path.Combine(
+                    configFolder,
+                    "iec61850_config.json");
+
+            //-----------------------------------------------------
+            // First Run
+            //-----------------------------------------------------
+
+            if (!File.Exists(userConfig))
+            {
+                string defaultConfig =
+                    Path.Combine(
+                        AppContext.BaseDirectory,
+                        "Configuration",
+                        "iec61850_config.json");
+
+                if (File.Exists(defaultConfig))
+                {
+                    File.Copy(defaultConfig, userConfig);
+                }
+            }
+
+            return userConfig;
+        }
+
+        //---------------------------------------------------------
+
         public string ConfigFilePath => _configFilePath;
     }
 }

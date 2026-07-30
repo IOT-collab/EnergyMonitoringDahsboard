@@ -8,6 +8,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace IECGUI.ViewModel
@@ -19,7 +20,7 @@ namespace IECGUI.ViewModel
         private readonly INavigationService _navigation;
 
         private MetersConfig _selectedMeter;
-        
+
         public MetersConfig SelectedMeter
         {
             get => _selectedMeter;
@@ -76,7 +77,7 @@ namespace IECGUI.ViewModel
 
         public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config)
         {
-            _config =config;
+            _config = config;
             _navigation = navigation;
             Meters = new ObservableCollection<MetersConfig>(
                 _config.Configuration.Meters);
@@ -100,7 +101,7 @@ namespace IECGUI.ViewModel
             AddRegisterCommand = new RelayCommand(AddRegister);
 
             DeleteRegisterCommand = new RelayCommand(DeleteRegister);
-                  
+
 
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
         }
@@ -109,17 +110,27 @@ namespace IECGUI.ViewModel
         {
             try
             {
-                var ports = SerialPort.GetPortNames()
-                    .OrderBy(p => p, StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
+                Console.WriteLine("Refreshing COM Ports...");
+
+                var ports = SerialPort.GetPortNames();
+
+                Console.WriteLine($"Found {ports.Length} ports");
 
                 AvailableComPorts.Clear();
-                foreach (var p in ports)
-                    AvailableComPorts.Add(p);
+
+                foreach (var port in ports.OrderBy(x => x))
+                {
+                    Console.WriteLine(port);
+                    AvailableComPorts.Add(port);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"RefreshComPorts error: {ex.Message}");
+                MessageBox.Show(
+                    ex.ToString(),
+                    "COM Port Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -132,14 +143,14 @@ namespace IECGUI.ViewModel
             {
                 MeterId = Meters.Count + 1,
                 MeterName = $"Meter-{Meters.Count + 1}",
-                Communication = new CommunicationConfig() 
-                { 
+                Communication = new CommunicationConfig()
+                {
                     Protocol = ProtocolsType.ModbusRtu,
-                    ComPort = defaultPort, 
-                    BaudRate = 19200, 
-                    DataBits = 8, 
-                    Parity = "Even", 
-                    SlaveId = 10, 
+                    ComPort = defaultPort,
+                    BaudRate = 19200,
+                    DataBits = 8,
+                    Parity = "Even",
+                    SlaveId = 10,
                     StopBits = 1,
                     IpAddress = "127.0.0.1",
                     TcpPort = 502

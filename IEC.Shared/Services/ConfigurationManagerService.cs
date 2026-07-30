@@ -1,19 +1,17 @@
-﻿using System;
+﻿using IEC.Shared.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IEC.Shared.Models;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization; // required for JsonStringEnumConverter
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace IEC.Shared.Services
 {
     public class ConfigurationManagerService
     {
-        private string _configFile;
+        private readonly string _configFile;
 
         public ProjectConfiguration Configuration { get; private set; }
 
@@ -23,21 +21,10 @@ namespace IEC.Shared.Services
             Load();
         }
 
-        //-------------------------------------------------------
+        //-------------------------------------------------------------
 
         public void Load()
         {
-            // If preferred solution-level file doesn't exist, try the bin-level fallback.
-            if (!File.Exists(_configFile))
-            {
-                var fallback = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                            "Configuration",
-                                            "ProjectConfig.json");
-
-                if (File.Exists(fallback))
-                    _configFile = fallback;
-            }
-
             if (!File.Exists(_configFile))
             {
                 Configuration = CreateDefaultConfiguration();
@@ -47,78 +34,96 @@ namespace IEC.Shared.Services
 
             string json = File.ReadAllText(_configFile);
 
-            var options = new JsonSerializerOptions
+            var options = new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             };
 
-            // Allow enums to be represented as strings in JSON (backwards-compatible if you previously stored strings)
             options.Converters.Add(new JsonStringEnumConverter());
 
             Configuration =
                 JsonSerializer.Deserialize<ProjectConfiguration>(json, options)
                 ?? CreateDefaultConfiguration();
 
-            // Ensure collections and nested objects are non-null so the UI bindings work.
             if (Configuration.Meters == null)
                 Configuration.Meters = new List<MetersConfig>();
 
             foreach (var meter in Configuration.Meters)
             {
-                if (meter.Communication == null)
-                    meter.Communication = new CommunicationConfig();
-
-                if (meter.Registers == null)
-                    meter.Registers = new ObservableCollection<RegisterConfig>();
+                meter.Communication ??= new CommunicationConfig();
+                meter.Registers ??= new ObservableCollection<RegisterConfig>();
             }
         }
 
-        //-------------------------------------------------------
+        //-------------------------------------------------------------
 
-        public void Save()
+        public bool Save()
         {
-            string folder = Path.GetDirectoryName(_configFile)!;
+            try
+            {
+                string folder = Path.GetDirectoryName(_configFile)!;
 
-            if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
-            var options = new JsonSerializerOptions()
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
+
+                options.Converters.Add(new JsonStringEnumConverter());
+
+                File.WriteAllText(
+                    _configFile,
+                    JsonSerializer.Serialize(Configuration, options));
+
+                return true;
+            }
+            catch (Exception ex)
             {
-                WriteIndented = true
-            };
+                System.Windows.MessageBox.Show(
+                    $"Unable to save configuration.\n\n{ex.Message}",
+                    "Configuration Error",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
 
-            // Serialize enums as strings to keep JSON readable and compatible
-            options.Converters.Add(new JsonStringEnumConverter());
-
-            string json =
-                JsonSerializer.Serialize(Configuration, options);
-
-            File.WriteAllText(_configFile, json);
+                return false;
+            }
         }
 
-        //-------------------------------------------------------
+        //-------------------------------------------------------------
 
         private ProjectConfiguration CreateDefaultConfiguration()
         {
             return new ProjectConfiguration();
         }
 
-        // Attempts to find the solution folder by walking parent directories and
-        // returns the preferred solution-level config path if found; otherwise falls back
-        // to the bin-level config path.
+        //-------------------------------------------------------------
+        // Returns configuration path depending on environment.
+        //-------------------------------------------------------------
+
         private string GetConfigFilePath()
         {
+            //=========================================================
+            // DEVELOPMENT MODE (Visual Studio)
+            //=========================================================
+
             try
             {
-                var start = AppContext.BaseDirectory;
-                var dir = new DirectoryInfo(start);
+                DirectoryInfo? dir =
+                    new DirectoryInfo(AppContext.BaseDirectory);
 
                 while (dir != null)
                 {
-                    // Found a .sln file => treat this as the solution root
-                    if (dir.EnumerateFiles("*.sln").Any())
+                    if (dir.GetFiles("*.sln").Any())
                     {
-                        return Path.Combine(dir.FullName, "Configuration", "ProjectConfig.json");
+                        string configFolder =
+                            Path.Combine(dir.FullName, "Configuration");
+
+                        Directory.CreateDirectory(configFolder);
+
+                        return Path.Combine(
+                            configFolder,
+                            "ProjectConfig.json");
                     }
 
                     dir = dir.Parent;
@@ -126,13 +131,46 @@ namespace IEC.Shared.Services
             }
             catch
             {
-                // ignore and fallback below
+                // Ignore and continue to installed mode.
             }
 
-            // Default fallback to bin path
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                 "Configuration",
-                                 "ProjectConfig.json");
+            //=========================================================
+            // INSTALLED APPLICATION
+            //=========================================================
+
+            string programDataFolder =
+                Path.Combine(
+                    Environment.GetFolderPath(
+                        Environment.SpecialFolder.CommonApplicationData),
+                    "VEMT",
+                    "Configuration");
+
+            Directory.CreateDirectory(programDataFolder);
+
+            string userConfig =
+                Path.Combine(
+                    programDataFolder,
+                    "ProjectConfig.json");
+
+            //---------------------------------------------------------
+            // First Run
+            //---------------------------------------------------------
+
+            if (!File.Exists(userConfig))
+            {
+                string defaultConfig =
+                    Path.Combine(
+                        AppContext.BaseDirectory,
+                        "Configuration",
+                        "ProjectConfig.json");
+
+                if (File.Exists(defaultConfig))
+                {
+                    File.Copy(defaultConfig, userConfig);
+                }
+            }
+
+            return userConfig;
         }
     }
 }
