@@ -1,0 +1,49 @@
+{
+  "ProjectName": "New Project",
+  "Meters": [
+    {
+      "MeterId": 1,
+      "MeterName": "Meter-1",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM6",
+        "BaudRate": 19200,
+        "Parity": "Even",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 10,
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": [
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 3022,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3024,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        }
+      ]
+    }
+  ]
+}

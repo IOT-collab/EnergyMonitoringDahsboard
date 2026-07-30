@@ -1,7 +1,6 @@
 ﻿using IEC.Shared.IECModels;
 using System;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Windows;
 
@@ -19,10 +18,21 @@ namespace IEC.Shared.IECServices
             };
 
         //---------------------------------------------------------
+        // Constructor
+        //---------------------------------------------------------
 
         public IecConfigManagerService()
         {
-            _configFilePath = GetConfigFilePath();
+            _configFilePath = AppPaths.IecConfigurationFile;
+
+            // Copy default configuration from installer on first run
+            string defaultFile =
+                Path.Combine(
+                    AppContext.BaseDirectory,
+                    "Configuration",
+                    "iec61850_config.json");
+
+            AppPaths.EnsureDefaultFile(_configFilePath, defaultFile);
         }
 
         //---------------------------------------------------------
@@ -70,9 +80,6 @@ namespace IEC.Shared.IECServices
         {
             try
             {
-                Directory.CreateDirectory(
-                    Path.GetDirectoryName(_configFilePath)!);
-
                 string json =
                     JsonSerializer.Serialize(
                         config,
@@ -94,85 +101,12 @@ namespace IEC.Shared.IECServices
             }
         }
 
-        //---------------------------------------------------------
-        // Configuration Path
-        //---------------------------------------------------------
 
-        private string GetConfigFilePath()
-        {
-            //-----------------------------------------------------
-            // Visual Studio Development
-            //-----------------------------------------------------
-
-            try
-            {
-                DirectoryInfo? dir =
-                    new DirectoryInfo(AppContext.BaseDirectory);
-
-                while (dir != null)
-                {
-                    if (dir.GetFiles("*.sln").Any())
-                    {
-                        string folder =
-                            Path.Combine(
-                                dir.FullName,
-                                "Configuration");
-
-                        Directory.CreateDirectory(folder);
-
-                        return Path.Combine(
-                            folder,
-                            "iec61850_config.json");
-                    }
-
-                    dir = dir.Parent;
-                }
-            }
-            catch
-            {
-            }
-
-            //-----------------------------------------------------
-            // Installed Application
-            //-----------------------------------------------------
-
-            string configFolder =
-                Path.Combine(
-                    Environment.GetFolderPath(
-                        Environment.SpecialFolder.CommonApplicationData),
-                    "VEMT",
-                    "Configuration");
-
-            Directory.CreateDirectory(configFolder);
-
-            string userConfig =
-                Path.Combine(
-                    configFolder,
-                    "iec61850_config.json");
-
-            //-----------------------------------------------------
-            // First Run
-            //-----------------------------------------------------
-
-            if (!File.Exists(userConfig))
-            {
-                string defaultConfig =
-                    Path.Combine(
-                        AppContext.BaseDirectory,
-                        "Configuration",
-                        "iec61850_config.json");
-
-                if (File.Exists(defaultConfig))
-                {
-                    File.Copy(defaultConfig, userConfig);
-                }
-            }
-
-            return userConfig;
-        }
 
         //---------------------------------------------------------
 
         public string ConfigFilePath => _configFilePath;
     }
+
+
 }

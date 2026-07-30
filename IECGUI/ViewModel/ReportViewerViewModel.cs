@@ -74,7 +74,7 @@ namespace IECGUI.ViewModel
         public ICommand ConfigViewCommand { get; }
         public DataTable ReportDataTable { get; set; } = new DataTable();
 
-        private readonly string _configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "ReportFormats.json");
+        private readonly string _configPath = AppPaths.ReportFormatFile;
         private string _prodCsvFolder;
 
         public ReportViewerViewModel(INavigationService navigation)

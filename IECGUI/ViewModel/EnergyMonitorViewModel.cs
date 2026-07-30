@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
+using IEC.Shared;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ namespace IECGUI.ViewModel
             _multiEnergyMeterService = multiEnergyMeterService;
             _navigation = navigation;
 
-            _energyLogger = new EnergyLoggingService(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data"));
+            _energyLogger = new EnergyLoggingService(AppPaths.Data);
 
 
             _config = config;

@@ -72,8 +72,7 @@ namespace IECGUI.ViewModel
 
         public ICommand BackCommand { get; }
 
-        private readonly string _configPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "Data", "ReportFormats.json");
+        private readonly string _configPath = AppPaths.ReportFormatFile;
 
         public ReportConfigViewModel(INavigationService navigation)
         {
