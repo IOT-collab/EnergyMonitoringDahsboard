@@ -71,6 +71,21 @@ namespace IECGUI.ViewModel
             1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200
         };
 
+        public ObservableCollection<string> Parity { get; } = new()
+        {
+         "Even","Odd","None"
+        };
+
+        public ObservableCollection<int> DataBits { get; } = new()
+        {
+         7,8
+        };
+
+        public ObservableCollection<int> StopBits { get; } = new()
+        {
+         0,1,2
+        };
+
         // New: Slave ID choices (1..255)
         public ObservableCollection<byte> SlaveIds { get; } = new ObservableCollection<byte>(
             Enumerable.Range(1, 255).Select(i => (byte)i));
@@ -147,10 +162,10 @@ namespace IECGUI.ViewModel
                 {
                     Protocol = ProtocolsType.ModbusRtu,
                     ComPort = defaultPort,
-                    BaudRate = 19200,
+                    BaudRate = 9600,
                     DataBits = 8,
-                    Parity = "Even",
-                    SlaveId = 10,
+                    Parity = "None",
+                    SlaveId = 5,
                     StopBits = 1,
                     IpAddress = "127.0.0.1",
                     TcpPort = 502

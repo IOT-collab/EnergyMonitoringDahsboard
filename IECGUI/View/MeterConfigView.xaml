@@ -203,6 +203,31 @@
                                           SelectedItem="{Binding SelectedMeter.Communication.BaudRate, Mode=TwoWay}"
                                           Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
 
+                                    <TextBlock Margin="0,10,0,0" Text="Parity" FontSize="20" Foreground="White"/>
+                                    
+                                    <ComboBox ItemsSource="{Binding DataContext.Parity, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         SelectedItem="{Binding SelectedMeter.Communication.Parity, Mode=TwoWay}"
+                                         Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
+                                    
+                                    <!-- Databits -->
+
+                                    <TextBlock Margin="0,10,0,0" Text="DataBits" FontSize="20" Foreground="White"/>
+
+                                    <ComboBox ItemsSource="{Binding DataContext.DataBits, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         SelectedItem="{Binding SelectedMeter.Communication.Databits, Mode=TwoWay}"
+                                         Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
+
+
+                                    <!-- StopBits -->
+
+                                    <TextBlock Margin="0,10,0,0" Text="StopBits" FontSize="20" Foreground="White"/>
+
+                                    <ComboBox ItemsSource="{Binding DataContext.StopBits, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         SelectedItem="{Binding SelectedMeter.Communication.StopBits, Mode=TwoWay}"
+                                         Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
+
+
+
 
 
                                 </StackPanel>

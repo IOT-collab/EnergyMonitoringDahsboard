@@ -532,12 +532,12 @@
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#44FFFFFF" Offset="0"/>
-                    <GradientStop Color="#11FFFFFF" Offset="1"/>
+                    <GradientStop Color="Transparent" Offset="0"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
-        <Setter Property="BorderBrush" Value="#55FFFFFF"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
     </Style>
 
 

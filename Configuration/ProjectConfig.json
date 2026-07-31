@@ -3,22 +3,22 @@
   "Meters": [
     {
       "MeterId": 1,
-      "MeterName": "Meter-1",
+      "MeterName": "WaveIC-01",
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
-        "BaudRate": 19200,
-        "Parity": "Even",
+        "BaudRate": 9600,
+        "Parity": "None",
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 10,
+        "SlaveId": 5,
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
+          "RegisterAddress": 3001,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -27,7 +27,7 @@
         },
         {
           "ParameterName": "Voltage B-N",
-          "RegisterAddress": 3022,
+          "RegisterAddress": 3003,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -36,6 +36,24 @@
         },
         {
           "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3005,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current-A",
+          "RegisterAddress": 3000,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current-B",
           "RegisterAddress": 3024,
           "IsEnabled": true,
           "Unit": "V",
@@ -44,6 +62,38 @@
           "DataType": "Float"
         }
       ]
+    },
+    {
+      "MeterId": 2,
+      "MeterName": "Meter-2",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM1",
+        "BaudRate": 115200,
+        "Parity": "Even",
+        "DataBits": 8,
+        "StopBits": 2,
+        "SlaveId": 15,
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": []
+    },
+    {
+      "MeterId": 3,
+      "MeterName": "Meter-3",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM1",
+        "BaudRate": 19200,
+        "Parity": "Odd",
+        "DataBits": 8,
+        "StopBits": 2,
+        "SlaveId": 16,
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": []
     }
   ]
 }
