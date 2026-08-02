@@ -8,7 +8,7 @@
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
         "BaudRate": 9600,
-        "Parity": "None",
+        "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
         "SlaveId": 5,
@@ -71,29 +71,68 @@
         "ComPort": "COM1",
         "BaudRate": 115200,
         "Parity": "Even",
-        "DataBits": 8,
+        "DataBits": 7,
         "StopBits": 2,
         "SlaveId": 15,
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
-      "Registers": []
-    },
-    {
-      "MeterId": 3,
-      "MeterName": "Meter-3",
-      "Communication": {
-        "Protocol": "ModbusRtu",
-        "ComPort": "COM1",
-        "BaudRate": 19200,
-        "Parity": "Odd",
-        "DataBits": 8,
-        "StopBits": 2,
-        "SlaveId": 16,
-        "IpAddress": "127.0.0.1",
-        "TcpPort": 502
-      },
-      "Registers": []
+      "Registers": [
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        }
+      ]
     }
   ]
 }

@@ -106,6 +106,9 @@ namespace IECGUI.ViewModel
             SaveCommand =
                 new RelayCommand(Save);
 
+            SaveRegisterCommand =
+                new RelayCommand(Save);
+
             RefreshComPortsCommand = new RelayCommand(RefreshComPorts);
 
             // populate available ports at startup
