@@ -173,7 +173,8 @@
                                 </StackPanel>
 
                                 <TextBlock Text="Meter Name" Margin="0,5,0,0" FontSize="20" Foreground="White"/>
-                                <TextBox Text="{Binding SelectedMeter.MeterName}" Margin="0,10,0,0" FontSize="20"/>
+                                <TextBox Text="{Binding SelectedMeter.MeterName}" Margin="0,10,0,0" 
+                                         FontSize="20" Background="#3A3A5E"  Foreground="White" BorderBrush="#5A5A8E"/>
                                 <StackPanel Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsRtu}}">
 
                                     <TextBlock Margin="0,5,0,0" Text="COM Port" FontSize="20" Foreground="White"/>
@@ -230,10 +231,12 @@
                                 <!-- TCP specific: IP + Port fields -->
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0"
                                             Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsTcp}}">
-                                    <TextBlock Text="IP" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="White"/>
-                                    <TextBox Text="{Binding SelectedMeter.Communication.IpAddress, Mode=TwoWay}" Width="120" FontSize="18" />
-                                    <TextBlock Text="Port" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="White"/>
-                                    <TextBox Text="{Binding SelectedMeter.Communication.TcpPort, Mode=TwoWay}" Width="60" FontSize="18" />
+                                    <TextBlock Text="IP" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.IpAddress, Mode=TwoWay}" Margin="0,0,10,0"
+                                          Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E" Width="150" FontSize="18" />
+                                    <TextBlock Text="Port" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.TcpPort, Mode=TwoWay}" 
+                                             Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E" Width="60" FontSize="18" />
                                 </StackPanel>
 
                                 <TextBlock Margin="0,10,0,0" Text="Slave ID" FontSize="20" Foreground="White"/>

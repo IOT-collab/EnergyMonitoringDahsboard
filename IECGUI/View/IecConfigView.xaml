@@ -257,11 +257,14 @@
                                        Margin="0,0,0,4"/>
                             <ComboBox DockPanel.Dock="Top"
                                       ItemsSource="{Binding Relays}" 
-                                      SelectedItem="{Binding SelectedRelay}"
-                                      DisplayMemberPath="RelayName"
-                                      Margin="0,0,0,10"
-                                      Foreground="Black"
-                                      Background="#3A3A5E"/>
+                                      SelectedItem="{Binding SelectedRelay}" Style="{StaticResource GlassComboBox}"                                      
+                                      Margin="0,0,0,10">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding RelayName}" Foreground="White"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
 
                             <TextBlock DockPanel.Dock="Top"
                                        Text="Logical Nodes"
@@ -330,11 +333,12 @@
                                        Margin="0,0,0,4"/>
                             <ComboBox ItemsSource="{Binding FcOptions}"
                                       SelectedItem="{Binding SelectedLn.FC}"
+                                      Style="{StaticResource GlassComboBox}"
                                       Background="#3A3A5E"
                                       Foreground="Black"
                                       FontSize="14"
                                       Padding="8,5"
-                                      Margin="0,0,0,12"/>
+                                      Margin="0,0,0,12"></ComboBox>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -360,22 +364,27 @@
                                    VerticalAlignment="Center"
                                    Margin="0,0,5,0"/>
                         <ComboBox ItemsSource="{Binding Relays}"
-                                  SelectedItem="{Binding SelectedRelay}"
-                                  DisplayMemberPath="RelayName"
+                                  SelectedItem="{Binding SelectedRelay}" Style="{StaticResource GlassComboBox}"                                 
                                   Width="150" Margin="0,0,15,0"
-                                  Background="#3A3A5E" Foreground="Black"/>
+                                  Background="#3A3A5E" Foreground="Black">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding RelayName}" Foreground="White"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                         <TextBlock Text="LN:"
                                    Foreground="Gray"
                                    VerticalAlignment="Center"
                                    Margin="0,0,5,0"/>
                         <ComboBox ItemsSource="{Binding LogicalNodes}"
-                                  SelectedItem="{Binding SelectedLn}"
-                                  Width="180" Margin="0,0,15,0"
-                                  Background="#3A3A5E" Foreground="Black">
+                                  SelectedItem="{Binding SelectedLn}" Style="{StaticResource GlassComboBox}"
+                                  Width="180" Margin="0,0,15,0">
+
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Foreground="Black">
+                                    <TextBlock>
                                         <Run Text="{Binding LogicalDevice}"/>
                                         <Run Text="/"/>
                                         <Run Text="{Binding LogicalNode}"/>
