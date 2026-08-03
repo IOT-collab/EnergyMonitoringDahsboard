@@ -32,7 +32,17 @@
         "frameworks": {
           "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\Project 2026\\EnergyMonitoring\\IEC.Shared\\IEC.Shared.csproj": {
+                "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IEC.Shared\\IEC.Shared.csproj"
+              },
+              "D:\\Project 2026\\EnergyMonitoring\\IECGUI.Visuals\\IECGUI.Visuals.csproj": {
+                "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IECGUI.Visuals\\IECGUI.Visuals.csproj"
+              },
+              "D:\\Project 2026\\EnergyMonitoring\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj": {
+                "projectPath": "D:\\Project 2026\\EnergyMonitoring\\IECGUI.WPFExtensions\\IECGUI.WPFExtensions.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

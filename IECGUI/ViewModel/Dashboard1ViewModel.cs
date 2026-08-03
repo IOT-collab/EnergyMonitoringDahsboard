@@ -1,7 +1,7 @@
 ﻿using IEC.Shared.Services;
 using IECGUI.Services;
 using IECGUI.ViewModel;
-using IPCSoftware.Common.CommonExtensions;
+using IEC.CommonService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

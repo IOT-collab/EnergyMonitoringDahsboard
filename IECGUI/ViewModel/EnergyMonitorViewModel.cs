@@ -1,7 +1,7 @@
 ﻿using IEC.Shared.Models;
 using IEC.Shared.Services;
 using IECGUI.Services;
-using IPCSoftware.Common.CommonExtensions;
+using IEC.CommonService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +23,8 @@ namespace IECGUI.ViewModel
         public ICommand Connect { get; set; }
         public ICommand Disconnect { get; set; }
 
+        private readonly IDialogService _dialogService;
+
         private readonly SafePoller _liveDataTimer;
 
         private readonly IMultiEnergyMeterService _multiEnergyMeterService;
@@ -41,12 +43,13 @@ namespace IECGUI.ViewModel
 
         private CancellationTokenSource _cts;
 
-        public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, IMultiEnergyMeterService multiEnergyMeterService)
+        public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, IMultiEnergyMeterService multiEnergyMeterService , IDialogService dialogService)
         {
             _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(500), RunBackgroundService, ex => Console.WriteLine(ex.Message));
             _liveDataTimer.Start();
 
             _multiEnergyMeterService = multiEnergyMeterService;
+            _dialogService = dialogService;
             _navigation = navigation;
 
             _energyLogger = new EnergyLoggingService(AppPaths.Data);
@@ -105,7 +108,8 @@ namespace IECGUI.ViewModel
             catch (Exception ex)
             {
                 Console.WriteLine($"ConnectMeters error: {ex.Message}");
-                MessageBox.Show($"Unable to Connect {ex.Message}");
+                _dialogService.ShowMessage($"Unable to Connect {ex.Message}", "Error");
+               
                 foreach (var vm in Meters)
                 {
                     vm.MeterStatus = "Disconnected";
@@ -264,7 +268,7 @@ namespace IECGUI.ViewModel
             catch (Exception ex)
             {
                 Console.WriteLine($"MultiMeterRuntime error: {ex.Message}");
-                MessageBox.Show($"Unexpected runtime error: {ex.Message}");
+                _dialogService.ShowMessage($"Unexpected runtime error: {ex.Message}", "Error");
                 foreach (var vm in Meters)
                 {
                     vm.MeterStatus = $"Unexpected runtime error: {ex.Message}";
@@ -294,7 +298,7 @@ namespace IECGUI.ViewModel
             catch (Exception ex)
             {
                 Console.WriteLine($"DisconnectMeters error: {ex.Message}");
-                MessageBox.Show($"Unable to Disconnect {ex.Message}");
+                _dialogService.ShowMessage($"Unable to Disconnect {ex.Message}", "Error");               
                 foreach (var vm in Meters)
                 {
                     vm.MeterStatus = $"Unable to Disconnect {ex.Message}";

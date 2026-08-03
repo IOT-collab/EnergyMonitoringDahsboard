@@ -1,0 +1,78 @@
+﻿<Window x:Class="IECGUI.View.CustomMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:IECGUI.Converters" 
+        Title="Notification" Height="320" Width="500"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize"
+        AllowsTransparency="True" Background="Transparent">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="2" CornerRadius="16" Margin="10">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="5" Opacity="0.3"/>
+        </Border.Effect>
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{Binding Title}" Foreground="#333333" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center"/>
+
+            <TextBlock Text="{Binding Message}" Grid.Row="1" Foreground="#555555" FontSize="24" FontWeight="SemiBold" 
+                       TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="20"/>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+
+                <Button Command="{Binding NoCommand}"
+                        Content="{Binding NoText}"
+                        Visibility="{Binding IsCancelVisible, Converter={StaticResource BoolToVis}}"
+                        Width="130" Height="60"
+                        FontSize="22" FontWeight="Bold" Cursor="Hand"
+                        Background="#F5F5F5" Foreground="#666666"
+                        BorderBrush="#CCCCCC" BorderThickness="2"
+                        Margin="0,0,30,0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#DDDDDD"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Command="{Binding YesCommand}"
+                        Content="{Binding YesText}"
+                        IsDefault="True"
+                        Background="{Binding YesButtonBrush}" 
+                        Width="130" Height="60"
+                        FontSize="22" FontWeight="Bold" Cursor="Hand"
+                        Foreground="White" BorderThickness="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

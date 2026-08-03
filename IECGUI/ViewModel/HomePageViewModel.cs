@@ -28,13 +28,14 @@ namespace IECGUI.ViewModel
         public string Password { get => _password; set => SetProperty(ref _password, value); }
         private string _password;
 
+        private readonly IDialogService _dialogService;
 
 
         private readonly INavigationService _navigation;
-        public HomePageViewModel(INavigationService navigation)
+        public HomePageViewModel(INavigationService navigation , IDialogService dialogService)
         {
             _navigation = navigation;
-
+            _dialogService = dialogService;
 
             SldViewCommand = new RelayCommand(SLDViewLogin);
             EnergyViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>()); //_navigation.NavigateTo(new Dashboard1ViewModel(_navigation));
@@ -47,16 +48,17 @@ namespace IECGUI.ViewModel
 
         private void SLDViewLogin()
         {
+            _navigation.NavigateTo<Dashboard1ViewModel>();
 
-            string name = Interaction.InputBox("Please enter the Password", "Password Required For SLD Operation",  "");
+            // string name = Interaction.InputBox("Please enter the Password", "Password Required For SLD Operation",  "");
 
 
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                if (name == "1234") { _navigation.NavigateTo<Dashboard1ViewModel>(); } else { MessageBox.Show("Wrong Passowrd"); return; }
-            }
+            //if (!string.IsNullOrWhiteSpace(name))
+            //{
+            //    if (name == "1234") { _navigation.NavigateTo<Dashboard1ViewModel>(); } else { _dialogService.ShowWarning("Wrong Password"); return; }
+            //}
 
-           
+
         }
     }
 }

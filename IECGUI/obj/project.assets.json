@@ -1522,6 +1522,9 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "IEC.Shared": "1.0.0",
+          "IECGUI.Visuals": "1.0.0",
+          "IECGUI.WPFExtensions": "1.0.0",
           "Microsoft.Extensions.DependencyInjection": "10.0.9",
           "System.Threading": "4.3.0",
           "System.Threading.Tasks": "4.3.0",

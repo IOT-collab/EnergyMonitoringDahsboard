@@ -4,7 +4,7 @@ using System.Windows.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace IPCSoftware.Common.CommonExtensions
+namespace IEC.CommonService
 {
     public class SafePoller : IDisposable
     {

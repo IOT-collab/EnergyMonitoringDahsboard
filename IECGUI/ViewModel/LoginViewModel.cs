@@ -17,6 +17,8 @@ namespace IECGUI.ViewModel
 
 
         public ICommand LoginCommand { get; }
+
+        private readonly IDialogService _dialogService;
  
         public string Username { get => _username; set => SetProperty(ref _username, value); }
         private string _username;
@@ -41,10 +43,11 @@ namespace IECGUI.ViewModel
             set => SetProperty(ref _isUsernameFocused, value);
 
         }
-        public LoginViewModel(INavigationService navigation)
+        public LoginViewModel(INavigationService navigation , IDialogService dialogService)
         { 
 
             _navigation = navigation;
+            _dialogService = dialogService;
             
             LoginCommand = new RelayCommand(async () => await ExecuteLoginAsync());
 
@@ -54,8 +57,9 @@ namespace IECGUI.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
             {
-          
-               MessageBox.Show("Please enter username and password.", "Login Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _dialogService.ShowWarning("Please enter username and password.");
+
+
                 return;
             }
 
@@ -65,7 +69,7 @@ namespace IECGUI.ViewModel
                 if (Username == "admin" && Password == "admin")
                 {
                     // Successful login
-                   // MessageBox.Show("Login successful!", "Login", MessageBoxButton.OK, MessageBoxImage.Information);
+           
                     _navigation.NavigateTo<HomePageViewModel>();
                     //_navigation.NavigateTo(new MainWindowViewModel());
 
@@ -74,7 +78,8 @@ namespace IECGUI.ViewModel
                 else
                 {
                     // Failed login
-                    MessageBox.Show("Invalid username or password.", "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _dialogService.ShowWarning("Invalid username or password.");
+        
                 }
 
                 Username = "";Password = "";

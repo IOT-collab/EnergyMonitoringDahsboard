@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IECGUI.View"
-             xmlns:controls ="clr-namespace:IECGUI.Controls"
+             xmlns:controls ="clr-namespace:IECGUI.Controls"           
              mc:Ignorable="d" 
              d:DesignHeight="930" d:DesignWidth="1920">
     <UserControl.Resources>
@@ -46,7 +46,7 @@
                     <Button Content="Gauge View" Width="100" Command="{Binding AlarmCommand}"/>
                     <Button Content="Relay Status" Width="100"  Command="{Binding EventsCommand}"/>
                     <Button Content="Meter Config" Width="100" Command="{Binding TrendingCommand}"/>-->
-                    <Button Content="Menu" Margin="1500,0,0,0" Width="100" Height="50" Command="{Binding MenuCommand}" Background="DarkCyan" Style="{StaticResource GlassButton.Blue}"/>
+                    <Button Content="Menu" Margin="1500,0,0,0" Width="100" Height="50" Command="{Binding MenuCommand}" Style="{StaticResource GlassButton.Ghost}"/>
                 </StackPanel>
 
             </DockPanel>

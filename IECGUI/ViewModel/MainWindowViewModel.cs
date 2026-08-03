@@ -1,6 +1,6 @@
 ﻿using IEC.Shared.Services;
 using IECGUI.Services;
-using IPCSoftware.Common.CommonExtensions;
+using IEC.CommonService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +22,7 @@ namespace IECGUI.ViewModel
             set => SetProperty(ref _systemTime, value);
         }
 
+
         private readonly SafePoller _liveDataTimer;
         public string AppVersion => "23.40.32";
 
@@ -30,9 +31,12 @@ namespace IECGUI.ViewModel
         public ICommand CloseAppCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
 
-        public MainWindowViewModel(INavigationService navigation)
+        private readonly IDialogService _dialogService;
+
+        public MainWindowViewModel(INavigationService navigation , IDialogService dialogService)
         {
             Navigation = navigation;
+            _dialogService = dialogService;
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
             Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));
@@ -63,7 +67,8 @@ namespace IECGUI.ViewModel
 
         private void ExecuteCloseApp()
         {
-            if (MessageBox.Show("Are you sure you want to exit?", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (_dialogService.ShowYesNo("Are you sure you want to exit?", "Confirm Exit") == true)
+                
             {
                 Application.Current.Shutdown();
             }
@@ -71,7 +76,7 @@ namespace IECGUI.ViewModel
 
         private void ExecuteLogout()
         {
-            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (_dialogService.ShowYesNo("Are you sure you want to logout?", "Confirm Logout") == true)
             {
                 Navigation.NavigateTo<LoginViewModel>();
             }

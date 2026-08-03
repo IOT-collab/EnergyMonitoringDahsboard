@@ -105,6 +105,11 @@ D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\IECGUI.deps.jso
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\IECGUI.runtimeconfig.json
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\IECGUI.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\IECGUI.pdb
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\ClosedXML.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.dll
@@ -115,6 +120,9 @@ D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\MQTTnet.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\NModbus.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\NModbus.Serial.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\RBush.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\System.IO.Packaging.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\System.IO.Ports.dll
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\runtimes\android-arm\native\libSystem.IO.Ports.Native.so
 D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\runtimes\android-arm64\native\libSystem.IO.Ports.Native.so
@@ -156,6 +164,7 @@ D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Controls\SevenS
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Controls\TriangleIndicator.g.cs
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Controls\VerticalProgressBar.g.cs
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\MainWindow.g.cs
+D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\CustomMessageBox.g.cs
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\Dashbaord1.g.cs
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\EnergyMonitor2.g.cs
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\EnergyMonitorView.g.cs
@@ -180,6 +189,7 @@ D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Controls\SevenS
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Controls\TriangleIndicator.baml
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Controls\VerticalProgressBar.baml
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\MainWindow.baml
+D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\CustomMessageBox.baml
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\Dashbaord1.baml
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\EnergyMonitor2.baml
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\View\EnergyMonitorView.baml
@@ -202,11 +212,3 @@ D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\refint\IECGUI.d
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\IECGUI.pdb
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\IECGUI.genruntimeconfig.cache
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\ref\IECGUI.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\ClosedXML.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\RBush.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
-D:\Project 2026\EnergyMonitoring\IECGUI\bin\Debug\net8.0-windows\System.IO.Packaging.dll

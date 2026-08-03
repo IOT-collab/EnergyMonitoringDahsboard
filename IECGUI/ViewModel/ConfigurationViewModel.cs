@@ -21,6 +21,8 @@ namespace IECGUI.ViewModel
 
         private MetersConfig _selectedMeter;
 
+        private readonly IDialogService _dialogService;
+
         public MetersConfig SelectedMeter
         {
             get => _selectedMeter;
@@ -90,10 +92,11 @@ namespace IECGUI.ViewModel
         public ObservableCollection<byte> SlaveIds { get; } = new ObservableCollection<byte>(
             Enumerable.Range(1, 255).Select(i => (byte)i));
 
-        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config)
+        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config , IDialogService dialogService)
         {
             _config = config;
             _navigation = navigation;
+            _dialogService = dialogService;
             Meters = new ObservableCollection<MetersConfig>(
                 _config.Configuration.Meters);
 
@@ -144,11 +147,8 @@ namespace IECGUI.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.ToString(),
-                    "COM Port Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                
+                _dialogService.ShowMessage(ex.ToString(), "COM Port Error");
             }
         }
 

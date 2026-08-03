@@ -9,6 +9,7 @@ namespace IEC.Shared.IECServices
     public class IecConfigManagerService
     {
         private readonly string _configFilePath;
+        
 
         private readonly JsonSerializerOptions _jsonOptions =
             new JsonSerializerOptions
@@ -62,11 +63,8 @@ namespace IEC.Shared.IECServices
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.Message,
-                    "IEC Configuration",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                
+                MessageBox.Show(ex.Message,"IEC Configuration", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 return new IecConfigRoot();
             }

@@ -15,4 +15,10 @@
     <PackageReference Include="System.Threading.Timer" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IEC.Shared\IEC.Shared.csproj" />
+    <ProjectReference Include="..\IECGUI.Visuals\IECGUI.Visuals.csproj" />
+    <ProjectReference Include="..\IECGUI.WPFExtensions\IECGUI.WPFExtensions.csproj" />
+  </ItemGroup>
+
 </Project>

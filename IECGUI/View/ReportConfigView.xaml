@@ -65,9 +65,9 @@
   <!-- ListBox Item Style with Borders -->
         <Style x:Key="BorderedListBoxItem" TargetType="ListBoxItem">
    <Setter Property="Padding" Value="15,10"/>
-  <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderBrush" Value="#5A5A8E"/>
          <Setter Property="BorderThickness" Value="0,0,0,1"/>
-        <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="#3A3A5E"/>
     <Setter Property="Template">
         <Setter.Value>
    <ControlTemplate TargetType="ListBoxItem">
@@ -79,10 +79,10 @@
   </Border>
          <ControlTemplate.Triggers>
      <Trigger Property="IsMouseOver" Value="True">
- <Setter Property="Background" Value="#EAF3FF"/>
+ <Setter Property="Background" Value="#3A3A5E"/>
           </Trigger>
    <Trigger Property="IsSelected" Value="True">
-               <Setter Property="Background" Value="#CCE4FF"/>
+     <Setter Property="Background" Value="#3A3A5E"/>
    </Trigger>
         </ControlTemplate.Triggers>
    </ControlTemplate>
@@ -164,7 +164,7 @@
       </Border>
 
  <!-- Middle Column: Column Selection -->
-      <Border Grid.Column="2" Style="{StaticResource CardStyle}"  BorderBrush="White" BorderThickness="3" Padding="5" Background="LightGray">
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}"  BorderBrush="#5A5A8E" BorderThickness="3" Padding="5" Background="LightGray">
           <StackPanel>
          <TextBlock Text="Report Details" FontSize="32" FontWeight="Bold" Margin="0,0,0,30"/>
 

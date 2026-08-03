@@ -104,15 +104,20 @@
                     <TextBlock Text="Report Format" Style="{StaticResource HmiLabelStyle}"/>
                     <StackPanel Orientation="Horizontal">
                         <ComboBox ItemsSource="{Binding ReportFormats}"
-                                  SelectedItem="{Binding SelectedReportFormat}"
-                                  DisplayMemberPath="Name"
-                                  Style="{StaticResource HmiComboBoxStyle}"
-                                  Width="300"/>
+                                  SelectedItem="{Binding SelectedReportFormat}"                                 
+                                  Style="{StaticResource GlassComboBox}"
+                                  Width="300" Height="50" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="20" Foreground="White"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                         <Button Content="Refresh" Command="{Binding RefreshFormatsCommand}"
                                 ToolTip="Refresh Report Formats"
-                                Width="100" Height="50" FontSize="18"
-                                Background="#E5E7EB" Foreground="#374151"
+                                Width="100" Height="50" FontSize="18" Style="{StaticResource GlassButton.Ghost}"
+                               
                                 BorderThickness="0" Margin="10,0,0,0" Cursor="Hand">
                             <Button.Resources>
                                 <Style TargetType="Border">
@@ -253,7 +258,7 @@
         </Border>
 
         <!-- 4. Footer Status Bar -->
-        <Border Grid.Row="3" Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" Padding="25,15">
+        <Border Grid.Row="3" CornerRadius="12" Background="#3A3A5E" BorderBrush="#5A5A8E" BorderThickness="1" Padding="25,15">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="2" Opacity="0.05"/>
             </Border.Effect>
@@ -265,18 +270,18 @@
 
                 <!-- Selected Format Info -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <TextBlock Text="Selected Format: " FontSize="20" Foreground="#6B7280" VerticalAlignment="Center"/>
+                    <TextBlock Text="Selected Format: " FontSize="20" Foreground="White" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SelectedReportFormat.Name, FallbackValue='None'}" 
-                               FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                               FontSize="20" FontWeight="Bold" Foreground="#007ACC" VerticalAlignment="Center"/>
 
-                    <TextBlock Text="  |  Columns: " FontSize="20" Foreground="#6B7280" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                    <TextBlock Text="  |  Columns: " FontSize="20" Foreground="White" VerticalAlignment="Center" Margin="20,0,0,0"/>
                     <TextBlock Text="{Binding SelectedFormatColumns.Count, FallbackValue='0'}" 
-                               FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                               FontSize="20" FontWeight="Bold" Foreground="#007ACC" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Row Count -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock Text="Total Rows: " FontSize="20" Foreground="#6B7280" VerticalAlignment="Center"/>
+                    <TextBlock Text="Total Rows: " FontSize="20" Foreground="White" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding TotalRowsLoaded}" 
                                FontSize="22" FontWeight="Bold" Foreground="#007ACC" VerticalAlignment="Center"/>
                 </StackPanel>

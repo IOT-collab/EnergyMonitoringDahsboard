@@ -26,6 +26,8 @@ namespace IECGUI.ViewModel
 
         private readonly INavigationService _navigation;
 
+        private readonly IDialogService _dialogService;
+
         private readonly Dictionary<string, DataTable> _perMeterTables = new();
 
         // Optionally expose perMeterTables for export usage
@@ -77,15 +79,16 @@ namespace IECGUI.ViewModel
         private readonly string _configPath = AppPaths.ReportFormatFile;
         private string _prodCsvFolder;
 
-        public ReportViewerViewModel(INavigationService navigation)
+        public ReportViewerViewModel(INavigationService navigation , IDialogService dialogService)
         {
             LoadReportFormats();
             LoadDataCommand = new RelayCommand(LoadData);
             ExportCsvCommand = new RelayCommand(ExportToCsv);
             RefreshFormatsCommand = new RelayCommand(RefreshFormats);
+            _navigation = navigation;
+            _dialogService = dialogService;
             ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ReportConfigViewModel>());
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
-            _navigation = navigation;
        
             _prodCsvFolder = Path.Combine(AppPaths.Data);
         }
@@ -136,18 +139,13 @@ namespace IECGUI.ViewModel
                 {
                     Directory.CreateDirectory(_prodCsvFolder);
 
-                    MessageBox.Show(
-                        "No report files found.",
-                        "Report Viewer",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-
+                    _dialogService.ShowMessage("No report files found.", "Report Viewer");
                     return;
                 }
 
                 if (SelectedReportFormat == null || SelectedReportFormat.SelectedColumns == null || !SelectedReportFormat.SelectedColumns.Any())
                 {
-                    MessageBox.Show("No report format or columns selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    _dialogService.ShowWarning("No report format or columns selected.");
                     OnPropertyChanged(nameof(ReportDataTable));
                     return;
                 }
@@ -238,11 +236,7 @@ namespace IECGUI.ViewModel
 
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    ex.ToString(),
-                    "Load Report Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                _dialogService.ShowMessage(ex.ToString(),"Load Report Error");
             }
         }
 
@@ -277,7 +271,7 @@ namespace IECGUI.ViewModel
         {
             if (ReportDataTable == null || ReportDataTable.Rows.Count == 0)
             {
-                System.Windows.MessageBox.Show("No data to export.", "Export", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                _dialogService.ShowWarning("No data to export.");
                 return;
             }
 
@@ -300,7 +294,7 @@ namespace IECGUI.ViewModel
                     sb.AppendLine(string.Join(",", values));
                 }
                 File.WriteAllText(saveDialog.FileName, sb.ToString(), Encoding.UTF8);
-                System.Windows.MessageBox.Show($"Exported to {saveDialog.FileName}", "Export Success", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                _dialogService.ShowMessage($"Exported to {saveDialog.FileName}", "Export Success");
             }
         }
 
@@ -316,7 +310,7 @@ namespace IECGUI.ViewModel
                 wb.Worksheets.Add(kv.Value, sheetName.Length > 31 ? sheetName[..31] : sheetName);
             }
             wb.SaveAs(saveDialog.FileName);
-            MessageBox.Show($"Exported to {saveDialog.FileName}", "Export Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            _dialogService.ShowMessage($"Exported to {saveDialog.FileName}", "Export Success");
         }
 
         private string EscapeCsv(string value)

@@ -60,6 +60,11 @@
                 <view:ReportConfigView/>
             </DataTemplate>
 
+
+            <DataTemplate DataType="{x:Type vm:CustomMessageBoxViewModel}">
+                <view:CustomMessageBox/>
+            </DataTemplate>
+
         </ResourceDictionary>
 
     </Application.Resources>
