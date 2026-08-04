@@ -212,3 +212,4 @@ D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\refint\IECGUI.d
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\IECGUI.pdb
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\IECGUI.genruntimeconfig.cache
 D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\ref\IECGUI.dll
+D:\Project 2026\EnergyMonitoring\IECGUI\obj\Debug\net8.0-windows\Resources\GlassComboBox.baml

@@ -541,6 +541,77 @@
     </Style>
 
 
+    <!-- Add these styles near your other styles in ButtonStyle.xaml -->
+    <Style x:Key="GlassComboBoxItemAlt" TargetType="ComboBoxItem">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="6,2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="Center"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#2A4A6A"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="GlassComboBoxAlt" TargetType="ComboBox">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="#2E3656"/>
+        <Setter Property="BorderBrush" Value="#4A5A88"/>
+        <Setter Property="Padding" Value="6,3"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource GlassComboBoxItemAlt}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton"
+                        Focusable="False"
+                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        HorizontalAlignment="Right" Width="24" Margin="0,0,4,0">
+                            <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </ToggleButton>
+
+                        <!-- Use TextElement.Foreground attached property rather than ContentPresenter.Foreground -->
+                        <ContentPresenter x:Name="ContentSite"
+                            Margin="6,2,30,2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                            TextElement.Foreground="{TemplateBinding Foreground}" />
+
+                        <Popup x:Name="Popup"
+                 Placement="Bottom"
+                 IsOpen="{TemplateBinding IsDropDownOpen}"
+                 AllowsTransparency="True"
+                 Focusable="False"
+                 PopupAnimation="Slide">
+                            <Border Background="#2E3656" BorderBrush="#4A5A88" BorderThickness="1" Padding="4">
+                                <ScrollViewer>
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 
 
 

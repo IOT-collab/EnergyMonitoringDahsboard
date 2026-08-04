@@ -43,6 +43,15 @@
           "ScaleFactor": 1,
           "Length": 2,
           "DataType": "Float"
+        },
+        {
+          "ParameterName": "Frequency",
+          "RegisterAddress": 3052,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
         }
       ]
     },
@@ -53,7 +62,7 @@
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
         "BaudRate": 19200,
-        "Parity": null,
+        "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
         "SlaveId": 11,
@@ -83,6 +92,15 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3027,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Frequency",
+          "RegisterAddress": 3052,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,

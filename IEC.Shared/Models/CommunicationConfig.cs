@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +14,12 @@ namespace IEC.Shared.Models
         HighLow = 1   // high-word then low-word (common variant)
     }
 
-    public class CommunicationConfig
+    public class CommunicationConfig : INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void Notify([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         public ProtocolsType Protocol { get; set; } = ProtocolsType.ModbusRtu;
 
         // RTU fields
