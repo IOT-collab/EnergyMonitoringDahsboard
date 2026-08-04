@@ -69,7 +69,7 @@ namespace IECGUI.Controls {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/IECGUI;component/controls/analoggauge.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/IECGUI;V1.0.0.0;component/controls/analoggauge.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Controls\AnalogGauge.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

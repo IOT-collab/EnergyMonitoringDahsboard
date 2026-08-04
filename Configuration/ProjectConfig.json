@@ -3,22 +3,23 @@
   "Meters": [
     {
       "MeterId": 1,
-      "MeterName": "WaveIC-01",
+      "MeterName": "EM6436H",
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
-        "BaudRate": 9600,
-        "Parity": "Even",
+        "BaudRate": 19200,
+        "Parity": null,
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 5,
+        "SlaveId": 10,
+        "WordOrder": "LowHigh",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3001,
+          "RegisterAddress": 3028,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -27,7 +28,7 @@
         },
         {
           "ParameterName": "Voltage B-N",
-          "RegisterAddress": 3003,
+          "RegisterAddress": 3024,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -36,25 +37,7 @@
         },
         {
           "ParameterName": "Voltage C-N",
-          "RegisterAddress": 3005,
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Float"
-        },
-        {
-          "ParameterName": "Current-A",
-          "RegisterAddress": 3000,
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Float"
-        },
-        {
-          "ParameterName": "Current-B",
-          "RegisterAddress": 3024,
+          "RegisterAddress": 3026,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -65,22 +48,23 @@
     },
     {
       "MeterId": 2,
-      "MeterName": "Meter-2",
+      "MeterName": "EM600NG",
       "Communication": {
         "Protocol": "ModbusRtu",
-        "ComPort": "COM1",
-        "BaudRate": 115200,
-        "Parity": "Even",
-        "DataBits": 7,
-        "StopBits": 2,
-        "SlaveId": 15,
+        "ComPort": "COM6",
+        "BaudRate": 19200,
+        "Parity": null,
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 11,
+        "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
+          "RegisterAddress": 3029,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -88,8 +72,8 @@
           "DataType": "Float"
         },
         {
-          "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 3025,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -97,35 +81,8 @@
           "DataType": "Float"
         },
         {
-          "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Float"
-        },
-        {
-          "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Float"
-        },
-        {
-          "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Float"
-        },
-        {
-          "ParameterName": "Voltage A-N",
-          "RegisterAddress": 3020,
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3027,
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,

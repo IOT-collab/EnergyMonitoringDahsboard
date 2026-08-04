@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IEC.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6cec8bbf867ff640403f9f6840fe1e0204bc9c5b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+008d6607ee5b492e5351b4a04bafdd0aa9c02c94")]
 [assembly: System.Reflection.AssemblyProductAttribute("IEC.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IEC.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

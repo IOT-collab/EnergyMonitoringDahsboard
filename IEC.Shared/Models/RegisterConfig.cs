@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace IEC.Shared.Models
 {
+
+
     public class RegisterConfig
     {
         public string ParameterName { get; set; }
@@ -23,5 +25,7 @@ namespace IEC.Shared.Models
 
         // Changed from string to enum for stronger typing and easier binding
         public RegisterDataType DataType { get; set; } = RegisterDataType.Float;
+
+
     }
 }

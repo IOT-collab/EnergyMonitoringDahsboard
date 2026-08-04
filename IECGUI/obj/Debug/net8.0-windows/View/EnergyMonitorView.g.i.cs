@@ -61,7 +61,7 @@ namespace IECGUI.View {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/IECGUI;component/view/energymonitorview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/IECGUI;V1.0.0.0;component/view/energymonitorview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\EnergyMonitorView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

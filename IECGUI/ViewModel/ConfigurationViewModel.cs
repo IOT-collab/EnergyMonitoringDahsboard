@@ -16,11 +16,8 @@ namespace IECGUI.ViewModel
     public class ConfigurationViewModel : BaseViewModel
     {
         private readonly ConfigurationManagerService _config;
-
         private readonly INavigationService _navigation;
-
         private MetersConfig _selectedMeter;
-
         private readonly IDialogService _dialogService;
 
         public MetersConfig SelectedMeter
@@ -30,7 +27,6 @@ namespace IECGUI.ViewModel
         }
 
         private RegisterConfig _selectedRegister;
-
         public RegisterConfig SelectedRegister
         {
             get => _selectedRegister;
@@ -38,20 +34,15 @@ namespace IECGUI.ViewModel
         }
 
         public ObservableCollection<RegisterConfig> Registers => SelectedMeter?.Registers;
-
         public ObservableCollection<MetersConfig> Meters { get; }
 
         public ICommand MenuCommand { get; }
-
         public ICommand AddMeterCommand { get; }
         public ICommand DeleteMeterCommand { get; }
         public ICommand SaveCommand { get; }
-
         public ICommand AddRegisterCommand { get; }
         public ICommand DeleteRegisterCommand { get; }
-
         public ICommand EditRegisterCommand { get; }
-
         public ICommand SaveRegisterCommand { get; }
 
         public ObservableCollection<RegisterDataType> DataTypes { get; } =
@@ -62,6 +53,11 @@ namespace IECGUI.ViewModel
         public ObservableCollection<ProtocolsType> Protocols { get; } =
             new ObservableCollection<ProtocolsType>(
                 Enum.GetValues(typeof(ProtocolsType)).Cast<ProtocolsType>());
+
+        // New: expose enum values for WordOrder so the ComboBox can bind
+        public ObservableCollection<RegisterWordOrder> WordOrder { get; } =
+            new ObservableCollection<RegisterWordOrder>(
+                Enum.GetValues(typeof(RegisterWordOrder)).Cast<RegisterWordOrder>());
 
         // New: available COM ports and refresh command
         public ObservableCollection<string> AvailableComPorts { get; } = new();
@@ -118,11 +114,8 @@ namespace IECGUI.ViewModel
             RefreshComPorts();
 
             //Register mapping Tab commands->
-
             AddRegisterCommand = new RelayCommand(AddRegister);
-
             DeleteRegisterCommand = new RelayCommand(DeleteRegister);
-
 
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
         }
@@ -171,15 +164,14 @@ namespace IECGUI.ViewModel
                     SlaveId = 5,
                     StopBits = 1,
                     IpAddress = "127.0.0.1",
-                    TcpPort = 502
+                    TcpPort = 502,
+                    WordOrder = RegisterWordOrder.LowHigh
                 }
             };
 
             Meters.Add(meter);
-
             SelectedMeter = meter;
         }
-
 
         private void DeleteMeter()
         {
@@ -192,14 +184,11 @@ namespace IECGUI.ViewModel
         private void Save()
         {
             _config.Configuration.Meters.Clear();
-
             foreach (var meter in Meters)
                 _config.Configuration.Meters.Add(meter);
 
             _config.Save();
         }
-
-        //Add Register Mapping//
 
         private void AddRegister()
         {
@@ -218,7 +207,6 @@ namespace IECGUI.ViewModel
             };
 
             SelectedMeter.Registers.Add(reg);
-
             SelectedRegister = reg;
         }
 

@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace IEC.Shared.Models
 {
+    public enum RegisterWordOrder
+    {
+        LowHigh = 0,  // low-word then high-word (service default)
+        HighLow = 1   // high-word then low-word (common variant)
+    }
+
     public class CommunicationConfig
     {
         public ProtocolsType Protocol { get; set; } = ProtocolsType.ModbusRtu;
@@ -18,12 +24,12 @@ namespace IEC.Shared.Models
         public int StopBits { get; set; } = 1;
         public byte SlaveId { get; set; } = 1;
 
+        // New: per-meter default word order (can be changed from UI)
+        public RegisterWordOrder WordOrder { get; set; } = RegisterWordOrder.LowHigh;
+
         // TCP fields (used when Protocol == ModbusTcp)
         // IP or hostname and optional TCP port (Modbus TCP default 502)
         public string IpAddress { get; set; }
         public int TcpPort { get; set; } = 502;
-
-
-
     }
 }

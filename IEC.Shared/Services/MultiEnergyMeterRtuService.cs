@@ -66,7 +66,7 @@ namespace IEC.Shared.Services
                 // Open the physical port once per unique PortName (shared across meters on that bus)
                 if (!_portConnections.ContainsKey(portName))
                 {
-                    var parity = System.IO.Ports.Parity.None;
+                    var parity = System.IO.Ports.Parity.Even;
                     if (!string.IsNullOrWhiteSpace(comm.Parity) &&
                         Enum.TryParse<System.IO.Ports.Parity>(comm.Parity, true, out var parsedParity))
                     {
@@ -190,6 +190,13 @@ namespace IEC.Shared.Services
             {
                 var reading = new MeterReading { MeterName = meterName, Timestamp = DateTime.UtcNow };
 
+                // Determine per-meter word order (default LowHigh)
+                var wordOrder = RegisterWordOrder.LowHigh;
+                if (_meterConfigs.TryGetValue(meterName, out var meterCfg) && meterCfg?.Communication != null)
+                {
+                    wordOrder = meterCfg.Communication.WordOrder;
+                }
+
                 lock (_lock)
                 {
                     foreach (var reg in registers.Where(r => r.IsEnabled))
@@ -200,8 +207,28 @@ namespace IEC.Shared.Services
                             int count = Math.Max(1, reg.Length);
                             ushort[] raw = conn.Master.ReadHoldingRegisters(meter.SlaveId, reg.RegisterAddress, (ushort)count);
 
+                            // If meter uses HighLow ordering convert to service expected LowHigh for decoding
+                            ushort[] rawForDecode = raw;
+                            if (raw != null && raw.Length >= 2 && wordOrder == RegisterWordOrder.HighLow)
+                            {
+                                rawForDecode = new ushort[raw.Length];
+                                for (int i = 0; i < raw.Length; i += 2)
+                                {
+                                    if (i + 1 < raw.Length)
+                                    {
+                                        // swap pair (high, low) -> (low, high)
+                                        rawForDecode[i] = raw[i + 1];
+                                        rawForDecode[i + 1] = raw[i];
+                                    }
+                                    else
+                                    {
+                                        rawForDecode[i] = raw[i];
+                                    }
+                                }
+                            }
+
                             // Use enum-typed DataType
-                            object value = DecodeRegister(raw, reg.DataType);
+                            object value = DecodeRegister(rawForDecode, reg.DataType);
 
                             // apply scale factor
                             if (value is double d)
