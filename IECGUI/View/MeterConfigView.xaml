@@ -319,8 +319,8 @@
                                 Command="{Binding SaveRegisterCommand}"/>
 
                         <Button Content="Load Default" Foreground="White" Style="{StaticResource GlassButton.Ghost}"
-                                Width="150"
-                                Margin="5"/>
+                                Width="150" Margin="5" Command="{Binding LoadDefaultRegistersCommand}"/>
+                        
                         <Button Content="Main Menu"
                                 Width="150"
                                 Margin="5" Command="{Binding MenuCommand}" Foreground="White" Style="{StaticResource GlassButton.Ghost}"/>
@@ -386,7 +386,7 @@
                             <!-- DataGridComboBoxColumn: ItemsSource already bound to DataGrid.DataContext.DataTypes -->
                             <DataGridComboBoxColumn Header="Data Type"
                                                     Width="130"
-                                                    SelectedItemBinding="{Binding DataType, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectedItemBinding="{Binding DataType, UpdateSourceTrigger=PropertyChanged}" 
                                                     ItemsSource="{Binding DataContext.DataTypes, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
 
                             <DataGridTextColumn Header="Unit"

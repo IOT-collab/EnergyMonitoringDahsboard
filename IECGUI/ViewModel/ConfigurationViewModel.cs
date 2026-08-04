@@ -45,6 +45,9 @@ namespace IECGUI.ViewModel
         public ICommand EditRegisterCommand { get; }
         public ICommand SaveRegisterCommand { get; }
 
+        // New: Load default registers command
+        public ICommand LoadDefaultRegistersCommand { get; }
+
         public ObservableCollection<RegisterDataType> DataTypes { get; } =
             new ObservableCollection<RegisterDataType>(
                 Enum.GetValues(typeof(RegisterDataType)).Cast<RegisterDataType>());
@@ -116,6 +119,9 @@ namespace IECGUI.ViewModel
             //Register mapping Tab commands->
             AddRegisterCommand = new RelayCommand(AddRegister);
             DeleteRegisterCommand = new RelayCommand(DeleteRegister);
+
+            // Load default registers command
+            LoadDefaultRegistersCommand = new RelayCommand(LoadDefaultRegisters);
 
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
         }
@@ -216,6 +222,52 @@ namespace IECGUI.ViewModel
                 return;
 
             SelectedMeter.Registers.Remove(SelectedRegister);
+        }
+
+        // Load default register mapping into the selected meter (or all meters if nothing selected)
+        private void LoadDefaultRegisters()
+        {
+            var defaults = new List<RegisterConfig>
+            {
+                new RegisterConfig { ParameterName = "Voltage A-N", RegisterAddress = 3020, DataType = RegisterDataType.Float, Unit = "V", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Voltage B-N", RegisterAddress = 3022, DataType = RegisterDataType.Float, Unit = "V", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Voltage C-N", RegisterAddress = 3024, DataType = RegisterDataType.Float, Unit = "V", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Voltage L-N Avg", RegisterAddress = 3026, DataType = RegisterDataType.Float, Unit = "V", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Current A", RegisterAddress = 3000, DataType = RegisterDataType.Float, Unit = "A", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Current B", RegisterAddress = 3002, DataType = RegisterDataType.Float, Unit = "A", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Current C", RegisterAddress = 3004, DataType = RegisterDataType.Float, Unit = "A", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Current Avg", RegisterAddress = 3010, DataType = RegisterDataType.Float, Unit = "A", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Total Active Power", RegisterAddress = 3060, DataType = RegisterDataType.Float, Unit = "kW", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Total Reactive Power", RegisterAddress = 3068, DataType = RegisterDataType.Float, Unit = "kVAR", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Total Apparent Power", RegisterAddress = 3076, DataType = RegisterDataType.Float, Unit = "kVA", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Frequency", RegisterAddress = 3110, DataType = RegisterDataType.Float, Unit = "Hz", ScaleFactor = 1, Length = 2, IsEnabled = true },
+                new RegisterConfig { ParameterName = "Power Factor", RegisterAddress = 3084, DataType = RegisterDataType.Float, Unit = "", ScaleFactor = 1, Length = 2, IsEnabled = true }
+            };
+
+            if (SelectedMeter != null)
+            {
+                SelectedMeter.Registers.Clear();
+                foreach (var r in defaults)
+                    SelectedMeter.Registers.Add(r);
+            }
+            else
+            {
+                foreach (var meter in Meters)
+                {
+                    meter.Registers.Clear();
+                    foreach (var r in defaults)
+                        meter.Registers.Add(new RegisterConfig
+                        {
+                            ParameterName = r.ParameterName,
+                            RegisterAddress = r.RegisterAddress,
+                            DataType = r.DataType,
+                            Unit = r.Unit,
+                            ScaleFactor = r.ScaleFactor,
+                            Length = r.Length,
+                            IsEnabled = r.IsEnabled
+                        });
+                }
+            }
         }
     }
 }
