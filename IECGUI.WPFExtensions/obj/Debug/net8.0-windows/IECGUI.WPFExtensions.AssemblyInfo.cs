@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IECGUI.WPFExtensions")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee83d001561ec92386680677d1adf7a44ecc07f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5bf5e4f527b2f627621fab944f180f7fc26be120")]
 [assembly: System.Reflection.AssemblyProductAttribute("IECGUI.WPFExtensions")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IECGUI.WPFExtensions")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

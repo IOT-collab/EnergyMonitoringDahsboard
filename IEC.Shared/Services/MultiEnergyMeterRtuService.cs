@@ -229,11 +229,77 @@ namespace IEC.Shared.Services
                     {
                         try
                         {
-                            // Length is number of registers to read
+                            // Length is number of registers to read (clamp to Modbus limit 125)
                             int count = Math.Max(1, reg.Length);
-                            ushort[] raw = conn.Master.ReadHoldingRegisters(meter.SlaveId, reg.RegisterAddress, (ushort)count);
+                            if (count > 125) count = 125;
 
-                            // If meter uses HighLow ordering convert to service expected LowHigh for decoding
+                            ushort[] raw = null;
+
+                            // Helper to attempt a read and return true on success
+                            bool TryRead(ushort startAddress, ushort readCount, out ushort[] result, out string failure)
+                            {
+                                result = null!;
+                                failure = null!;
+                                try
+                                {
+                                    result = conn.Master.ReadHoldingRegisters(meter.SlaveId, startAddress, readCount);
+                                    return true;
+                                }
+                                catch (NModbus.SlaveException sex)
+                                {
+                                    failure = $"SlaveException: FunctionCode={sex.FunctionCode}, ExceptionCode={sex.SlaveExceptionCode}";
+                                    return false;
+                                }
+                                catch (Exception ex)
+                                {
+                                    failure = $"Exception: {ex.Message}";
+                                    return false;
+                                }
+                            }
+
+                            // Candidate start addresses to try:
+                            // 1) as configured
+                            // 2) if configured looks like 40001-style (>=40001) try subtracting 40001
+                            // 3) if configured looks like 30001-style (>=30001) try subtracting 30001
+                            // (use unique list so we don't duplicate attempts)
+                            var candidates = new List<int> { reg.RegisterAddress };
+
+                            if (reg.RegisterAddress >= 40001)
+                                candidates.Add(reg.RegisterAddress - 40001);
+                            if (reg.RegisterAddress >= 30001)
+                                candidates.Add(reg.RegisterAddress - 30001);
+
+                            // also try a zero-based variant if the configured value looks like 1-based (>=1)
+                            if (reg.RegisterAddress >= 1)
+                                candidates.Add(reg.RegisterAddress - 1);
+
+                            // ensure unique and non-negative, and fit into ushort
+                            var uniqueCandidates = candidates.Distinct()
+                                .Where(a => a >= 0 && a <= ushort.MaxValue)
+                                .Select(a => (ushort)a)
+                                .ToArray();
+
+                            string lastFailure = null;
+                            foreach (var start in uniqueCandidates)
+                            {
+                                if (TryRead(start, (ushort)count, out var attemptRaw, out var fail))
+                                {
+                                    raw = attemptRaw;
+                                    break;
+                                }
+                                lastFailure = fail;
+                                // small settle between attempts
+                                System.Threading.Thread.Sleep(10);
+                            }
+
+                            if (raw == null)
+                            {
+                                // All attempts failed: rethrow with context so you can inspect it in the caller
+                                throw new InvalidOperationException(
+                                    $"ReadHoldingRegisters failed for meter='{meterName}', slave={meter.SlaveId}, register={reg.RegisterAddress}, count={count}. Last failure: {lastFailure}");
+                            }
+
+                            // If device uses HighLow, swap words into the format expected by decoder
                             ushort[] rawForDecode = raw;
                             if (raw != null && raw.Length >= 2 && wordOrder == RegisterWordOrder.HighLow)
                             {
@@ -242,7 +308,6 @@ namespace IEC.Shared.Services
                                 {
                                     if (i + 1 < raw.Length)
                                     {
-                                        // swap pair (high, low) -> (low, high)
                                         rawForDecode[i] = raw[i + 1];
                                         rawForDecode[i + 1] = raw[i];
                                     }
@@ -267,12 +332,17 @@ namespace IEC.Shared.Services
                             var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
                             reading.Values[key] = value;
                         }
+                        catch (NModbus.SlaveException sex)
+                        {
+                            var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
+                            reading.Values[key] = null;
+                            Console.WriteLine($"SlaveException reading {reg.RegisterAddress} for {meterName}: Function={sex.FunctionCode}, Code={sex.InnerException}, Message={sex.Message}");
+                        }
                         catch (Exception ex)
                         {
                             var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
                             reading.Values[key] = null;
                             Console.WriteLine($"Read register {reg.RegisterAddress} failed for {meterName}: {ex.Message}");
-                            
                         }
 
                         // tiny settle gap
