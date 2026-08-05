@@ -1,8 +1,0 @@
-is_global = true
-build_property.RootNamespace = client_example_authenticate
-build_property.ProjectDir = C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\core\2.0\client_example_authenticate\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.CsWinRTUseWindowsUIXamlProjections = false
-build_property.EffectiveAnalysisLevelStyle = 
-build_property.EnableCodeStyleSeverity = 
