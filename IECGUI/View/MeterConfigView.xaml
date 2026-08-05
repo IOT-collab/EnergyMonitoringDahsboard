@@ -185,7 +185,7 @@
                                         <ComboBox Width="250" Height="35" BorderBrush="#6A7AB5"
                                             IsEditable="False" Style="{StaticResource GlassComboBox}"
                                             ItemsSource="{Binding AvailableComPorts}"
-                                            SelectedItem="{Binding SelectedMeter.Communication.ComPort, Mode=TwoWay}"
+                                            SelectedItem="{Binding SelectedMeter.Communication.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             FontSize="20"  ToolTip="Select serial port. Refresh icon updates available COM ports.">
                                         </ComboBox>
                                         <Button Margin="10,0,0,0" Padding="10,0" Command="{Binding RefreshComPortsCommand}" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Center">
@@ -198,8 +198,8 @@
                                     <TextBlock Margin="0,10,0,0" Text="Baud Rate" FontSize="20" Foreground="White"/>
 
                                     <!-- In the meter details panel, change Baud Rate and Slave ID textboxes to ComboBoxes -->
-                                    <ComboBox ItemsSource="{Binding DataContext.BaudRates, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                          SelectedItem="{Binding SelectedMeter.Communication.BaudRate, Mode=TwoWay}" Style="{StaticResource GlassComboBox}"
+                                    <ComboBox ItemsSource="{Binding DataContext.BaudRates, RelativeSource={RelativeSource AncestorType=UserControl}}" SelectedValuePath="."
+                                          SelectedItem="{Binding SelectedMeter.Communication.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"
                                           Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
 
                                     <TextBlock Margin="0,10,0,0" Text="Parity" FontSize="20" Foreground="White"/>
@@ -213,7 +213,7 @@
                                     <TextBlock Margin="0,10,0,0" Text="DataBits" FontSize="20" Foreground="White"/>
 
                                     <ComboBox ItemsSource="{Binding DataContext.DataBits, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                         SelectedItem="{Binding SelectedMeter.Communication.DataBits, Mode=TwoWay}" Style="{StaticResource GlassComboBox}"
+                                         SelectedItem="{Binding SelectedMeter.Communication.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"
                                          Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
 
 
@@ -222,7 +222,7 @@
                                     <TextBlock Margin="0,10,0,0" Text="StopBits" FontSize="20" Foreground="White"/>
 
                                     <ComboBox ItemsSource="{Binding DataContext.StopBits, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                         SelectedItem="{Binding SelectedMeter.Communication.StopBits, Mode=TwoWay}" Style="{StaticResource GlassComboBox}"
+                                         SelectedItem="{Binding SelectedMeter.Communication.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"
                                          Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" />
 
 
@@ -234,16 +234,16 @@
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0"
                                             Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsTcp}}">
                                     <TextBlock Text="IP" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
-                                    <TextBox Text="{Binding SelectedMeter.Communication.IpAddress, Mode=TwoWay}" Margin="0,0,10,0"
+                                    <TextBox Text="{Binding SelectedMeter.Communication.IpAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0"
                                           Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E" Width="150" FontSize="18" />
                                     <TextBlock Text="Port" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
-                                    <TextBox Text="{Binding SelectedMeter.Communication.TcpPort, Mode=TwoWay}" 
+                                    <TextBox Text="{Binding SelectedMeter.Communication.TcpPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                              Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E" Width="60" FontSize="18" />
                                 </StackPanel>
 
                                 <TextBlock Margin="0,10,0,0" Text="Slave ID" FontSize="20" Foreground="White"/>
                                 <ComboBox ItemsSource="{Binding DataContext.SlaveIds, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                          SelectedItem="{Binding SelectedMeter.Communication.SlaveId, Mode=TwoWay}" Style="{StaticResource GlassComboBox}"
+                                          SelectedItem="{Binding SelectedMeter.Communication.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"
                                           Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" Background="#40456B" Foreground="Black" BorderBrush="#6A7AB5"/>
 
 
@@ -252,7 +252,7 @@
 
                                     <!-- Per-meter default selection -->
                                     <ComboBox Width="160" ItemsSource="{Binding DataContext.WordOrder, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                     SelectedItem="{Binding SelectedMeter.Communication.WordOrder, Mode=TwoWay}" Style="{StaticResource GlassComboBox}"/>
+                                     SelectedItem="{Binding SelectedMeter.Communication.WordOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"/>
                                 </StackPanel>
 
                                 <Button Margin="0,10,0,0"  Height="50" Width="250"  Style="{StaticResource GlassButton.Blue}"  Content="💾 Save Configuration" Command="{Binding SaveCommand}" FontSize="20"/>

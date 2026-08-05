@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO.Ports;
+﻿using IEC.Shared.Models;
 using NModbus;
 using NModbus.Serial;
 using NModbus.Utility;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using IEC.Shared.Models;
+using System.IO.Ports;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace IEC.Shared.Services
@@ -55,7 +57,31 @@ namespace IEC.Shared.Services
                 // store full config for later use (registers + comm)
                 _meterConfigs[meter.MeterName] = meter;
 
+                // Log the incoming meter object (helps verify what caller passed)
+                try
+                {
+                    var serOpts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    serOpts.Converters.Add(new JsonStringEnumConverter());
+                    Console.WriteLine($"Configure() received meter: {JsonSerializer.Serialize(meter, serOpts)}");
+                }
+                catch { /* best-effort logging, ignore if serialization fails */ }
+
                 var comm = meter.Communication ?? new CommunicationConfig();
+
+                // Defensive parity handling + logging so we can see why it's null
+                var parity = System.IO.Ports.Parity.Even; // choose a safe default
+                if (string.IsNullOrWhiteSpace(comm.Parity))
+                {
+                    Console.WriteLine($"Warning: meter '{meter?.MeterName}' has null/empty Communication.Parity. Defaulting to Even.");
+                }
+                else if (!Enum.TryParse<System.IO.Ports.Parity>(comm.Parity, true, out var parsedParity))
+                {
+                    Console.WriteLine($"Warning: meter '{meter?.MeterName}' parity '{comm.Parity}' not recognized. Defaulting to Even.");
+                }
+                else
+                {
+                    parity = parsedParity;
+                }
 
                 string portName = comm.ComPort ?? "COM1";
                 int baud = comm.BaudRate;
@@ -66,7 +92,7 @@ namespace IEC.Shared.Services
                 // Open the physical port once per unique PortName (shared across meters on that bus)
                 if (!_portConnections.ContainsKey(portName))
                 {
-                    var parity = System.IO.Ports.Parity.Even;
+                   // var parity = System.IO.Ports.Parity.Even;
                     if (!string.IsNullOrWhiteSpace(comm.Parity) &&
                         Enum.TryParse<System.IO.Ports.Parity>(comm.Parity, true, out var parsedParity))
                     {
@@ -203,11 +229,77 @@ namespace IEC.Shared.Services
                     {
                         try
                         {
-                            // Length is number of registers to read
+                            // Length is number of registers to read (clamp to Modbus limit 125)
                             int count = Math.Max(1, reg.Length);
-                            ushort[] raw = conn.Master.ReadHoldingRegisters(meter.SlaveId, reg.RegisterAddress, (ushort)count);
+                            if (count > 125) count = 125;
 
-                            // If meter uses HighLow ordering convert to service expected LowHigh for decoding
+                            ushort[] raw = null;
+
+                            // Helper to attempt a read and return true on success
+                            bool TryRead(ushort startAddress, ushort readCount, out ushort[] result, out string failure)
+                            {
+                                result = null!;
+                                failure = null!;
+                                try
+                                {
+                                    result = conn.Master.ReadHoldingRegisters(meter.SlaveId, startAddress, readCount);
+                                    return true;
+                                }
+                                catch (NModbus.SlaveException sex)
+                                {
+                                    failure = $"SlaveException: FunctionCode={sex.FunctionCode}, ExceptionCode={sex.SlaveExceptionCode}";
+                                    return false;
+                                }
+                                catch (Exception ex)
+                                {
+                                    failure = $"Exception: {ex.Message}";
+                                    return false;
+                                }
+                            }
+
+                            // Candidate start addresses to try:
+                            // 1) as configured
+                            // 2) if configured looks like 40001-style (>=40001) try subtracting 40001
+                            // 3) if configured looks like 30001-style (>=30001) try subtracting 30001
+                            // (use unique list so we don't duplicate attempts)
+                            var candidates = new List<int> { reg.RegisterAddress };
+
+                            if (reg.RegisterAddress >= 40001)
+                                candidates.Add(reg.RegisterAddress - 40001);
+                            if (reg.RegisterAddress >= 30001)
+                                candidates.Add(reg.RegisterAddress - 30001);
+
+                            // also try a zero-based variant if the configured value looks like 1-based (>=1)
+                            if (reg.RegisterAddress >= 1)
+                                candidates.Add(reg.RegisterAddress - 1);
+
+                            // ensure unique and non-negative, and fit into ushort
+                            var uniqueCandidates = candidates.Distinct()
+                                .Where(a => a >= 0 && a <= ushort.MaxValue)
+                                .Select(a => (ushort)a)
+                                .ToArray();
+
+                            string lastFailure = null;
+                            foreach (var start in uniqueCandidates)
+                            {
+                                if (TryRead(start, (ushort)count, out var attemptRaw, out var fail))
+                                {
+                                    raw = attemptRaw;
+                                    break;
+                                }
+                                lastFailure = fail;
+                                // small settle between attempts
+                                System.Threading.Thread.Sleep(10);
+                            }
+
+                            if (raw == null)
+                            {
+                                // All attempts failed: rethrow with context so you can inspect it in the caller
+                                throw new InvalidOperationException(
+                                    $"ReadHoldingRegisters failed for meter='{meterName}', slave={meter.SlaveId}, register={reg.RegisterAddress}, count={count}. Last failure: {lastFailure}");
+                            }
+
+                            // If device uses HighLow, swap words into the format expected by decoder
                             ushort[] rawForDecode = raw;
                             if (raw != null && raw.Length >= 2 && wordOrder == RegisterWordOrder.HighLow)
                             {
@@ -216,7 +308,6 @@ namespace IEC.Shared.Services
                                 {
                                     if (i + 1 < raw.Length)
                                     {
-                                        // swap pair (high, low) -> (low, high)
                                         rawForDecode[i] = raw[i + 1];
                                         rawForDecode[i + 1] = raw[i];
                                     }
@@ -240,6 +331,12 @@ namespace IEC.Shared.Services
 
                             var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
                             reading.Values[key] = value;
+                        }
+                        catch (NModbus.SlaveException sex)
+                        {
+                            var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
+                            reading.Values[key] = null;
+                            Console.WriteLine($"SlaveException reading {reg.RegisterAddress} for {meterName}: Function={sex.FunctionCode}, Code={sex.InnerException}, Message={sex.Message}");
                         }
                         catch (Exception ex)
                         {
