@@ -3,7 +3,7 @@
   "Meters": [
     {
       "MeterId": 2,
-      "MeterName": "EM600NG",
+      "MeterName": "EM6436",
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -11,8 +11,8 @@
         "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 11,
-        "WordOrder": "HighLow",
+        "SlaveId": 10,
+        "WordOrder": "LowHigh",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
@@ -138,7 +138,7 @@
     },
     {
       "MeterId": 2,
-      "MeterName": "EM6436",
+      "MeterName": "EM6400NG",
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -146,8 +146,8 @@
         "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 10,
-        "WordOrder": "LowHigh",
+        "SlaveId": 11,
+        "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
