@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IECGUI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ba2e7f4bd81e2a9450bc05cfb2ba45ed7629ea2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9da3475c19db923a82bb656a7e34b3fa94fa742f")]
 [assembly: System.Reflection.AssemblyProductAttribute("IECGUI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IECGUI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
