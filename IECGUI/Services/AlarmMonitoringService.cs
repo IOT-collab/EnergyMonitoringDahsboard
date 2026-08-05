@@ -59,7 +59,8 @@ namespace IECGUI.Services
 
                 RaiseAlarm(rule, value, severity.Value);
             }
-        }
+        } 
+
 
         public void RaiseAlarm(AlarmRule rule, double value, AlarmSeverity severity)
         {
