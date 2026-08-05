@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO.Ports;
+﻿using IEC.Shared.Models;
 using NModbus;
 using NModbus.Serial;
 using NModbus.Utility;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using IEC.Shared.Models;
+using System.IO.Ports;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace IEC.Shared.Services
@@ -55,7 +57,31 @@ namespace IEC.Shared.Services
                 // store full config for later use (registers + comm)
                 _meterConfigs[meter.MeterName] = meter;
 
+                // Log the incoming meter object (helps verify what caller passed)
+                try
+                {
+                    var serOpts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    serOpts.Converters.Add(new JsonStringEnumConverter());
+                    Console.WriteLine($"Configure() received meter: {JsonSerializer.Serialize(meter, serOpts)}");
+                }
+                catch { /* best-effort logging, ignore if serialization fails */ }
+
                 var comm = meter.Communication ?? new CommunicationConfig();
+
+                // Defensive parity handling + logging so we can see why it's null
+                var parity = System.IO.Ports.Parity.Even; // choose a safe default
+                if (string.IsNullOrWhiteSpace(comm.Parity))
+                {
+                    Console.WriteLine($"Warning: meter '{meter?.MeterName}' has null/empty Communication.Parity. Defaulting to Even.");
+                }
+                else if (!Enum.TryParse<System.IO.Ports.Parity>(comm.Parity, true, out var parsedParity))
+                {
+                    Console.WriteLine($"Warning: meter '{meter?.MeterName}' parity '{comm.Parity}' not recognized. Defaulting to Even.");
+                }
+                else
+                {
+                    parity = parsedParity;
+                }
 
                 string portName = comm.ComPort ?? "COM1";
                 int baud = comm.BaudRate;
@@ -66,7 +92,7 @@ namespace IEC.Shared.Services
                 // Open the physical port once per unique PortName (shared across meters on that bus)
                 if (!_portConnections.ContainsKey(portName))
                 {
-                    var parity = System.IO.Ports.Parity.Even;
+                   // var parity = System.IO.Ports.Parity.Even;
                     if (!string.IsNullOrWhiteSpace(comm.Parity) &&
                         Enum.TryParse<System.IO.Ports.Parity>(comm.Parity, true, out var parsedParity))
                     {
@@ -246,6 +272,7 @@ namespace IEC.Shared.Services
                             var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
                             reading.Values[key] = null;
                             Console.WriteLine($"Read register {reg.RegisterAddress} failed for {meterName}: {ex.Message}");
+                            
                         }
 
                         // tiny settle gap
