@@ -7,7 +7,7 @@
              xmlns:Controls="clr-namespace:IECGUI.Controls"
              mc:Ignorable="d" 
              Background="#0A0F1C"
-             d:DesignHeight="930" d:DesignWidth="1920">
+             d:DesignHeight="1080" d:DesignWidth="1920">
 
     <Grid>
 
@@ -27,15 +27,15 @@
         <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="860"/>
+            <RowDefinition Height="72"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
 
         <!-- TOP TOOLBAR -->
         <Border Grid.Row="0"
-                Background="#111827"
-                BorderBrush="#00BFFF"
+                Background="#6614263A"
+                BorderBrush="#667ECBE5"
                 BorderThickness="0,0,0,1">
 
             <StackPanel Orientation="Horizontal"
@@ -97,8 +97,8 @@
 
             <!-- LEFT TOOLBOX -->
             <Border Grid.Column="0"
-                    Background="#0F172A"
-                    BorderBrush="#00BFFF"
+                    Background="#6614263A"
+                    BorderBrush="#667ECBE5"
                     BorderThickness="1">
 
                 <ScrollViewer>
@@ -160,9 +160,10 @@
                     <StackPanel Margin="10">
 
                         <!-- CURRENT GAUGES -->
-                        <Border BorderBrush="DodgerBlue"
-                                BorderThickness="0"
-                                CornerRadius="10"
+                        <Border Background="#4414263A"
+                                BorderBrush="#667ECBE5"
+                                BorderThickness="1"
+                                CornerRadius="8"
                                 Padding="10"
                                 Width="1650"
                                 HorizontalAlignment="Left"
@@ -219,9 +220,10 @@
                         </Border>
 
                         <!-- VOLTAGE GAUGES -->
-                        <Border BorderBrush="Orange"
-                                BorderThickness="0"
-                                CornerRadius="10"
+                        <Border Background="#4414263A"
+                                BorderBrush="#667ECBE5"
+                                BorderThickness="1"
+                                CornerRadius="8"
                                 Width="800"
                                 HorizontalAlignment="Left"
                                 Padding="10">

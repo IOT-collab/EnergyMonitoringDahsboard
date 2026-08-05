@@ -4,16 +4,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="930" d:DesignWidth="1920"
-             Background="#27283D">
+             d:DesignHeight="1080" d:DesignWidth="1920"
+             Background="#081421">
     <!-- Modern light gray background -->
 
     <UserControl.Resources>
         <!-- Modern Card Style -->
         <Style x:Key="CardStyle" TargetType="Border">
-            <Setter Property="Background" Value="#27283D"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="BorderBrush" Value="#27283B"/>
+            <Setter Property="Background" Value="#6614263A"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#667ECBE5"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Effect">
                 <Setter.Value>
@@ -66,7 +66,7 @@
             <!-- Header -->
             <RowDefinition Height="Auto"/>
             <!-- Filters -->
-            <RowDefinition Height="630"/>
+            <RowDefinition Height="*"/>
             <!-- DataGrid (Takes remaining space) -->
             <RowDefinition Height="Auto"/>
             <!-- Footer -->
@@ -191,10 +191,10 @@
                       RowHeight="50"
                       FontSize="18"
                       HeadersVisibility="Column"
-                      Background="Gray"
+                      Background="#4414263A"
                       BorderThickness="0"
                       GridLinesVisibility="Horizontal"
-                      HorizontalGridLinesBrush="#E5E7EB"
+                      HorizontalGridLinesBrush="#225D9DB6"
                       VerticalGridLinesBrush="Transparent"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -208,10 +208,10 @@
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="FontSize" Value="18"/>
                         <Setter Property="FontWeight" Value="Bold"/>
-                        <Setter Property="Foreground" Value="#374151"/>
+                        <Setter Property="Foreground" Value="White"/>
                         <Setter Property="Padding" Value="15,0"/>
-                        <Setter Property="Background" Value="#F9FAFB"/>
-                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                        <Setter Property="Background" Value="#8830536B"/>
+                        <Setter Property="BorderBrush" Value="#557ECBE5"/>
                         <Setter Property="BorderThickness" Value="0,0,1,2"/>
                         <Setter Property="Height" Value="60"/>
                         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -220,17 +220,18 @@
 
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
-                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Background" Value="#4414263A"/>
+                        <Setter Property="Foreground" Value="White"/>
                         <Style.Triggers>
                             <Trigger Property="AlternationIndex" Value="1">
-                                <Setter Property="Background" Value="#F9FAFB"/>
+                                <Setter Property="Background" Value="#55203349"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#EBF5FF"/>
+                                <Setter Property="Background" Value="#3348D9FF"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#CCE8FF"/>
-                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="Background" Value="#5548D9FF"/>
+                                <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -258,7 +259,7 @@
         </Border>
 
         <!-- 4. Footer Status Bar -->
-        <Border Grid.Row="3" CornerRadius="12" Background="#3A3A5E" BorderBrush="#5A5A8E" BorderThickness="1" Padding="25,15">
+        <Border Grid.Row="3" CornerRadius="8" Background="#6614263A" BorderBrush="#667ECBE5" BorderThickness="1" Padding="25,15">
             <Border.Effect>
                 <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="2" Opacity="0.05"/>
             </Border.Effect>
@@ -272,18 +273,18 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <TextBlock Text="Selected Format: " FontSize="20" Foreground="White" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SelectedReportFormat.Name, FallbackValue='None'}" 
-                               FontSize="20" FontWeight="Bold" Foreground="#007ACC" VerticalAlignment="Center"/>
+                               FontSize="20" FontWeight="Bold" Foreground="#48D9FF" VerticalAlignment="Center"/>
 
                     <TextBlock Text="  |  Columns: " FontSize="20" Foreground="White" VerticalAlignment="Center" Margin="20,0,0,0"/>
                     <TextBlock Text="{Binding SelectedFormatColumns.Count, FallbackValue='0'}" 
-                               FontSize="20" FontWeight="Bold" Foreground="#007ACC" VerticalAlignment="Center"/>
+                               FontSize="20" FontWeight="Bold" Foreground="#48D9FF" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Row Count -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock Text="Total Rows: " FontSize="20" Foreground="White" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding TotalRowsLoaded}" 
-                               FontSize="22" FontWeight="Bold" Foreground="#007ACC" VerticalAlignment="Center"/>
+                               FontSize="22" FontWeight="Bold" Foreground="#48D9FF" VerticalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Border>

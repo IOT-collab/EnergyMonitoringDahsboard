@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:IECGUI.View"
              xmlns:conv="clr-namespace:IECGUI.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="930" d:DesignWidth="1920">
+             d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
         <conv:ProtocolToVisibilityConverter x:Key="IsTcp" TargetProtocol="ModbusTcp"/>
         <conv:ProtocolToVisibilityConverter x:Key="IsRtu" TargetProtocol="ModbusRtu"/>
@@ -17,14 +17,15 @@
     <Grid Margin="0">
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#27283D" Offset="0"/>
-                <GradientStop Color="#222334" Offset="1"/>
+                <GradientStop Color="#081421" Offset="0"/>
+                <GradientStop Color="#142B3D" Offset="0.55"/>
+                <GradientStop Color="#06101A" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="860"/>
+            <RowDefinition Height="72"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -49,9 +50,9 @@
                 <!-- SCADA Tab Style -->
                 <Style TargetType="TabItem">
 
-                    <Setter Property="Background" Value="#2E3656"/>
+                    <Setter Property="Background" Value="#6614263A"/>
                     <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="BorderBrush" Value="#4A5A88"/>
+                    <Setter Property="BorderBrush" Value="#667ECBE5"/>
                     <Setter Property="FontSize" Value="20"/>
                     <Setter Property="Padding" Value="20,8"/>
 
@@ -81,19 +82,19 @@
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#0078D7"/>
+                                        Value="#235C77"/>
                                     </Trigger>
 
                                     <Trigger Property="IsSelected" Value="False">
                                         <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#3B7CFF"/>
+                                        Value="#1A3448"/>
                                     </Trigger>
 
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="Border"
                                         Property="Background"
-                                        Value="#5A95FF"/>
+                                        Value="#2B6B85"/>
                                     </Trigger>
 
                                 </ControlTemplate.Triggers>
@@ -121,7 +122,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border     Background="#31344B"   BorderBrush="#505A85" CornerRadius="12"    Padding="15"  Grid.Row="1" Grid.Column="0"
+                        <Border     Background="#6614263A"   BorderBrush="#667ECBE5" CornerRadius="8"    Padding="15"  Grid.Row="1" Grid.Column="0"
                                 BorderThickness="1" Height="750" Width="320"
                                 Margin="5" HorizontalAlignment="Right">
 
@@ -141,7 +142,7 @@
 
 
 
-                                <ListBox ItemsSource="{Binding Meters}" Background="#40456B" BorderThickness="0" Foreground="White"
+                                <ListBox ItemsSource="{Binding Meters}" Background="#4414263A" BorderThickness="0" Foreground="White"
                                  SelectedItem="{Binding SelectedMeter}">
 
                                     <ListBox.ItemTemplate>
@@ -161,7 +162,7 @@
 
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="1" Height="750" Width="320" HorizontalAlignment="Left" Margin="5"   Background="#31344B"   BorderBrush="#505A85" CornerRadius="12"  BorderThickness="2"  Padding="5">
+                        <Border Grid.Row="1" Grid.Column="1" Height="750" Width="320" HorizontalAlignment="Left" Margin="5"   Background="#6614263A"   BorderBrush="#667ECBE5" CornerRadius="8"  BorderThickness="1"  Padding="5">
                             <StackPanel>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0"> 
@@ -343,13 +344,13 @@
                               HeadersVisibility="Column"
 
                               RowHeight="32"
-                              Background="#31344B"
+                              Background="#6614263A"
 
                             Foreground="White"
 
-                            RowBackground="#31344B"
+                            RowBackground="#4414263A"
 
-                            AlternatingRowBackground="#383D58"
+                            AlternatingRowBackground="#55203349"
 
                             GridLinesVisibility="None"
 
@@ -361,7 +362,7 @@
 
                             <Style TargetType="DataGridColumnHeader">
 
-                                <Setter Property="Background" Value="#3A4670"/>
+                                <Setter Property="Background" Value="#8830536B"/>
 
                                 <Setter Property="Foreground" Value="White"/>
 

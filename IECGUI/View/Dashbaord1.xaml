@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:IECGUI.View"
              xmlns:controls ="clr-namespace:IECGUI.Controls"           
              mc:Ignorable="d" 
-             d:DesignHeight="930" d:DesignWidth="1920">
+             d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
         <Style x:Key="ColumnHeaderStyle" TargetType="TextBlock">
             <Setter Property="Height" Value="40"/>
@@ -18,36 +18,37 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="#2A2A3E">
+    <Grid Background="#081421">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="72"/>
             <RowDefinition Height="150"/>
-            <RowDefinition Height="720"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
         <Border Grid.Row="0"
-                Background="#2A346A">
+                Background="#6614263A">
 
-            <DockPanel>
+            <DockPanel LastChildFill="True">
 
                 <TextBlock Text="Grid SubStation-031"
+                           DockPanel.Dock="Left"
                            Foreground="White"
                            FontSize="24"
                            FontWeight="Bold"
                            Margin="20,0"
                            VerticalAlignment="Center"/>
 
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Center">
-
-                    <!--<Button Content="Energy Monitor" Width="100" Command="{Binding HomeCommand}"/>
-                    <Button Content="Gauge View" Width="100" Command="{Binding AlarmCommand}"/>
-                    <Button Content="Relay Status" Width="100"  Command="{Binding EventsCommand}"/>
-                    <Button Content="Meter Config" Width="100" Command="{Binding TrendingCommand}"/>-->
-                    <Button Content="Menu" Margin="1500,0,0,0" Width="100" Height="50" Command="{Binding MenuCommand}" Style="{StaticResource GlassButton.Ghost}"/>
-                </StackPanel>
+                <Button Content="Menu"
+                        DockPanel.Dock="Right"
+                        Margin="0,0,178,0"
+                        Width="100"
+                        Height="50"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding MenuCommand}"
+                        Style="{StaticResource GlassButton.Ghost}"/>
 
             </DockPanel>
 
@@ -98,10 +99,10 @@
         <!-- Mimic Area -->
         <Border Grid.Row="2"
                 Margin="10"
-                BorderBrush="Gray"
+                BorderBrush="#667ECBE5"
                 BorderThickness="1">
 
-            <Canvas Background="#2A2A3E">
+            <Canvas Background="#4414263A">
 
                 <!-- Main Bus -->
                 <Line X1="148" Y1="300" X2="800" Y2="300" Stroke="{Binding Feeder5LineColor}" StrokeThickness="5"/>

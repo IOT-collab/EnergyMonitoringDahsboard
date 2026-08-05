@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="930" d:DesignWidth="1920"
-             Background="#1E1E2E">
+             d:DesignHeight="1080" d:DesignWidth="1920"
+             Background="#081421">
 
     <UserControl.Resources>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
@@ -16,8 +16,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="690"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="170"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
@@ -51,17 +51,17 @@
                   ItemsSource="{Binding LiveReadings}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                  Background="#2A2A3E"
+                  Background="#6614263A"
                   Foreground="White"
-                  RowBackground="#2A2A3E"
-                  AlternatingRowBackground="#323250"
+                  RowBackground="#4414263A"
+                  AlternatingRowBackground="#55203349"
                   GridLinesVisibility="Horizontal"
                   HeadersVisibility="Column"
                   FontSize="14">
 
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="#3D5A80"/>
+                    <Setter Property="Background" Value="#8830536B"/>
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                     <Setter Property="Padding" Value="8,5"/>
@@ -97,8 +97,8 @@
         </DataGrid>
 
         <!-- Message Log -->
-        <Border Grid.Row="3" Background="#0D0D1A"
-                BorderBrush="#3D5A80" BorderThickness="1"
+        <Border Grid.Row="3" Background="#6614263A"
+                BorderBrush="#667ECBE5" BorderThickness="1"
                 CornerRadius="5" Padding="5">
             <StackPanel>
                 <TextBlock Text="Message Log"

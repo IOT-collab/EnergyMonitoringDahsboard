@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="930" d:DesignWidth="1920"
+             d:DesignHeight="1080" d:DesignWidth="1920"
              Background="Transparent">
     <UserControl.Resources>
         <SolidColorBrush x:Key="HomeCyan" Color="#48D9FF"/>
@@ -141,7 +141,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Width="1920" Height="930" ClipToBounds="True">
+    <Grid Width="1920" Height="1080" ClipToBounds="True">
         <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Backend.jpg"
                Stretch="UniformToFill"
                Opacity="0.62"/>
@@ -155,7 +155,7 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <Grid Margin="64,34,64,28">
+        <Grid Margin="64,58,64,44">
             <Grid.RowDefinitions>
                 <RowDefinition Height="122"/>
                 <RowDefinition Height="132"/>
@@ -291,7 +291,7 @@
                 </Grid>
             </Border>
 
-            <Grid Grid.Row="2" Margin="42,48,42,0">
+            <Grid Grid.Row="2" Margin="42,62,42,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="235"/>
                     <RowDefinition Height="34"/>

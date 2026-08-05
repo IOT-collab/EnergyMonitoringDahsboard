@@ -8,7 +8,7 @@
             xmlns:extConv="clr-namespace:IECGUI.Common.WPFExtensions.Convertors;assembly=IECGUI.WPFExtensions"           
             mc:Ignorable="d"
             d:DesignHeight="1080" d:DesignWidth="1920"
-            Background="#27283D">
+            Background="#081421">
 
  <UserControl.Resources>
         <!-- converters from the WPF extensions assembly -->
@@ -16,9 +16,9 @@
 
         <!-- Modern Card Style -->
         <Style x:Key="CardStyle" TargetType="Border">
-            <Setter Property="Background" Value="#27283D"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="BorderBrush" Value="#27283B"/>
+            <Setter Property="Background" Value="#6614263A"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#667ECBE5"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Effect">
                 <Setter.Value>
@@ -65,9 +65,9 @@
   <!-- ListBox Item Style with Borders -->
         <Style x:Key="BorderedListBoxItem" TargetType="ListBoxItem">
    <Setter Property="Padding" Value="15,10"/>
-            <Setter Property="BorderBrush" Value="#5A5A8E"/>
+            <Setter Property="BorderBrush" Value="#667ECBE5"/>
          <Setter Property="BorderThickness" Value="0,0,0,1"/>
-            <Setter Property="Background" Value="#3A3A5E"/>
+            <Setter Property="Background" Value="#4414263A"/>
     <Setter Property="Template">
         <Setter.Value>
    <ControlTemplate TargetType="ListBoxItem">
@@ -79,10 +79,10 @@
   </Border>
          <ControlTemplate.Triggers>
      <Trigger Property="IsMouseOver" Value="True">
- <Setter Property="Background" Value="#3A3A5E"/>
+ <Setter Property="Background" Value="#3348D9FF"/>
           </Trigger>
    <Trigger Property="IsSelected" Value="True">
-     <Setter Property="Background" Value="#3A3A5E"/>
+     <Setter Property="Background" Value="#5548D9FF"/>
    </Trigger>
         </ControlTemplate.Triggers>
    </ControlTemplate>
@@ -119,12 +119,12 @@
    </Grid.ColumnDefinitions>
 
       <!-- Left Column: Saved Reports -->
-                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" BorderBrush="White" BorderThickness="3" Padding="5" Background="LightGray">
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" BorderBrush="#667ECBE5" BorderThickness="1" Padding="12">
        <StackPanel >
-                            <TextBlock Text="Saved Report Formats" FontSize="32" FontWeight="Bold" Margin="0,0,0,30" />
+                            <TextBlock Text="Saved Report Formats" FontSize="32" FontWeight="Bold" Foreground="White" Margin="0,0,0,30" />
        
          <TextBlock Text="Select a report to view or edit" Style="{StaticResource HmiLabelStyle}" Foreground="White"/>
-         <Border BorderBrush="#CCCCCC" BorderThickness="2" CornerRadius="4">
+         <Border BorderBrush="#667ECBE5" BorderThickness="1" CornerRadius="6">
      <ListBox ItemsSource="{Binding ReportFormats}" 
               SelectedItem="{Binding SelectedFormat}" 
          DisplayMemberPath="Name" 
@@ -164,9 +164,9 @@
       </Border>
 
  <!-- Middle Column: Column Selection -->
-                    <Border Grid.Column="2" Style="{StaticResource CardStyle}"  BorderBrush="#5A5A8E" BorderThickness="3" Padding="5" Background="LightGray">
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}"  BorderBrush="#667ECBE5" BorderThickness="1" Padding="12">
           <StackPanel>
-         <TextBlock Text="Report Details" FontSize="32" FontWeight="Bold" Margin="0,0,0,30"/>
+         <TextBlock Text="Report Details" FontSize="32" FontWeight="Bold" Foreground="White" Margin="0,0,0,30"/>
 
       <StackPanel Margin="0,0,0,20">
           <TextBlock Text="Report Name" Style="{StaticResource HmiLabelStyle}"/>
@@ -175,15 +175,15 @@
 
         <TextBlock Text="Available Columns" Style="{StaticResource HmiLabelStyle}"/>
     <TextBlock Text="Select columns to include in this report format" 
-  FontSize="18" Foreground="#888888" Margin="0,0,0,10"/>
+  FontSize="18" Foreground="#B7E9F7" Margin="0,0,0,10"/>
        
-        <Border BorderBrush="#CCCCCC" BorderThickness="2" CornerRadius="4">
+        <Border BorderBrush="#667ECBE5" BorderThickness="1" CornerRadius="6">
  <ListBox ItemsSource="{Binding AvailableColumns}" 
   SelectionMode="Multiple"     behaviors:ListBoxSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedColumns, Mode=TwoWay}"
          Height="380"
                 FontSize="22"
               BorderThickness="0"
-       Background="#FAFAFA"
+       Background="#4414263A"
         ItemContainerStyle="{StaticResource BorderedListBoxItem}">
         <ListBox.ItemTemplate>
              <DataTemplate>
@@ -210,31 +210,31 @@
       </Border>
 
        <TextBlock Text="{Binding SelectedColumns.Count, StringFormat='Selected: {0} columns'}" 
-  FontSize="20" Foreground="#666666" Margin="0,10,0,0"/>
+  FontSize="20" Foreground="#B7E9F7" Margin="0,10,0,0"/>
     </StackPanel>
    </Border>
 
                 <!-- Right Column: Selected Columns Preview -->
-                    <Border Grid.Column="4" Style="{StaticResource CardStyle}"  BorderBrush="White" BorderThickness="3" Padding="5" Background="LightGray">
+                    <Border Grid.Column="4" Style="{StaticResource CardStyle}"  BorderBrush="#667ECBE5" BorderThickness="1" Padding="12">
          <StackPanel>
-      <TextBlock Text="Selected Columns" FontSize="32" FontWeight="Bold" Margin="0,0,0,30"/>
+      <TextBlock Text="Selected Columns" FontSize="32" FontWeight="Bold" Foreground="White" Margin="0,0,0,30"/>
 
        <TextBlock Text="Report Name" Style="{StaticResource HmiLabelStyle}"/>
    <TextBox Text="{Binding SelectedFormat.Name, Mode=OneWay}" 
-         IsReadOnly="True"  Background="#F5F5F5" FontSize="30" Height="50" />
+         IsReadOnly="True"  Background="#4414263A" Foreground="White" FontSize="30" Height="50" />
 
         <TextBlock Text="Columns in this report" Style="{StaticResource HmiLabelStyle}" Margin="0,20,0,0"/>
-     <Border BorderBrush="#CCCCCC" BorderThickness="2" CornerRadius="4">
+     <Border BorderBrush="#667ECBE5" BorderThickness="1" CornerRadius="6">
        <ListBox ItemsSource="{Binding SelectedColumnsView}" 
   Height="380"
       FontSize="22"
        BorderThickness="0"
-  Background="#FAFAFA"
+  Background="#4414263A"
      ItemContainerStyle="{StaticResource BorderedListBoxItem}"/>
     </Border>
 
           <TextBlock Text="{Binding SelectedColumnsView.Count, StringFormat='Total: {0} columns', FallbackValue='Total: 0 columns'}" 
-   FontSize="20" Foreground="#666666" Margin="0,10,0,0"/>
+   FontSize="20" Foreground="#B7E9F7" Margin="0,10,0,0"/>
      </StackPanel>
           </Border>
  </Grid>
