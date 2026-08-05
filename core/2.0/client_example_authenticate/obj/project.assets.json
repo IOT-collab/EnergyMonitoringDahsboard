@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    ".NETCoreApp,Version=v2.0": {
+    "netcoreapp2.0": {
       "Microsoft.NETCore.App/2.0.0": {
         "type": "package",
         "dependencies": {
@@ -929,29 +929,29 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v2.0": [
-      "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj",
+    "netcoreapp2.0": [
+      "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj",
       "Microsoft.NETCore.App >= 2.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\": {},
+    "C:\\Users\\ASUS\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\client_example_authenticate\\client_example_authenticate.csproj",
+      "projectUniqueName": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\client_example_authenticate\\client_example_authenticate.csproj",
       "projectName": "client_example_authenticate",
-      "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\client_example_authenticate\\client_example_authenticate.csproj",
-      "packagesPath": "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\",
-      "outputPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\client_example_authenticate\\obj\\",
+      "projectPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\client_example_authenticate\\client_example_authenticate.csproj",
+      "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\client_example_authenticate\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\V5 IT SOLUTION\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -960,15 +960,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
+          "framework": "netcoreapp2.0",
           "targetAlias": "netcoreapp2.0",
           "projectReferences": {
-            "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj": {
-              "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj"
+            "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj": {
+              "projectPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj"
             }
           }
         }
@@ -983,10 +983,11 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "netcoreapp2.0": {
+        "framework": "netcoreapp2.0",
         "targetAlias": "netcoreapp2.0",
         "dependencies": {
           "Microsoft.NETCore.App": {
@@ -1007,7 +1008,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -1015,10 +1016,10 @@
     {
       "code": "NU1105",
       "level": "Error",
-      "message": "Unable to find project information for 'D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj",
+      "message": "Unable to find project information for 'C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
+      "libraryId": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\core\\2.0\\IEC61850.NET.core.2.0\\IEC61850.NET.core.2.0.csproj",
       "targetGraphs": [
-        ".NETCoreApp,Version=v2.0"
+        "netcoreapp2.0"
       ]
     },
     {
@@ -1028,7 +1029,7 @@
       "message": "Package 'Microsoft.NETCore.App' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-7mfr-774f-w5r9",
       "libraryId": "Microsoft.NETCore.App",
       "targetGraphs": [
-        ".NETCoreApp,Version=v2.0"
+        "netcoreapp2.0"
       ]
     }
   ]

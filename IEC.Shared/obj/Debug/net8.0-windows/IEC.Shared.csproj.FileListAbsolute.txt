@@ -32,3 +32,20 @@ D:\Project 2026\EnergyMonitoring\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.
 D:\Project 2026\EnergyMonitoring\IEC.Shared\obj\Debug\net8.0-windows\refint\IEC.Shared.dll
 D:\Project 2026\EnergyMonitoring\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.pdb
 D:\Project 2026\EnergyMonitoring\IEC.Shared\obj\Debug\net8.0-windows\ref\IEC.Shared.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\bin\Debug\net8.0-windows\iec61850.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\bin\Debug\net8.0-windows\IEC.Shared.deps.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\bin\Debug\net8.0-windows\IEC.Shared.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\bin\Debug\net8.0-windows\IEC.Shared.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\bin\Debug\net8.0-windows\iec61850dotnet.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\bin\Debug\net8.0-windows\iec61850dotnet.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.csproj.AssemblyReference.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.AssemblyInfoInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.AssemblyInfo.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.sourcelink.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.csproj.Up2Date
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\refint\IEC.Shared.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\IEC.Shared.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.Shared\obj\Debug\net8.0-windows\ref\IEC.Shared.dll

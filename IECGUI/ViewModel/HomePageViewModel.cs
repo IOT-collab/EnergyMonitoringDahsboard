@@ -44,6 +44,7 @@ namespace IECGUI.ViewModel
             ProtRelayMonitorViewCommand = new RelayCommand(() => _navigation.NavigateTo<Iec61850MonitorViewModel>());
             MqttViewCommad = new RelayCommand(() => _navigation.NavigateTo<MqttMonitorViewModel>());
             ReportViewerCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
+            AlarmViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel2>());
         }
 
         private void SLDViewLogin()

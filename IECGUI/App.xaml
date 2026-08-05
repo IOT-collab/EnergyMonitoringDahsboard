@@ -21,7 +21,7 @@
             <view:LoginView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
-            <view:HomePage/>
+                <view:HomePageView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:Dashboard1ViewModel}">

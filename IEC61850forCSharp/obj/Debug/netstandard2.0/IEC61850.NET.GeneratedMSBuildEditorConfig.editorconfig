@@ -1,6 +1,6 @@
 is_global = true
 build_property.RootNamespace = iec61850dotnet
-build_property.ProjectDir = D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\
+build_property.ProjectDir = C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false

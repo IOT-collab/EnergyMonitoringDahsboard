@@ -35,3 +35,26 @@ D:\Project 2026\EnergyMonitoring\IEC.CommonService\obj\Debug\net8.0-windows\IEC.
 D:\Project 2026\EnergyMonitoring\IEC.CommonService\obj\Debug\net8.0-windows\refint\IEC.CommonService.dll
 D:\Project 2026\EnergyMonitoring\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.pdb
 D:\Project 2026\EnergyMonitoring\IEC.CommonService\obj\Debug\net8.0-windows\ref\IEC.CommonService.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\iec61850.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IEC.CommonService.deps.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IEC.CommonService.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IEC.CommonService.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IEC.Shared.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\iec61850dotnet.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IECGUI.Visuals.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IECGUI.WPFExtensions.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IEC.Shared.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IECGUI.Visuals.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\IECGUI.WPFExtensions.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\bin\Debug\net8.0-windows\iec61850dotnet.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.csproj.AssemblyReference.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.AssemblyInfoInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.AssemblyInfo.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.sourcelink.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.Comm.41C51092.Up2Date
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\refint\IEC.CommonService.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\IEC.CommonService.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC.CommonService\obj\Debug\net8.0-windows\ref\IEC.CommonService.dll

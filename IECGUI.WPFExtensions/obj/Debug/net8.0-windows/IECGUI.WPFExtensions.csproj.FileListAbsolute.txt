@@ -52,3 +52,30 @@ D:\Project 2026\EnergyMonitoring\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\I
 D:\Project 2026\EnergyMonitoring\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\refint\IECGUI.WPFExtensions.dll
 D:\Project 2026\EnergyMonitoring\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.pdb
 D:\Project 2026\EnergyMonitoring\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\ref\IECGUI.WPFExtensions.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\iec61850.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\IECGUI.WPFExtensions.deps.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\IECGUI.WPFExtensions.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\IECGUI.WPFExtensions.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\IEC.Shared.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\iec61850dotnet.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\IEC.Shared.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\bin\Debug\net8.0-windows\iec61850dotnet.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.csproj.AssemblyReference.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\Controls\OeeProgressBar.baml
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\Controls\PieChart.baml
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\Controls\TrendChart.baml
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\Controls\OeeProgressBar.g.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\Controls\PieChart.g.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\Controls\TrendChart.g.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions_MarkupCompile.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.g.resources
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.AssemblyInfoInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.AssemblyInfo.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.sourcelink.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.W.087ED132.Up2Date
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\refint\IECGUI.WPFExtensions.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\IECGUI.WPFExtensions.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI.WPFExtensions\obj\Debug\net8.0-windows\ref\IECGUI.WPFExtensions.dll

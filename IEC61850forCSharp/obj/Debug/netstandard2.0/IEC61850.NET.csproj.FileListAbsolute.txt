@@ -22,3 +22,15 @@ D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC6
 D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.sourcelink.json
 D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.dll
 D:\Project 2026\EnergyMonitoring\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850dotnet.deps.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850dotnet.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\bin\Debug\netstandard2.0\iec61850dotnet.pdb
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.csproj.AssemblyReference.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.AssemblyInfoInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.AssemblyInfo.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\IEC61850.NET.sourcelink.json
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.dll
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IEC61850forCSharp\obj\Debug\netstandard2.0\iec61850dotnet.pdb

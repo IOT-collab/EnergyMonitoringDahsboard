@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    ".NETFramework,Version=v4.6": {
+    "net46": {
       "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
         "type": "package",
         "dependencies": {
@@ -15,7 +15,7 @@
         }
       }
     },
-    ".NETFramework,Version=v4.6/win-x86": {
+    "net46/win-x86": {
       "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
         "type": "package",
         "dependencies": {
@@ -372,30 +372,30 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.6": [
-      "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus.Serial\\NModbus.Serial.csproj",
-      "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus\\NModbus.csproj",
+    "net46": [
+      "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus.Serial\\NModbus.Serial.csproj",
+      "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus\\NModbus.csproj",
       "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\": {},
+    "C:\\Users\\ASUS\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\Samples\\Samples.csproj",
+      "projectUniqueName": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\Samples\\Samples.csproj",
       "projectName": "Modbus.Comm",
-      "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\Samples\\Samples.csproj",
-      "packagesPath": "C:\\Users\\V5 IT SOLUTION\\.nuget\\packages\\",
-      "outputPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\Samples\\obj\\",
+      "projectPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\Samples\\Samples.csproj",
+      "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\Samples\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\V5 IT SOLUTION\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -404,18 +404,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net46": {
+          "framework": "net46",
           "targetAlias": "net46",
           "projectReferences": {
-            "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus.Serial\\NModbus.Serial.csproj": {
-              "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus.Serial\\NModbus.Serial.csproj"
+            "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus.Serial\\NModbus.Serial.csproj": {
+              "projectPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus.Serial\\NModbus.Serial.csproj"
             },
-            "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus\\NModbus.csproj": {
-              "projectPath": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus\\NModbus.csproj"
+            "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus\\NModbus.csproj": {
+              "projectPath": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus\\NModbus.csproj"
             }
           }
         }
@@ -431,10 +431,11 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net46": {
+        "framework": "net46",
         "targetAlias": "net46",
         "dependencies": {
           "Microsoft.NETFramework.ReferenceAssemblies": {
@@ -444,7 +445,7 @@
             "autoReferenced": true
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {
@@ -457,21 +458,21 @@
     {
       "code": "NU1104",
       "level": "Error",
-      "message": "Unable to find project 'D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus.Serial\\NModbus.Serial.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus.Serial\\NModbus.Serial.csproj",
+      "message": "Unable to find project 'C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus.Serial\\NModbus.Serial.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus.Serial\\NModbus.Serial.csproj",
       "targetGraphs": [
-        ".NETFramework,Version=v4.6",
-        ".NETFramework,Version=v4.6/win-x86"
+        "net46",
+        "net46/win-x86"
       ]
     },
     {
       "code": "NU1104",
       "level": "Error",
-      "message": "Unable to find project 'D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus\\NModbus.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Project 2026\\libiec61850-1.6\\libiec61850-1.6\\dotnet\\NModbus\\NModbus.csproj",
+      "message": "Unable to find project 'C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus\\NModbus.csproj'. Check that the project reference is valid and that the project file exists.",
+      "libraryId": "C:\\Users\\ASUS\\source\\repos\\EnergyMonitoringDahsboard\\NModbus\\NModbus.csproj",
       "targetGraphs": [
-        ".NETFramework,Version=v4.6",
-        ".NETFramework,Version=v4.6/win-x86"
+        "net46",
+        "net46/win-x86"
       ]
     }
   ]
