@@ -61,6 +61,119 @@
                 </Button>
             </StackPanel>
 
+            <Grid Visibility="{Binding AlarmService.AlarmPopupVisibility}"
+                  Background="#66000000"
+                  Panel.ZIndex="900"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+                <Border Width="640"
+                        Height="380"
+                        CornerRadius="8"
+                        Background="#F20A1A28"
+                        BorderBrush="#CCFF746D"
+                        BorderThickness="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#FF746D" BlurRadius="34" ShadowDepth="0" Opacity="0.75"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="82"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="86"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0"
+                                Background="#33FF746D"
+                                BorderBrush="#66FF746D"
+                                BorderThickness="0,0,0,1">
+                            <DockPanel Margin="24,0">
+                                <Border Width="46"
+                                        Height="46"
+                                        CornerRadius="23"
+                                        BorderBrush="#FFFFA29D"
+                                        BorderThickness="2"
+                                        Background="#33FF746D"
+                                        DockPanel.Dock="Left"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,16,0">
+                                    <TextBlock Text="!"
+                                               Foreground="#FFFFA29D"
+                                               FontSize="30"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="ALARM RAISED"
+                                               Foreground="White"
+                                               FontSize="28"
+                                               FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding AlarmService.CurrentPopupAlarm.SeverityText}"
+                                               Foreground="#FFFFA29D"
+                                               FontSize="15"
+                                               FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <Grid Grid.Row="1" Margin="28,24">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{Binding AlarmService.CurrentPopupAlarm.AlarmName}"
+                                       Foreground="White"
+                                       FontSize="26"
+                                       FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1"
+                                       Text="{Binding AlarmService.CurrentPopupAlarm.Message}"
+                                       Foreground="#BCEFFF"
+                                       FontSize="18"
+                                       Margin="0,12,0,0"/>
+                            <UniformGrid Grid.Row="2" Columns="3" Margin="0,22,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="Meter" Foreground="#8FDDEA" FontSize="13"/>
+                                    <TextBlock Text="{Binding AlarmService.CurrentPopupAlarm.MeterName}" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Value" Foreground="#8FDDEA" FontSize="13"/>
+                                    <TextBlock Text="{Binding AlarmService.CurrentPopupAlarm.ValueText}" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Time" Foreground="#8FDDEA" FontSize="13"/>
+                                    <TextBlock Text="{Binding AlarmService.CurrentPopupAlarm.RaisedAtText}" Foreground="White" FontSize="16" FontWeight="Bold"/>
+                                </StackPanel>
+                            </UniformGrid>
+                        </Grid>
+
+                        <Grid Grid.Row="2" Margin="28,0,28,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Content="ACKNOWLEDGE"
+                                    Command="{Binding AlarmService.AcknowledgeCurrentCommand}"
+                                    Style="{StaticResource GlassButton.Cyan}"
+                                    Height="52"
+                                    Margin="0,0,10,0"/>
+                            <Button Grid.Column="1"
+                                    Content="DISMISS"
+                                    Command="{Binding AlarmService.DismissPopupCommand}"
+                                    Style="{StaticResource GlassButton.Ghost}"
+                                    Height="52"
+                                    Margin="10,0,0,0"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
         </Grid>
     </Viewbox>
 </Window>

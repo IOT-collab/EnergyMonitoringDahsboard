@@ -1,283 +1,513 @@
-﻿<UserControl x:Class="IECGUI.View.EnergyMonitor2"
+<UserControl x:Class="IECGUI.View.EnergyMonitor2"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:IECGUI.View"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:IECGUI.Controls"
-             mc:Ignorable="d" 
-             Background="#0A0F1C"
-             d:DesignHeight="1080" d:DesignWidth="1920">
+             mc:Ignorable="d"
+             d:DesignHeight="1080"
+             d:DesignWidth="1920"
+             Width="1920"
+             Height="1080">
+    <UserControl.Resources>
+        <Style x:Key="HudPanel" TargetType="Border">
+            <Setter Property="Background" Value="#B20A1A28"/>
+            <Setter Property="BorderBrush" Value="#667ECBE5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#48D9FF" BlurRadius="18" ShadowDepth="0" Opacity="0.14"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-    <Grid>
+        <Style x:Key="HudTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
 
-        <!-- LAYER 1 : Background Image -->
+        <Style x:Key="HudLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#BCEFFF"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="HudValue" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#48D9FF" BlurRadius="12" ShadowDepth="0" Opacity="0.68"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ToolboxButton" TargetType="Button" BasedOn="{StaticResource GlassButton.Cyan}">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="8,0,8,10"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="MeterCell" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F4FBFF"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="12,0"/>
+        </Style>
+
+        <Style x:Key="MeterHeaderCell" TargetType="TextBlock" BasedOn="{StaticResource MeterCell}">
+            <Setter Property="Foreground" Value="#8FDDEA"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#06111C" ClipToBounds="True">
         <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power4.jpg"
-               Stretch="Fill">
-
+               Stretch="UniformToFill"
+               Opacity="0.52">
             <Image.Effect>
-                <BlurEffect Radius="15"/>
+                <BlurEffect Radius="8"/>
             </Image.Effect>
-
         </Image>
+        <Rectangle Fill="#D706111C"/>
 
-        <!-- LAYER 2 : Dark Overlay -->
-        <Rectangle Fill="#AA000000"/>
+        <Canvas IsHitTestVisible="False" Opacity="0.34">
+            <Line X1="0" Y1="790" X2="1920" Y2="790" Stroke="#3348D9FF" StrokeThickness="1"/>
+            <Line X1="0" Y1="862" X2="1920" Y2="862" Stroke="#2848D9FF" StrokeThickness="1"/>
+            <Line X1="0" Y1="934" X2="1920" Y2="934" Stroke="#2248D9FF" StrokeThickness="1"/>
+            <Line X1="0" Y1="1006" X2="1920" Y2="1006" Stroke="#1C48D9FF" StrokeThickness="1"/>
+            <Line X1="210" Y1="720" X2="-70" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="500" Y1="720" X2="390" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="790" Y1="720" X2="850" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="1080" Y1="720" X2="1310" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="1370" Y1="720" X2="1770" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+        </Canvas>
 
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="72"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="72"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-
-        <!-- TOP TOOLBAR -->
-        <Border Grid.Row="0"
-                Background="#6614263A"
-                BorderBrush="#667ECBE5"
-                BorderThickness="0,0,0,1">
-
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center">
-
-                <!--<Button Content="+ PAGE"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding AddPageCommand}"/>
-
-                <Button Content="SAVE"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding SaveCommand}"/>
-
-                <Button Content="LOAD"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding LoadCommand}"/>
-
-                <Button Content="DELETE"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding DeleteCommand}"/>
-
-                <Button Content="RELAY STATUS"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding RelayPage}"/>
-
-                <Button Content="MQTT Browser"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding MqttBrowserCommand}"/>-->
-
-                <Button Content="BACK"
-                        Width="120"
-                        Height="40"
-                        Margin="10" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}"/>
-
-                <TextBlock Text=" "
-                           FontSize="36"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           Margin="50,0,0,0"
-                           VerticalAlignment="Center"/>
-
-            </StackPanel>
-
-        </Border>
-
-        <!-- MAIN AREA -->
-        <Grid Grid.Row="1">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
-                <ColumnDefinition Width="1700"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- LEFT TOOLBOX -->
-            <Border Grid.Column="0"
-                    Background="#6614263A"
+            <Border Grid.Row="0"
+                    Background="#B214263A"
                     BorderBrush="#667ECBE5"
-                    BorderThickness="1">
+                    BorderThickness="0,0,0,1"
+                    Padding="10,0,172,0">
+                <DockPanel LastChildFill="True">
+                    <Button DockPanel.Dock="Left"
+                            Content="BACK"
+                            Width="120"
+                            Height="40"
+                            Command="{Binding BackCommand}"
+                            Style="{StaticResource GlassButton.Cyan}"/>
 
-                <ScrollViewer>
+                    <StackPanel DockPanel.Dock="Right"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="0,0,12,0">
+                        <Ellipse Width="10" Height="10" Fill="#4BD050" Margin="0,0,10,0">
+                            <Ellipse.Effect>
+                                <DropShadowEffect Color="#4BD050" BlurRadius="10" ShadowDepth="0" Opacity="0.85"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+                        <TextBlock Text="500 meters connected"
+                                   Foreground="#B8F0FF"
+                                   FontSize="16"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
 
-                    <StackPanel Margin="10">
+                    <TextBlock Text="GAUGE MONITORING"
+                               Foreground="White"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="22,0,0,0"/>
+                </DockPanel>
+            </Border>
 
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Background="#B214263A"
+                        BorderBrush="#667ECBE5"
+                        BorderThickness="0,0,1,0">
+                    <StackPanel Margin="10,18">
                         <TextBlock Text="Basic Widgets"
                                    Foreground="White"
                                    FontSize="18"
-                                   Margin="5"/>
+                                   Margin="5,0,5,12"/>
+                        <Button Content="Button Widgets" Style="{StaticResource ToolboxButton}"/>
+                        <Button Content="Lamp Widgets" Style="{StaticResource ToolboxButton}"/>
+                        <Button Content="Knobs" Style="{StaticResource ToolboxButton}"/>
+                        <Button Content="Utilities" Style="{StaticResource ToolboxButton}"/>
+                        <Button Content="Charts" Style="{StaticResource ToolboxButton}"/>
 
-                        <Button Content="Button Widgets"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Button Content="Lamp Widgets"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Button Content="Knobs"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Button Content="Utilities"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Button Content="Charts"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Separator Margin="10"/>
+                        <Separator Margin="10,10,10,18" Opacity="0.65"/>
 
                         <TextBlock Text="AI Widgets"
                                    Foreground="White"
                                    FontSize="18"
-                                   Margin="5"/>
-
-                        <Button Content="AI Trend"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Button Content="Prediction"
-                                Height="40"
-                                Margin="5"/>
-
-                        <Button Content="Anomaly Detector"
-                                Height="40"
-                                Margin="5"/>
-
+                                   Margin="5,0,5,12"/>
+                        <Button Content="AI Trend" Style="{StaticResource ToolboxButton}"/>
+                        <Button Content="Prediction" Style="{StaticResource ToolboxButton}"/>
+                        <Button Content="Anomaly Detector" Style="{StaticResource ToolboxButton}"/>
                     </StackPanel>
+                </Border>
 
-                </ScrollViewer>
+                <Grid Grid.Column="1" Margin="26,26,26,26">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="118"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="126"/>
+                    </Grid.RowDefinitions>
 
-            </Border>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-            <ScrollViewer Grid.Column="1">
-
-                    <StackPanel Margin="10">
-
-                        <!-- CURRENT GAUGES -->
-                        <Border Background="#4414263A"
-                                BorderBrush="#667ECBE5"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="10"
-                                Width="1650"
-                                HorizontalAlignment="Left"
-                                Margin="0,0,0,20">
-
-                            <StackPanel>
-
-                                <TextBlock Text="CURRENT MONITORING"
-                                           Foreground="White"
-                                           FontSize="18"
-                                           FontWeight="Bold"
-                                           Margin="0,0,0,10"/>
-
-                                <WrapPanel>
-
-                                    <Controls:AnalogGauge Width="250"
-                                          Height="180"
-                                          Title="Incommer 1 Current"
-                                          Unit="A"
-                                          MinValue="0"
-                                          MaxValue="500"
-                                          Value="{Binding INC1AMP}" />
-
-                                    <Controls:AnalogGauge Width="250"
-                                          Height="180"
-                                          Title="Incommer 2 Current"
-                                          Unit="A"
-                                          MinValue="0"
-                                          MaxValue="500"
-                                          Value="{Binding INC2AMP}" />
-
-                                    <Controls:AnalogGauge Width="250"
-                                          Height="180"
-                                          Title="Incommer 3 Current"
-                                          Unit="A"
-                                          MinValue="0"
-                                          MaxValue="500"
-                                          Value="{Binding INC3AMP}" />
-
-                                    <Controls:DigitalMeterCard Width="250"
-                                          Height="180" Value="{Binding INC1AMP,StringFormat={}{0:F2}}" 
-                                          CurrentBrush="{Binding Brush1}" Padding="5,5" Margin="100,5,5,5" />
-
-                                    <Controls:DigitalMeterCard Width="250"
-                                          Height="180" Value="{Binding INC2AMP,StringFormat={}{0:F2}}" 
-                                          CurrentBrush="{Binding Brush2}" Padding="5,5" Margin="100,5,5,5"  />
-
-
-
-                                </WrapPanel>
-
-                            </StackPanel>
-
+                        <Border Grid.Column="0" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="78"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Viewbox Width="70" Height="70">
+                                    <Controls:AnalogGauge/>
+                                </Viewbox>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Total Current" Style="{StaticResource HudLabel}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding INC1AMP, StringFormat={}{0:F1}}" Style="{StaticResource HudValue}"/>
+                                        <TextBlock Text=" A" Foreground="#BCEFFF" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="4,0,0,5"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Selected incomer live" Foreground="#63ED8F" FontSize="13"/>
+                                </StackPanel>
+                            </Grid>
                         </Border>
 
-                        <!-- VOLTAGE GAUGES -->
-                        <Border Background="#4414263A"
-                                BorderBrush="#667ECBE5"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Width="800"
-                                HorizontalAlignment="Left"
-                                Padding="10">
-
-                            <StackPanel>
-
-                                <TextBlock Text="VOLTAGE MONITORING"
-                                           Foreground="White"
-                                           FontSize="18"
-                                           FontWeight="Bold"
-                                           Margin="0,0,0,10"/>
-
-                                <WrapPanel>
-
-                                    <Controls:AnalogGauge Width="250"
-                                          Height="180"
-                                          Title="Incommer 1 Voltage"
-                                          Unit="KV"
-                                          MinValue="0"
-                                          MaxValue="50"
-                                          Value="{Binding INC1VOLT}" />
-
-                                    <Controls:AnalogGauge Width="250"
-                                          Height="180"
-                                          Title="Incommer 2 Voltage"
-                                          Unit="KV"
-                                          MinValue="0"
-                                          MaxValue="50"
-                                          Value="{Binding INC2VOLT}" />
-
-                                    <Controls:AnalogGauge Width="250"
-                                          Height="180"
-                                          Title="Incommer 3 Voltage"
-                                          Unit="KV"
-                                          MinValue="0"
-                                          MaxValue="50"
-                                          Value="{Binding INC3VOLT}" />
-
-
-  
-
-                                </WrapPanel>
-
-                            </StackPanel>
-
+                        <Border Grid.Column="1" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="78"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Viewbox Width="70" Height="70">
+                                    <Controls:AnalogGauge/>
+                                </Viewbox>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Voltage Health" Style="{StaticResource HudLabel}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding INC1VOLT, StringFormat={}{0:F1}}" Style="{StaticResource HudValue}"/>
+                                        <TextBlock Text=" kV" Foreground="#BCEFFF" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="4,0,0,5"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Nominal band" Foreground="#63ED8F" FontSize="13"/>
+                                </StackPanel>
+                            </Grid>
                         </Border>
 
-                    </StackPanel>
-                
+                        <Border Grid.Column="2" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="78"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Viewbox Width="70" Height="70">
+                                    <Controls:AnalogGauge Value="{Binding TotalPowerFactor}" MinValue="0" MaxValue="1" Unit="PF"/>
+                                </Viewbox>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Power Factor" Style="{StaticResource HudLabel}"/>
+                                    <TextBlock Text="{Binding TotalPowerFactor, StringFormat={}{0:F2}}" Style="{StaticResource HudValue}"/>
+                                    <TextBlock Text="Live calculated" Foreground="#FFC24A" FontSize="13"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
 
-                </ScrollViewer>
+                        <Border Grid.Column="3" Style="{StaticResource HudPanel}" Padding="14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="78"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Viewbox Width="70" Height="70">
+                                    <Controls:AnalogGauge Value="3" MinValue="0" MaxValue="10" Unit="AL"/>
+                                </Viewbox>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Active Alarms" Style="{StaticResource HudLabel}"/>
+                                    <TextBlock Text="03" Style="{StaticResource HudValue}" Foreground="#FF746D"/>
+                                    <TextBlock Text="High priority watch" Foreground="#FF746D" FontSize="13"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
 
+                    <Grid Grid.Row="1" Margin="0,20,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.32*"/>
+                            <ColumnDefinition Width="0.88*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource HudPanel}" Margin="0,0,20,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="56"/>
+                                    <RowDefinition Height="46"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" BorderBrush="#337ECBE5" BorderThickness="0,0,0,1">
+                                    <DockPanel Margin="16,0">
+                                        <Border DockPanel.Dock="Right"
+                                                Width="230"
+                                                Height="32"
+                                                CornerRadius="6"
+                                                Background="#77071522"
+                                                BorderBrush="#557ECBE5"
+                                                BorderThickness="1"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="Search meter / feeder"
+                                                       Foreground="#8FDDEA"
+                                                       FontSize="13"
+                                                       VerticalAlignment="Center"
+                                                       Margin="12,0"/>
+                                        </Border>
+                                        <TextBlock Text="METER INDEX" Style="{StaticResource HudTitle}"/>
+                                    </DockPanel>
+                                </Border>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="14,10,14,0">
+                                    <Border CornerRadius="5" Background="#771AB7CC" BorderBrush="#995AECFF" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
+                                        <TextBlock Text="All 500" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
+                                        <TextBlock Text="Alarm 7" Foreground="#FF746D" FontSize="13" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
+                                        <TextBlock Text="Warning 12" Foreground="#FFC24A" FontSize="13" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
+                                        <TextBlock Text="Feeder A" Foreground="#BCEFFF" FontSize="13" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28">
+                                        <TextBlock Text="Feeder B" Foreground="#BCEFFF" FontSize="13" VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <Grid Grid.Row="2" Margin="14,10,14,16">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                        <RowDefinition Height="42"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.0*"/>
+                                        <ColumnDefinition Width="1.1*"/>
+                                        <ColumnDefinition Width="0.9*"/>
+                                        <ColumnDefinition Width="0.9*"/>
+                                        <ColumnDefinition Width="0.7*"/>
+                                        <ColumnDefinition Width="1.0*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Row="0" Grid.ColumnSpan="6" BorderBrush="#337ECBE5" BorderThickness="0,0,0,1"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Meter" Style="{StaticResource MeterHeaderCell}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Area" Style="{StaticResource MeterHeaderCell}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Current" Style="{StaticResource MeterHeaderCell}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Voltage" Style="{StaticResource MeterHeaderCell}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="PF" Style="{StaticResource MeterHeaderCell}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="5" Text="Status" Style="{StaticResource MeterHeaderCell}"/>
+
+                                    <Border Grid.Row="1" Grid.ColumnSpan="6" Background="#2238D9FF" BorderBrush="#885AECFF" BorderThickness="1"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="MFM-031" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Incomer 1" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding INC1AMP, StringFormat={}{0:F1} A}" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding INC1VOLT, StringFormat={}{0:F1} kV}" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="4" Text="0.96" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="MFM-032" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Incomer 2" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding INC2AMP, StringFormat={}{0:F1} A}" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding INC2VOLT, StringFormat={}{0:F1} kV}" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="0.95" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="MFM-033" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="Incomer 3" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding INC3AMP, StringFormat={}{0:F1} A}" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding INC3VOLT, StringFormat={}{0:F1} kV}" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="4" Text="0.94" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="MFM-048" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="Feeder A" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="2" Text="144.0 A" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="3" Text="10.9 kV" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="0.91" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="5" Text="Warning" Foreground="#FFC24A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="MFM-102" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="Transformer" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="2" Text="256.0 A" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="3" Text="10.7 kV" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="4" Text="0.86" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="5" Text="Alarm" Foreground="#FF746D" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="MFM-118" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="1" Text="Utility" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="2" Text="112.0 A" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="3" Text="11.3 kV" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="4" Text="0.97" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="MFM-147" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="1" Text="Feeder C" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="2" Text="166.0 A" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="3" Text="11.0 kV" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="4" Text="0.92" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="7" Grid.Column="5" Text="Warning" Foreground="#FFC24A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+
+                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="MFM-211" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="8" Grid.Column="1" Text="Spare Bay" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="0.0 A" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="8" Grid.Column="3" Text="0.0 kV" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="0.00" Style="{StaticResource MeterCell}"/>
+                                    <TextBlock Grid.Row="8" Grid.Column="5" Text="Offline" Foreground="#FF746D" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource HudPanel}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="56"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="116"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" BorderBrush="#337ECBE5" BorderThickness="0,0,0,1">
+                                    <TextBlock Text="SELECTED METER: MFM-031"
+                                               Style="{StaticResource HudTitle}"
+                                               Margin="16,0"/>
+                                </Border>
+
+                                <Grid Grid.Row="1" Margin="18,14,18,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.1*"/>
+                                        <ColumnDefinition Width="0.9*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Viewbox Grid.RowSpan="2" Grid.Column="0" Margin="0,0,18,0">
+                                        <Controls:AnalogGauge Title="Main Current" Unit="A" MinValue="0" MaxValue="500" Value="{Binding INC1AMP}"/>
+                                    </Viewbox>
+
+                                    <Viewbox Grid.Row="0" Grid.Column="1" Margin="0,0,0,8">
+                                        <Controls:AnalogGauge Title="Voltage" Unit="kV" MinValue="0" MaxValue="50" Value="{Binding INC1VOLT}"/>
+                                    </Viewbox>
+
+                                    <Viewbox Grid.Row="1" Grid.Column="1" Margin="0,8,0,0">
+                                        <Controls:AnalogGauge Title="Power Factor" Unit="PF" MinValue="0" MaxValue="1" Value="{Binding TotalPowerFactor}"/>
+                                    </Viewbox>
+                                </Grid>
+
+                                <Grid Grid.Row="2" Margin="18,0,18,18">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="24"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Last 30 min trend" Foreground="#BCEFFF" FontSize="14"/>
+                                    <Canvas Grid.Row="1">
+                                        <Polyline Points="0,62 55,52 110,56 165,36 220,43 275,24 330,34 385,18 440,28 495,18"
+                                                  Stroke="#48D9FF"
+                                                  StrokeThickness="3">
+                                            <Polyline.Effect>
+                                                <DropShadowEffect Color="#48D9FF" BlurRadius="12" ShadowDepth="0" Opacity="0.75"/>
+                                            </Polyline.Effect>
+                                        </Polyline>
+                                        <Path Data="M 0,62 L 55,52 L 110,56 L 165,36 L 220,43 L 275,24 L 330,34 L 385,18 L 440,28 L 495,18 L 495,76 L 0,76 Z"
+                                              Fill="#2248D9FF"/>
+                                    </Canvas>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Incomer Group" Style="{StaticResource HudTitle}" FontSize="16"/>
+                                <DockPanel Margin="0,14,0,0">
+                                    <TextBlock Text="36 meters" Foreground="#BCEFFF" FontSize="14"/>
+                                    <TextBlock Text="98%" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
+                                </DockPanel>
+                                <ProgressBar Value="98" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#55EF87" Background="#33101F32"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Feeder Group A" Style="{StaticResource HudTitle}" FontSize="16"/>
+                                <DockPanel Margin="0,14,0,0">
+                                    <TextBlock Text="126 meters" Foreground="#BCEFFF" FontSize="14"/>
+                                    <TextBlock Text="92%" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
+                                </DockPanel>
+                                <ProgressBar Value="92" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#48D9FF" Background="#33101F32"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Transformer Bays" Style="{StaticResource HudTitle}" FontSize="16"/>
+                                <DockPanel Margin="0,14,0,0">
+                                    <TextBlock Text="54 meters" Foreground="#BCEFFF" FontSize="14"/>
+                                    <TextBlock Text="86%" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
+                                </DockPanel>
+                                <ProgressBar Value="86" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#FFC24A" Background="#33101F32"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="3" Style="{StaticResource HudPanel}" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="Critical Watch" Style="{StaticResource HudTitle}" FontSize="16"/>
+                                <DockPanel Margin="0,14,0,0">
+                                    <TextBlock Text="7 meters" Foreground="#BCEFFF" FontSize="14"/>
+                                    <TextBlock Text="Alarm" Foreground="#FF746D" FontSize="14" HorizontalAlignment="Right"/>
+                                </DockPanel>
+                                <ProgressBar Value="34" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#FF746D" Background="#33101F32"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
             </Grid>
-
         </Grid>
     </Grid>
 </UserControl>

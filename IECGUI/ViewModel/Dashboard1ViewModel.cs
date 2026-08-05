@@ -547,7 +547,7 @@ namespace IECGUI.ViewModel
             _navigation = navigation;
             EventsCommand = new RelayCommand(OpenRelayCard);
             HomeCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>()); //_navigation.NavigateTo(new Dashboard1ViewModel(_navigation));
-            AlarmCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel2>());
+            AlarmCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
             TrendingCommand = new RelayCommand(() => _navigation.NavigateTo<ConfigurationViewModel>());
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
 

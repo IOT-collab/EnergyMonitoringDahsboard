@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace IECGUI.Controls
 {
@@ -112,7 +113,14 @@ namespace IECGUI.Controls
             // 0..180 degrees
             double angle = -90 + (percent * 180);
 
-            NeedleRotate.Angle = angle;
+            var animation = new DoubleAnimation
+            {
+                To = angle,
+                Duration = TimeSpan.FromMilliseconds(650),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            NeedleRotate.BeginAnimation(RotateTransform.AngleProperty, animation, HandoffBehavior.SnapshotAndReplace);
         }
     }
 }

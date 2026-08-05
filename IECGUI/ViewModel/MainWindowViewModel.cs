@@ -27,16 +27,18 @@ namespace IECGUI.ViewModel
         public string AppVersion => "23.40.32";
 
         public INavigationService Navigation { get; }
+        public AlarmMonitoringService AlarmService { get; }
 
         public ICommand CloseAppCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
 
         private readonly IDialogService _dialogService;
 
-        public MainWindowViewModel(INavigationService navigation , IDialogService dialogService)
+        public MainWindowViewModel(INavigationService navigation , IDialogService dialogService, AlarmMonitoringService alarmService)
         {
             Navigation = navigation;
             _dialogService = dialogService;
+            AlarmService = alarmService;
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
             Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));

@@ -329,3 +329,5 @@ C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI\obj\Debug\net8.0-win
 C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI\obj\Debug\net8.0-windows\ref\IECGUI.dll
 C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI\obj\Debug\net8.0-windows\View\HomePageView.baml
 C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI\obj\Debug\net8.0-windows\View\HomePageView.g.cs
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI\obj\Debug\net8.0-windows\View\AlarmView.baml
+C:\Users\ASUS\source\repos\EnergyMonitoringDahsboard\IECGUI\obj\Debug\net8.0-windows\View\AlarmView.g.cs

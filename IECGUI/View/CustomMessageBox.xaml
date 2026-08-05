@@ -1,78 +1,187 @@
-﻿<Window x:Class="IECGUI.View.CustomMessageBox"
+<Window x:Class="IECGUI.View.CustomMessageBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:conv="clr-namespace:IECGUI.Converters" 
-        Title="Notification" Height="320" Width="500"
-        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize"
-        AllowsTransparency="True" Background="Transparent">
+        Title="Notification"
+        Height="380"
+        Width="650"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <DropShadowEffect x:Key="DialogGlow"
+                          Color="#24DFFF"
+                          BlurRadius="30"
+                          ShadowDepth="0"
+                          Opacity="0.42"/>
+
+        <Style x:Key="DialogActionButton" TargetType="Button">
+            <Setter Property="Height" Value="52"/>
+            <Setter Property="MinWidth" Value="150"/>
+            <Setter Property="Padding" Value="24,0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#69BFEFFF"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#47D9F7FF" Offset="0"/>
+                        <GradientStop Color="#1A18D9F0" Offset="0.18"/>
+                        <GradientStop Color="#D1087A8F" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="7">
+                            <Grid>
+                                <Border Height="1"
+                                        VerticalAlignment="Top"
+                                        Background="#9BFFFFFF"
+                                        Margin="1,1"/>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#A93EEBFF"/>
+                                <Setter TargetName="Root" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#2EDFFF" BlurRadius="18" ShadowDepth="0" Opacity="0.55"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.78"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DialogGhostButton" TargetType="Button" BasedOn="{StaticResource DialogActionButton}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#50FFFFFF" Offset="0"/>
+                        <GradientStop Color="#21192D3B" Offset="0.2"/>
+                        <GradientStop Color="#B5081420" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="#4B91B8C9"/>
+            <Setter Property="Foreground" Value="#DDF8FF"/>
+        </Style>
     </Window.Resources>
 
-    <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="2" CornerRadius="16" Margin="10">
-        <Border.Effect>
-            <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="5" Opacity="0.3"/>
-        </Border.Effect>
+    <Grid>
+        <Border Background="#7A000711"/>
+        <Border Margin="10"
+                CornerRadius="9"
+                Background="#F20A1A28"
+                BorderBrush="#8C6EDFFF"
+                BorderThickness="1.5"
+                Effect="{StaticResource DialogGlow}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="92"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="92"/>
+                </Grid.RowDefinitions>
 
-        <Grid Margin="30">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                <Border Grid.Row="0"
+                        Background="#1D30DFFF"
+                        BorderBrush="#386EDFFF"
+                        BorderThickness="0,0,0,1">
+                    <DockPanel Margin="28,0">
+                        <Border Width="48"
+                                Height="48"
+                                CornerRadius="24"
+                                BorderBrush="#8C6EDFFF"
+                                BorderThickness="2"
+                                Background="#1F1FD7EC"
+                                DockPanel.Dock="Left"
+                                VerticalAlignment="Center"
+                                Margin="0,0,16,0">
+                            <Path Data="M 20,5 L 35,35 L 5,35 Z M 20,14 L 20,24 M 20,29 L 20,30"
+                                  Stroke="#BCEFFF"
+                                  StrokeThickness="3"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  StrokeLineJoin="Round"
+                                  Stretch="Uniform"
+                                  Width="25"
+                                  Height="25"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Title}"
+                                       Foreground="White"
+                                       FontSize="30"
+                                       FontWeight="Bold"/>
+                            <TextBlock Text="System notification"
+                                       Foreground="#9EE9F7"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
 
-            <TextBlock Text="{Binding Title}" Foreground="#333333" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <Grid Grid.Row="1" Margin="34,20">
+                    <Border Background="#280C2233"
+                            BorderBrush="#2440DFFF"
+                            BorderThickness="1"
+                            CornerRadius="8"/>
+                    <TextBlock Text="{Binding Message}"
+                               Foreground="#EAFBFF"
+                               FontSize="25"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               MaxWidth="520"
+                               LineHeight="34"/>
+                </Grid>
 
-            <TextBlock Text="{Binding Message}" Grid.Row="1" Foreground="#555555" FontSize="24" FontWeight="SemiBold" 
-                       TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="20"/>
+                <Grid Grid.Row="2" Margin="34,0,34,28">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Grid.Column="0"
+                            Command="{Binding NoCommand}"
+                            Content="{Binding NoText}"
+                            Visibility="{Binding IsCancelVisible, Converter={StaticResource BoolToVis}}"
+                            Style="{StaticResource DialogGhostButton}"
+                            HorizontalAlignment="Right"/>
 
-                <Button Command="{Binding NoCommand}"
-                        Content="{Binding NoText}"
-                        Visibility="{Binding IsCancelVisible, Converter={StaticResource BoolToVis}}"
-                        Width="130" Height="60"
-                        FontSize="22" FontWeight="Bold" Cursor="Hand"
-                        Background="#F5F5F5" Foreground="#666666"
-                        BorderBrush="#CCCCCC" BorderThickness="2"
-                        Margin="0,0,30,0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" CornerRadius="10">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="#DDDDDD"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-
-                <Button Command="{Binding YesCommand}"
-                        Content="{Binding YesText}"
-                        IsDefault="True"
-                        Background="{Binding YesButtonBrush}" 
-                        Width="130" Height="60"
-                        FontSize="22" FontWeight="Bold" Cursor="Hand"
-                        Foreground="White" BorderThickness="0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="border" Property="Opacity" Value="0.8"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-
-            </StackPanel>
-        </Grid>
-    </Border>
+                    <Button Grid.Column="2"
+                            Command="{Binding YesCommand}"
+                            Content="{Binding YesText}"
+                            IsDefault="True"
+                            Style="{StaticResource DialogActionButton}"
+                            HorizontalAlignment="Left"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>

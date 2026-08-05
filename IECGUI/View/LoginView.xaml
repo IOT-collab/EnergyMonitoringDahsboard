@@ -1,46 +1,202 @@
-﻿<UserControl x:Class="IECGUI.View.LoginView"
+<UserControl x:Class="IECGUI.View.LoginView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:helpers="clr-namespace:IECGUI.Common.WPFExtensions;assembly=IECGUI.WPFExtensions"
-        xmlns:local="clr-namespace:IECGUI.View"
         mc:Ignorable="d"
-        d:Height ="1080" Width="1920">
+        d:DesignHeight="1080"
+        d:DesignWidth="1920"
+        Width="1920">
     <UserControl.Resources>
         <Style x:Key="LoginInputContainer" TargetType="Border">
-            <Setter Property="Height" Value="60"/>
+            <Setter Property="Height" Value="58"/>
             <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Background" Value="#6614263A"/>
+            <Setter Property="Background" Value="#66101F32"/>
             <Setter Property="BorderBrush" Value="#667ECBE5"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,0,25"/>
+            <Setter Property="Margin" Value="0,0,0,24"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#1DDCFF" BlurRadius="12" ShadowDepth="0" Opacity="0.08"/>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#1E4FA8"/>
+                    <Setter Property="BorderBrush" Value="#B448D9FF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </UserControl.Resources>
-    <Grid>
-        <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power1.jpg"
-            Stretch="UniformToFill"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"/>
 
-        <Rectangle Fill="#990F172A" />
+        <Style x:Key="LoginTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="58"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CaretBrush" Value="#48D9FF"/>
+        </Style>
+
+        <Style x:Key="LoginActionButton" TargetType="Button">
+            <Setter Property="Height" Value="68"/>
+            <Setter Property="FontSize" Value="23"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" CornerRadius="8" ClipToBounds="True">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#0F93AD" Offset="0"/>
+                                    <GradientStop Color="#105272" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid>
+                                <Rectangle Width="90"
+                                           HorizontalAlignment="Left"
+                                           Opacity="0.35"
+                                           RenderTransformOrigin="0.5,0.5">
+                                    <Rectangle.RenderTransform>
+                                        <TransformGroup>
+                                            <SkewTransform AngleX="-18"/>
+                                            <TranslateTransform x:Name="ButtonShineTransform" X="-130"/>
+                                        </TransformGroup>
+                                    </Rectangle.RenderTransform>
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                            <GradientStop Color="#88FFFFFF" Offset="0.5"/>
+                                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetName="ButtonShineTransform"
+                                                         Storyboard.TargetProperty="X"
+                                                         From="-130"
+                                                         To="720"
+                                                         Duration="0:0:2.8"
+                                                         BeginTime="0:0:0.7"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.92"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.985" ScaleY="0.985"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="ButtonBorder" Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#06111C" ClipToBounds="True">
+        <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/Power1.jpg"
+               Stretch="UniformToFill"
+               Opacity="0.88"/>
+        <Rectangle Fill="#AA06111C"/>
+
+        <Canvas IsHitTestVisible="False">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="EnergyGridTransform" Y="0"/>
+            </Canvas.RenderTransform>
+            <Canvas.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetName="EnergyGridTransform"
+                                             Storyboard.TargetProperty="Y"
+                                             From="0"
+                                             To="72"
+                                             Duration="0:0:5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Canvas.Triggers>
+            <Canvas.OpacityMask>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#00FFFFFF" Offset="0"/>
+                    <GradientStop Color="#88FFFFFF" Offset="0.55"/>
+                    <GradientStop Color="#22FFFFFF" Offset="1"/>
+                </LinearGradientBrush>
+            </Canvas.OpacityMask>
+            <Line X1="-120" Y1="790" X2="2040" Y2="790" Stroke="#2748D9FF" StrokeThickness="1"/>
+            <Line X1="-120" Y1="862" X2="2040" Y2="862" Stroke="#2248D9FF" StrokeThickness="1"/>
+            <Line X1="-120" Y1="934" X2="2040" Y2="934" Stroke="#1C48D9FF" StrokeThickness="1"/>
+            <Line X1="-120" Y1="1006" X2="2040" Y2="1006" Stroke="#1848D9FF" StrokeThickness="1"/>
+            <Line X1="140" Y1="748" X2="-140" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="380" Y1="748" X2="240" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="620" Y1="748" X2="620" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="860" Y1="748" X2="1000" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="1100" Y1="748" X2="1380" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="1340" Y1="748" X2="1760" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+            <Line X1="1580" Y1="748" X2="2140" Y2="1080" Stroke="#2448D9FF" StrokeThickness="1"/>
+        </Canvas>
+
+        <Canvas IsHitTestVisible="False">
+            <Ellipse Canvas.Left="160" Canvas.Top="850" Width="175" Height="175" Opacity="0.75">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#FFF1A64B" Offset="0"/>
+                        <GradientStop Color="#66F47A22" Offset="0.38"/>
+                        <GradientStop Color="#00F47A22" Offset="0.76"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+                <Ellipse.Effect>
+                    <BlurEffect Radius="8"/>
+                </Ellipse.Effect>
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 From="0.58"
+                                                 To="0.9"
+                                                 Duration="0:0:2.5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+
+            <Line X1="-80" Y1="248" X2="2050" Y2="196" Stroke="#99071422" StrokeThickness="2"/>
+            <Line X1="-80" Y1="318" X2="2050" Y2="272" Stroke="#77071422" StrokeThickness="2"/>
+            <Line X1="-80" Y1="405" X2="2050" Y2="350" Stroke="#66071422" StrokeThickness="2"/>
+            <Line X1="-80" Y1="492" X2="2050" Y2="432" Stroke="#55071422" StrokeThickness="2"/>
+
+        </Canvas>
 
         <Viewbox Stretch="Uniform">
             <Grid Width="1920" Height="1080">
-
-                <Border Width="1200" Height="700"
-                     CornerRadius="20"
-                    Background="#6614263A"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center">
-
+                <Border Width="1210"
+                        Height="700"
+                        CornerRadius="8"
+                        Background="#66101F32"
+                        BorderBrush="#667ECBE5"
+                        BorderThickness="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        ClipToBounds="True">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Opacity="0.4" Color="Black"/>
+                        <DropShadowEffect BlurRadius="54" ShadowDepth="12" Opacity="0.45" Color="Black"/>
                     </Border.Effect>
 
                     <Grid>
@@ -49,133 +205,173 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" CornerRadius="20,0,0,20">
+                        <Border Grid.Column="0" CornerRadius="8,0,0,8" ClipToBounds="True">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#0D6B85" Offset="0"/>
-                                    <GradientStop Color="#081421" Offset="1"/>
+                                    <GradientStop Color="#0E7A91" Offset="0"/>
+                                    <GradientStop Color="#061A2A" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
 
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Border Width="380" Height="380" 
-                                     CornerRadius="60" 
-                                     BorderBrush="Transparent" 
-                                     BorderThickness="4"
-                                     Margin="0,0,0,30">
-                                    <Border.Background>
-                                        <ImageBrush ImageSource="pack://application:,,,/IECGUI.Visuals;component/Images/vertexlogo.png" Stretch="Uniform"/>
-                                    </Border.Background>
+                            <Grid Margin="42,34,42,36">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="180"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0"
+                                        Width="300"
+                                        Height="145"
+                                        CornerRadius="8"
+                                        Background="#22000000"
+                                        BorderBrush="#3348D9FF"
+                                        BorderThickness="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top">
+                                    <Image Source="pack://application:,,,/IECGUI.Visuals;component/Images/vertexlogo.png"
+                                           Stretch="Uniform"
+                                           Margin="18"/>
                                 </Border>
 
-                                <TextBlock Text="{Binding AppName}"
-                                        FontSize="42"
-                                        FontWeight="Bold"
-                                        Foreground="White"
-                                        HorizontalAlignment="Center"
-                                        />
+                                <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="285" Height="250">
+                                    <Ellipse Width="230" Height="230" Stroke="#4548D9FF" StrokeThickness="1" StrokeDashArray="10 8"
+                                             HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Ellipse.RenderTransform>
+                                            <RotateTransform x:Name="OuterOrbitRotate" CenterX="115" CenterY="115"/>
+                                        </Ellipse.RenderTransform>
+                                        <Ellipse.Triggers>
+                                            <EventTrigger RoutedEvent="Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard RepeatBehavior="Forever">
+                                                        <DoubleAnimation Storyboard.TargetName="OuterOrbitRotate"
+                                                                         Storyboard.TargetProperty="Angle"
+                                                                         From="0"
+                                                                         To="360"
+                                                                         Duration="0:0:12"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Ellipse.Triggers>
+                                    </Ellipse>
 
-                                <!--<TextBlock Text="Secure Operator Access"
-                                        FontSize="20"
-                                        Foreground="#AAC4FF"
-                                        HorizontalAlignment="Center"
-                                        Margin="0,10,0,0"/>-->
-                            </StackPanel>
+                                    <Ellipse Width="150" Height="150" Stroke="#3348D9FF" StrokeThickness="1"
+                                             HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Ellipse.RenderTransform>
+                                            <RotateTransform x:Name="InnerOrbitRotate" CenterX="75" CenterY="75"/>
+                                        </Ellipse.RenderTransform>
+                                        <Ellipse.Triggers>
+                                            <EventTrigger RoutedEvent="Loaded">
+                                                <BeginStoryboard>
+                                                    <Storyboard RepeatBehavior="Forever">
+                                                        <DoubleAnimation Storyboard.TargetName="InnerOrbitRotate"
+                                                                         Storyboard.TargetProperty="Angle"
+                                                                         From="360"
+                                                                         To="0"
+                                                                         Duration="0:0:8"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Ellipse.Triggers>
+                                    </Ellipse>
+
+                                    <Border Width="82" Height="82" CornerRadius="14" BorderBrush="#8848D9FF" BorderThickness="2"
+                                            Background="#33101F32"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="&#xE945;"
+                                                   FontFamily="Segoe MDL2 Assets"
+                                                   FontSize="52"
+                                                   Foreground="#6DEEFF"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="#48D9FF" BlurRadius="18" ShadowDepth="0" Opacity="0.75"/>
+                                            </TextBlock.Effect>
+                                        </TextBlock>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+                                    <TextBlock Text="VERTEX GROUP"
+                                               FontSize="38"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="ENERGY INTELLIGENCE COMMAND CENTER"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="#C7F3FF"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,10,0,0"/>
+                                    <Border Width="210" Height="34" CornerRadius="17" BorderBrush="#594BD050" BorderThickness="1" Margin="0,24,0,0">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Ellipse Width="9" Height="9" Fill="#4BD050" Margin="0,0,9,0">
+                                                <Ellipse.Effect>
+                                                    <DropShadowEffect Color="#4BD050" BlurRadius="12" ShadowDepth="0" Opacity="0.85"/>
+                                                </Ellipse.Effect>
+                                            </Ellipse>
+                                            <TextBlock Text="SECURE GRID ACCESS" Foreground="#77EF88" FontSize="12" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
                         </Border>
 
-                        <Grid Grid.Column="1" Margin="80">
+                        <Grid Grid.Column="1" Margin="80,74,80,62">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <StackPanel Grid.Row="0" Margin="0,0,0,50">
+                            <StackPanel Grid.Row="0" Margin="0,0,0,42">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                                    <Ellipse Width="10" Height="10" Fill="#4BD050" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="System Online" Foreground="#AEEFFF" FontSize="15"/>
+                                </StackPanel>
                                 <TextBlock Text="Welcome Back"
-                                        FontSize="48"
-                                        FontWeight="Bold"
-                                        Foreground="White"/>
-                                <TextBlock Text="Please enter your credentials to continue."
-                                        FontSize="20"
-                                        Foreground="#B7E9F7"
-                                        Margin="0,10,0,0"/>
+                                           FontSize="48"
+                                           FontWeight="Bold"
+                                           Foreground="White"/>
+                                <TextBlock Text="Authenticate to open the live energy monitoring dashboard."
+                                           FontSize="20"
+                                           Foreground="#B7E9F7"
+                                           Margin="0,12,0,0"/>
                             </StackPanel>
 
                             <StackPanel Grid.Row="1" VerticalAlignment="Center">
-
-                                <TextBlock Text="USERNAME" FontSize=" 20" FontWeight="SemiBold" Foreground="#B7E9F7" Margin="0,0,0,10"/>
+                                <TextBlock Text="USERNAME" FontSize="18" FontWeight="SemiBold" Foreground="#B7E9F7" Margin="0,0,0,10"/>
                                 <Border Style="{StaticResource LoginInputContainer}">
-
-                                    <TextBox x:Name="UsernameInput" Height="60"
-                                          Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                                          FontSize="24"                                         
-                                          Background="Transparent"
-                                          BorderThickness="0"
-                                          VerticalContentAlignment="Center"
-                                          Padding="15,0"
-                                          Foreground="White"/>
+                                    <TextBox x:Name="UsernameInput"
+                                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource LoginTextBox}"/>
                                 </Border>
 
-                                <TextBlock Text="PASSWORD" FontSize=" 20" FontWeight="SemiBold" Foreground="#B7E9F7" Margin="0,0,0,10"/>
+                                <TextBlock Text="PASSWORD" FontSize="18" FontWeight="SemiBold" Foreground="#B7E9F7" Margin="0,0,0,10"/>
                                 <Border Style="{StaticResource LoginInputContainer}">
-                                    <TextBox x:Name="PasswordBoxControl" Height="60"
-                                              Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"    
-                                              FontSize="24"
-                                              Background="Transparent"
-                                              BorderThickness="0"
-                                              VerticalContentAlignment="Center"
-                                              Padding="15,0"
-                                               />
+                                    <TextBox x:Name="PasswordBoxControl"
+                                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource LoginTextBox}"/>
                                 </Border>
                             </StackPanel>
 
-                            <Button Grid.Row="2"
-                                 Content="LOGIN"
-                                 Command="{Binding LoginCommand}"
-                                 IsDefault="True"
-                                 Height="70"
-                                 FontSize="24"
-                                 FontWeight="Bold"
-                                 Foreground="White"
-                                 Cursor="Hand"
-                                 BorderThickness="0">
-
-                                <Button.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="#0D6B85" Offset="0"/>
-                                        <GradientStop Color="#123C55" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Button.Background>
-
-                                <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="10"/>
-                                    </Style>
-                                </Button.Resources>
-
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="10">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Opacity" Value="0.9"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Opacity" Value="0.7"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-
+                            <StackPanel Grid.Row="2">
+                                <Button Content="LOGIN"
+                                        Command="{Binding LoginCommand}"
+                                        IsDefault="True"
+                                        Style="{StaticResource LoginActionButton}"/>
+                                <Grid Margin="0,17,0,0">
+                                    <TextBlock Text="Secure session"
+                                               Foreground="#8FDDEA"
+                                               FontSize="13"
+                                               HorizontalAlignment="Left"/>
+                                    <TextBlock Text="23.40.32"
+                                               Foreground="#8FDDEA"
+                                               FontSize="13"
+                                               HorizontalAlignment="Right"/>
+                                </Grid>
+                            </StackPanel>
                         </Grid>
                     </Grid>
                 </Border>
