@@ -1,5 +1,0 @@
-D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\reporting\obj\Debug\net8.0\reporting.GeneratedMSBuildEditorConfig.editorconfig
-D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\reporting\obj\Debug\net8.0\reporting.AssemblyInfoInputs.cache
-D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\reporting\obj\Debug\net8.0\reporting.AssemblyInfo.cs
-D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\reporting\obj\Debug\net8.0\reporting.csproj.CoreCompileInputs.cache
-D:\Project 2026\libiec61850-1.6\libiec61850-1.6\dotnet\reporting\obj\Debug\net8.0\reporting.sourcelink.json
