@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:extensions="clr-namespace:IECGUI.Common.WPFExtensions;assembly=IECGUI.WPFExtensions"
         mc:Ignorable="d"
         d:DesignHeight="1080"
         d:DesignWidth="1920"
@@ -28,6 +29,17 @@
         </Style>
 
         <Style x:Key="LoginTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="58"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CaretBrush" Value="#48D9FF"/>
+        </Style>
+
+        <Style x:Key="LoginPasswordBox" TargetType="PasswordBox">
             <Setter Property="Height" Value="58"/>
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -350,9 +362,11 @@
 
                                 <TextBlock Text="PASSWORD" FontSize="18" FontWeight="SemiBold" Foreground="#B7E9F7" Margin="0,0,0,10"/>
                                 <Border Style="{StaticResource LoginInputContainer}">
-                                    <TextBox x:Name="PasswordBoxControl"
-                                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                                             Style="{StaticResource LoginTextBox}"/>
+                                    <PasswordBox x:Name="PasswordBoxControl"
+                                                 PasswordChar="*"
+                                                 extensions:PasswordBoxHelper.BindPassword="True"
+                                                 extensions:PasswordBoxHelper.BindablePassword="{Binding Password, Mode=TwoWay}"
+                                                 Style="{StaticResource LoginPasswordBox}"/>
                                 </Border>
                             </StackPanel>
 
