@@ -29,6 +29,7 @@ namespace IECGUI.ViewModel
         public ICommand AddUserCommand { get; }
         public ICommand DeleteUserCommand { get; }
         public ICommand SaveCommand { get; }
+        public ICommand HomeCommand { get; }
 
         public UserSettingsViewModel(INavigationService navigation, IUserSettingsService userService, IDialogService dialog)
         {
@@ -51,6 +52,7 @@ namespace IECGUI.ViewModel
             AddUserCommand = new RelayCommand(AddUser);
             DeleteUserCommand = new RelayCommand(DeleteUser);
             SaveCommand = new RelayCommand(Save);
+            HomeCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
         }
 
         private void AddUser()
