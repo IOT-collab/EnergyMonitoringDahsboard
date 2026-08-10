@@ -49,6 +49,15 @@
                         VerticalAlignment="Center"
                         Command="{Binding MenuCommand}"
                         Style="{StaticResource GlassButton.Ghost}"/>
+                <Button Content="User Settings"
+                        DockPanel.Dock="Right"
+                        Margin="0,0,178,0"
+                        Width="100"
+                        Height="50"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding UserSettingCommand}"
+                        Style="{StaticResource GlassButton.Ghost}"/>
 
             </DockPanel>
 

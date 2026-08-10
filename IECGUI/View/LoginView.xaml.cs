@@ -21,9 +21,16 @@ namespace IECGUI.View
         public LoginView()
         {
             InitializeComponent();
-       
         }
 
-
+        // Mirror PasswordBox.Password into ViewModel.Password securely (string). 
+        // For production use SecureString and avoid storing plain text.
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is IECGUI.ViewModel.LoginViewModel vm)
+            {
+                vm.Password = ((PasswordBox)sender).Password;
+            }
+        }
     }
 }

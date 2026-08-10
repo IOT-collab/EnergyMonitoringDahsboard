@@ -12,5 +12,9 @@ namespace IEC.Shared.Models
 
         public List<MetersConfig> Meters { get; set; }
             = new List<MetersConfig>();
+
+        // New: persisted user settings
+        public UserSettings UserSettings { get; set; } = new UserSettings();
+
     }
 }

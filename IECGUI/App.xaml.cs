@@ -43,12 +43,14 @@ namespace IECGUI
             services.AddTransient<MqttMonitorViewModel>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<AlarmMonitoringService>();
-
+            services.AddSingleton<IUserSettingsService, UserSettingsService>();
+            services.AddSingleton<IAuthService, AuthService>();
 
             //IEC 618850 services
 
             services.AddSingleton<IIec61850MeterService, Iec61850MeterService>();
             services.AddTransient<IecConfigViewModel>();
+            
 
 
             // ViewModels
@@ -63,6 +65,7 @@ namespace IECGUI
             services.AddTransient<Iec61850MonitorViewModel>();
             services.AddSingleton<ReportViewerViewModel>();
             services.AddSingleton<ReportConfigViewModel>();
+            services.AddSingleton<UserSettingsViewModel>();
             // Views
             services.AddTransient<MainWindow>();
 

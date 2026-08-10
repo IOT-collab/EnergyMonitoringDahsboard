@@ -140,7 +140,7 @@
       "MeterId": 2,
       "MeterName": "EM6400NG",
       "Communication": {
-        "Protocol": "ModbusRtu",
+        "Protocol": "ModbusTcp",
         "ComPort": "COM6",
         "BaudRate": 19200,
         "Parity": "Even",
@@ -270,6 +270,85 @@
           "DataType": "Float"
         }
       ]
+    },
+    {
+      "MeterId": 3,
+      "MeterName": "Meter-3",
+      "Communication": {
+        "Protocol": "ModbusTcp",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 5,
+        "WordOrder": "LowHigh",
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": []
+    },
+    {
+      "MeterId": 4,
+      "MeterName": "Meter-4",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 5,
+        "WordOrder": "LowHigh",
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": []
+    },
+    {
+      "MeterId": 5,
+      "MeterName": "Meter-5",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 5,
+        "WordOrder": "LowHigh",
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": []
+    },
+    {
+      "MeterId": 6,
+      "MeterName": "Meter-6",
+      "Communication": {
+        "Protocol": "ModbusRtu",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 5,
+        "WordOrder": "LowHigh",
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502
+      },
+      "Registers": []
     }
-  ]
+  ],
+  "UserSettings": {
+    "Users": [
+      {
+        "Username": "Rishabh",
+        "Password": "1234",
+        "Role": "Operator",
+        "IsEnabled": false
+      }
+    ],
+    "DefaultRole": "Operator"
+  }
 }

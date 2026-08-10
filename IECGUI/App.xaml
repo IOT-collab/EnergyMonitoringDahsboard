@@ -68,6 +68,10 @@
                 <view:CustomMessageBox/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:UserSettingsViewModel}">
+                <view:UserSettingsView/>
+            </DataTemplate>
+
         </ResourceDictionary>
 
     </Application.Resources>

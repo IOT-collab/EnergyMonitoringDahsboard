@@ -31,6 +31,8 @@ namespace IECGUI.ViewModel
 
         public ICommand MenuCommand { get; }
 
+        public ICommand UserSettingCommand { get; }
+
         public ICommand INCBRK1OPEN { get; set; }
 
         public ICommand INCBRK2OPEN { get; set; }
@@ -550,6 +552,7 @@ namespace IECGUI.ViewModel
             AlarmCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
             TrendingCommand = new RelayCommand(() => _navigation.NavigateTo<ConfigurationViewModel>());
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+            UserSettingCommand = new RelayCommand(() => _navigation.NavigateTo<UserSettingsViewModel>());
 
 
             _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(100), RunBackgroundService, ex => Console.WriteLine(ex.Message));

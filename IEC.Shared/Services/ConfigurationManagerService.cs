@@ -48,6 +48,10 @@ namespace IEC.Shared.Services
             if (Configuration.Meters == null)
                 Configuration.Meters = new List<MetersConfig>();
 
+            // Ensure UserSettings object exists after load (so UI/ViewModel can bind safely)
+            if (Configuration.UserSettings == null)
+                Configuration.UserSettings = new UserSettings();
+
             foreach (var meter in Configuration.Meters)
             {
                 meter.Communication ??= new CommunicationConfig();
