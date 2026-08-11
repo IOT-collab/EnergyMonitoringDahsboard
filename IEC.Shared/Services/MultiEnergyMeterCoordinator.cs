@@ -23,8 +23,8 @@ namespace IEC.Shared.Services
         {
             if (meters == null)
             {
-                _rtuService.Configure(Array.Empty<MetersConfig>());
-                _tcpService.Configure(Array.Empty<MetersConfig>());
+                await _rtuService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
+                await _tcpService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
                 return;
             }
 
@@ -33,8 +33,11 @@ namespace IEC.Shared.Services
             var rtuMeters = list.Where(m => (m.Communication?.Protocol ?? ProtocolsType.ModbusRtu) == ProtocolsType.ModbusRtu);
             var tcpMeters = list.Where(m => (m.Communication?.Protocol ?? ProtocolsType.ModbusRtu) == ProtocolsType.ModbusTcp);
 
-            _rtuService.Configure(rtuMeters);
-            _tcpService.Configure(tcpMeters);
+            // Configuration must complete before the caller starts polling.
+            // Previously these tasks were fire-and-forget, so ReadAllAsync could
+            // run while the RTU service had just cleared its meter dictionaries.
+            await _rtuService.Configure(rtuMeters).ConfigureAwait(false);
+            await _tcpService.Configure(tcpMeters).ConfigureAwait(false);
         }
 
         public async Task<Dictionary<string, MeterReading>> ReadAllAsync()

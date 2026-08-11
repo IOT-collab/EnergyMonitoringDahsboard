@@ -60,6 +60,20 @@ namespace IEC.Shared.Services
             // Every slave sharing a physical RTU port must use identical serial settings.
             foreach (var portGroup in meterList.GroupBy(m => m.Communication?.ComPort ?? "COM1", StringComparer.OrdinalIgnoreCase))
             {
+                // Recover a transient/null parity from another meter on the same
+                // physical bus. The configuration UI may previously have written
+                // null while changing ComboBox selections, although JSON is valid.
+                var sharedParity = portGroup
+                    .Select(m => m.Communication?.Parity)
+                    .FirstOrDefault(p => !string.IsNullOrWhiteSpace(p)) ?? "Even";
+
+                foreach (var groupedMeter in portGroup)
+                {
+                    groupedMeter.Communication ??= new CommunicationConfig();
+                    if (string.IsNullOrWhiteSpace(groupedMeter.Communication.Parity))
+                        groupedMeter.Communication.Parity = sharedParity;
+                }
+
                 var first = portGroup.First().Communication ?? new CommunicationConfig();
                 if (portGroup.Skip(1).Any(m =>
                 {

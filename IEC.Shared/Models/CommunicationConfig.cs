@@ -40,7 +40,19 @@ namespace IEC.Shared.Models
         public string Parity
         {
             get => _parity;
-            set { if (_parity == value) return; _parity = value; Notify(); }
+            set
+            {
+                // A WPF ComboBox can briefly write null while SelectedItem and
+                // ItemsSource are changing. Do not let that transient UI state
+                // erase a valid communication setting already loaded from JSON.
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+
+                var normalized = value.Trim();
+                if (_parity == normalized) return;
+                _parity = normalized;
+                Notify();
+            }
         }
 
         private int _dataBits = 8;
