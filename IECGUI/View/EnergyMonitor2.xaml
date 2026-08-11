@@ -64,6 +64,41 @@
             <Setter Property="Foreground" Value="#8FDDEA"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8FDDEA"/>
+            <Setter Property="BorderBrush" Value="#337ECBE5"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Foreground" Value="#F4FBFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1838D9FF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#3038D9FF"/>
+                    <Setter Property="BorderBrush" Value="#885AECFF"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Background="#06111C" ClipToBounds="True">
@@ -116,7 +151,7 @@
                                 <DropShadowEffect Color="#4BD050" BlurRadius="10" ShadowDepth="0" Opacity="0.85"/>
                             </Ellipse.Effect>
                         </Ellipse>
-                        <TextBlock Text="500 meters connected"
+                        <TextBlock Text="{Binding MeterConnectionSummary}"
                                    Foreground="#B8F0FF"
                                    FontSize="16"
                                    VerticalAlignment="Center"/>
@@ -191,7 +226,7 @@
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock Text="Total Current" Style="{StaticResource HudLabel}"/>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding INC1AMP, StringFormat={}{0:F1}}" Style="{StaticResource HudValue}"/>
+                                        <TextBlock Text="{Binding SelectedMeter.CurrentAvg, StringFormat={}{0:F1}}" Style="{StaticResource HudValue}"/>
                                         <TextBlock Text=" A" Foreground="#BCEFFF" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="4,0,0,5"/>
                                     </StackPanel>
                                     <TextBlock Text="Selected incomer live" Foreground="#63ED8F" FontSize="13"/>
@@ -211,7 +246,7 @@
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock Text="Voltage Health" Style="{StaticResource HudLabel}"/>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding INC1VOLT, StringFormat={}{0:F1}}" Style="{StaticResource HudValue}"/>
+                                        <TextBlock Text="{Binding SelectedMeter.VoltageL_N_Avg, StringFormat={}{0:F1}}" Style="{StaticResource HudValue}"/>
                                         <TextBlock Text=" kV" Foreground="#BCEFFF" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Bottom" Margin="4,0,0,5"/>
                                     </StackPanel>
                                     <TextBlock Text="Nominal band" Foreground="#63ED8F" FontSize="13"/>
@@ -226,11 +261,11 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Viewbox Width="70" Height="70">
-                                    <Controls:AnalogGauge Value="{Binding TotalPowerFactor}" MinValue="0" MaxValue="1" Unit="PF"/>
+                                    <Controls:AnalogGauge Value="{Binding SelectedMeter.TotalPowerFactor}" MinValue="0" MaxValue="1" Unit="PF"/>
                                 </Viewbox>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock Text="Power Factor" Style="{StaticResource HudLabel}"/>
-                                    <TextBlock Text="{Binding TotalPowerFactor, StringFormat={}{0:F2}}" Style="{StaticResource HudValue}"/>
+                                    <TextBlock Text="{Binding SelectedMeter.TotalPowerFactor, StringFormat={}{0:F2}}" Style="{StaticResource HudValue}"/>
                                     <TextBlock Text="Live calculated" Foreground="#FFC24A" FontSize="13"/>
                                 </StackPanel>
                             </Grid>
@@ -290,7 +325,7 @@
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="14,10,14,0">
                                     <Border CornerRadius="5" Background="#771AB7CC" BorderBrush="#995AECFF" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
-                                        <TextBlock Text="All 500" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding MeterCount, StringFormat=All {0}}" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                     </Border>
                                     <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
                                         <TextBlock Text="Alarm 7" Foreground="#FF746D" FontSize="13" VerticalAlignment="Center"/>
@@ -306,92 +341,22 @@
                                     </Border>
                                 </StackPanel>
 
-                                <Grid Grid.Row="2" Margin="14,10,14,16">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                        <RowDefinition Height="42"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1.0*"/>
-                                        <ColumnDefinition Width="1.1*"/>
-                                        <ColumnDefinition Width="0.9*"/>
-                                        <ColumnDefinition Width="0.9*"/>
-                                        <ColumnDefinition Width="0.7*"/>
-                                        <ColumnDefinition Width="1.0*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Row="0" Grid.ColumnSpan="6" BorderBrush="#337ECBE5" BorderThickness="0,0,0,1"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Meter" Style="{StaticResource MeterHeaderCell}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Area" Style="{StaticResource MeterHeaderCell}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Current" Style="{StaticResource MeterHeaderCell}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Voltage" Style="{StaticResource MeterHeaderCell}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="4" Text="PF" Style="{StaticResource MeterHeaderCell}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="5" Text="Status" Style="{StaticResource MeterHeaderCell}"/>
-
-                                    <Border Grid.Row="1" Grid.ColumnSpan="6" Background="#2238D9FF" BorderBrush="#885AECFF" BorderThickness="1"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="MFM-031" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Incomer 1" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding INC1AMP, StringFormat={}{0:F1} A}" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding INC1VOLT, StringFormat={}{0:F1} kV}" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="4" Text="0.96" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="MFM-032" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Incomer 2" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding INC2AMP, StringFormat={}{0:F1} A}" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding INC2VOLT, StringFormat={}{0:F1} kV}" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="4" Text="0.95" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="MFM-033" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="Incomer 3" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding INC3AMP, StringFormat={}{0:F1} A}" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding INC3VOLT, StringFormat={}{0:F1} kV}" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="4" Text="0.94" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="MFM-048" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="Feeder A" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="2" Text="144.0 A" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="3" Text="10.9 kV" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="4" Text="0.91" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="5" Text="Warning" Foreground="#FFC24A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="MFM-102" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="Transformer" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="2" Text="256.0 A" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="3" Text="10.7 kV" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="4" Text="0.86" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="5" Text="Alarm" Foreground="#FF746D" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="MFM-118" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="1" Text="Utility" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="2" Text="112.0 A" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="3" Text="11.3 kV" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="4" Text="0.97" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="6" Grid.Column="5" Text="Online" Foreground="#73F59A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="MFM-147" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="7" Grid.Column="1" Text="Feeder C" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="7" Grid.Column="2" Text="166.0 A" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="7" Grid.Column="3" Text="11.0 kV" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="7" Grid.Column="4" Text="0.92" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="7" Grid.Column="5" Text="Warning" Foreground="#FFC24A" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-
-                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="MFM-211" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="8" Grid.Column="1" Text="Spare Bay" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="8" Grid.Column="2" Text="0.0 A" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="8" Grid.Column="3" Text="0.0 kV" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="8" Grid.Column="4" Text="0.00" Style="{StaticResource MeterCell}"/>
-                                    <TextBlock Grid.Row="8" Grid.Column="5" Text="Offline" Foreground="#FF746D" FontSize="15" VerticalAlignment="Center" Margin="12,0"/>
-                                </Grid>
+                                <DataGrid Grid.Row="2" Margin="14,10,14,16"
+                                          ItemsSource="{Binding Meters}"
+                                          SelectedItem="{Binding SelectedMeter, Mode=TwoWay}"
+                                          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                                          HeadersVisibility="Column" RowHeaderWidth="0" GridLinesVisibility="None"
+                                          SelectionMode="Single" SelectionUnit="FullRow"
+                                          Background="Transparent" BorderThickness="0"
+                                          VerticalScrollBarVisibility="Auto">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Meter" Binding="{Binding MeterName}" Width="1.1*"/>
+                                        <DataGridTextColumn Header="Current" Binding="{Binding CurrentAvg, StringFormat={}{0:F1} A}" Width="1.0*"/>
+                                        <DataGridTextColumn Header="Voltage" Binding="{Binding VoltageL_N_Avg, StringFormat={}{0:F1} V}" Width="1.0*"/>
+                                        <DataGridTextColumn Header="PF" Binding="{Binding TotalPowerFactor, StringFormat={}{0:F2}}" Width="0.75*"/>
+                                        <DataGridTextColumn Header="Status" Binding="{Binding MeterStatus}" Width="1.15*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </Grid>
                         </Border>
 
@@ -404,7 +369,7 @@
                                 </Grid.RowDefinitions>
 
                                 <Border Grid.Row="0" BorderBrush="#337ECBE5" BorderThickness="0,0,0,1">
-                                    <TextBlock Text="SELECTED METER: MFM-031"
+                                    <TextBlock Text="{Binding SelectedMeter.MeterName, StringFormat=SELECTED METER: {0}, TargetNullValue=SELECTED METER: NONE}"
                                                Style="{StaticResource HudTitle}"
                                                Margin="16,0"/>
                                 </Border>
@@ -420,15 +385,15 @@
                                     </Grid.RowDefinitions>
 
                                     <Viewbox Grid.RowSpan="2" Grid.Column="0" Margin="0,0,18,0">
-                                        <Controls:AnalogGauge Title="Main Current" Unit="A" MinValue="0" MaxValue="500" Value="{Binding INC1AMP}"/>
+                                        <Controls:AnalogGauge Title="Main Current" Unit="A" MinValue="0" MaxValue="500" Value="{Binding SelectedMeter.CurrentAvg}"/>
                                     </Viewbox>
 
                                     <Viewbox Grid.Row="0" Grid.Column="1" Margin="0,0,0,8">
-                                        <Controls:AnalogGauge Title="Voltage" Unit="kV" MinValue="0" MaxValue="50" Value="{Binding INC1VOLT}"/>
+                                        <Controls:AnalogGauge Title="Voltage" Unit="V" MinValue="0" MaxValue="500" Value="{Binding SelectedMeter.VoltageL_N_Avg}"/>
                                     </Viewbox>
 
                                     <Viewbox Grid.Row="1" Grid.Column="1" Margin="0,8,0,0">
-                                        <Controls:AnalogGauge Title="Power Factor" Unit="PF" MinValue="0" MaxValue="1" Value="{Binding TotalPowerFactor}"/>
+                                        <Controls:AnalogGauge Title="Power Factor" Unit="PF" MinValue="0" MaxValue="1" Value="{Binding SelectedMeter.TotalPowerFactor}"/>
                                     </Viewbox>
                                 </Grid>
 

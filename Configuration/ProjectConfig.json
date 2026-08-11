@@ -2,8 +2,8 @@
   "ProjectName": "New Project",
   "Meters": [
     {
-      "MeterId": 2,
-      "MeterName": "EM6436",
+      "MeterId": 1,
+      "MeterName": "DG INCOMMER 1",
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -11,8 +11,8 @@
         "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 10,
-        "WordOrder": "LowHigh",
+        "SlaveId": 4,
+        "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
@@ -138,15 +138,15 @@
     },
     {
       "MeterId": 2,
-      "MeterName": "EM6400NG",
+      "MeterName": "DG INCOMMER 3",
       "Communication": {
-        "Protocol": "ModbusTcp",
+        "Protocol": "ModbusRtu",
         "ComPort": "COM6",
         "BaudRate": 19200,
         "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 11,
+        "SlaveId": 2,
         "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
@@ -273,71 +273,138 @@
     },
     {
       "MeterId": 3,
-      "MeterName": "Meter-3",
-      "Communication": {
-        "Protocol": "ModbusTcp",
-        "ComPort": "COM1",
-        "BaudRate": 9600,
-        "Parity": "None",
-        "DataBits": 8,
-        "StopBits": 1,
-        "SlaveId": 5,
-        "WordOrder": "LowHigh",
-        "IpAddress": "127.0.0.1",
-        "TcpPort": 502
-      },
-      "Registers": []
-    },
-    {
-      "MeterId": 4,
-      "MeterName": "Meter-4",
+      "MeterName": "DG INCOMMER 4",
       "Communication": {
         "Protocol": "ModbusRtu",
-        "ComPort": "COM1",
-        "BaudRate": 9600,
-        "Parity": "None",
+        "ComPort": "COM6",
+        "BaudRate": 19200,
+        "Parity": "Even",
         "DataBits": 8,
         "StopBits": 1,
-        "SlaveId": 5,
-        "WordOrder": "LowHigh",
+        "SlaveId": 1,
+        "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502
       },
-      "Registers": []
-    },
-    {
-      "MeterId": 5,
-      "MeterName": "Meter-5",
-      "Communication": {
-        "Protocol": "ModbusRtu",
-        "ComPort": "COM1",
-        "BaudRate": 9600,
-        "Parity": "None",
-        "DataBits": 8,
-        "StopBits": 1,
-        "SlaveId": 5,
-        "WordOrder": "LowHigh",
-        "IpAddress": "127.0.0.1",
-        "TcpPort": 502
-      },
-      "Registers": []
-    },
-    {
-      "MeterId": 6,
-      "MeterName": "Meter-6",
-      "Communication": {
-        "Protocol": "ModbusRtu",
-        "ComPort": "COM1",
-        "BaudRate": 9600,
-        "Parity": "None",
-        "DataBits": 8,
-        "StopBits": 1,
-        "SlaveId": 5,
-        "WordOrder": "LowHigh",
-        "IpAddress": "127.0.0.1",
-        "TcpPort": 502
-      },
-      "Registers": []
+      "Registers": [
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 3022,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3024,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage L-N Avg",
+          "RegisterAddress": 3026,
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current A",
+          "RegisterAddress": 3000,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current B",
+          "RegisterAddress": 3002,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current C",
+          "RegisterAddress": 3004,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current Avg",
+          "RegisterAddress": 3010,
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Active Power",
+          "RegisterAddress": 3060,
+          "IsEnabled": true,
+          "Unit": "kW",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Reactive Power",
+          "RegisterAddress": 3068,
+          "IsEnabled": true,
+          "Unit": "kVAR",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Apparent Power",
+          "RegisterAddress": 3076,
+          "IsEnabled": true,
+          "Unit": "kVA",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Frequency",
+          "RegisterAddress": 3110,
+          "IsEnabled": true,
+          "Unit": "Hz",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Power Factor",
+          "RegisterAddress": 3084,
+          "IsEnabled": true,
+          "Unit": "",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        }
+      ]
     }
   ],
   "UserSettings": {
