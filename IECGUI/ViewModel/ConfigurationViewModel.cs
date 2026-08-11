@@ -160,6 +160,7 @@ namespace IECGUI.ViewModel
             {
                 MeterId = Meters.Count + 1,
                 MeterName = $"Meter-{Meters.Count + 1}",
+                IsEnabled = true,
                 Communication = new CommunicationConfig()
                 {
                     Protocol = ProtocolsType.ModbusRtu,

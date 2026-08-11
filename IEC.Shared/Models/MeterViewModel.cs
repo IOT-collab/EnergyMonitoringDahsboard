@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Collections.ObjectModel;
 
 namespace IEC.Shared.Models
 {
@@ -24,6 +25,9 @@ namespace IEC.Shared.Models
         private float _totalApparentPower;
         private float _frequency;
         private float _totalPowerFactor;
+
+        public ObservableCollection<MeterParameterViewModel> Parameters { get; }
+            = new ObservableCollection<MeterParameterViewModel>();
 
         public string MeterName
         {

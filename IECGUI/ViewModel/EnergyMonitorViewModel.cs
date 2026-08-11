@@ -60,7 +60,9 @@ namespace IECGUI.ViewModel
             _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(500), RunBackgroundService, ex => Console.WriteLine(ex.Message));
 
             // Build UI collection from saved configuration
-            var configMeters = _config.Configuration?.Meters ?? new List<MetersConfig>();
+            var configMeters = (_config.Configuration?.Meters ?? new List<MetersConfig>())
+                .Where(m => m != null && m.IsEnabled)
+                .ToList();
 
             // Populate map and create MeterViewModel items
             foreach (var cfg in configMeters)
@@ -72,7 +74,7 @@ namespace IECGUI.ViewModel
             }
 
             Meters = new ObservableCollection<MeterViewModel>(
-                _meterConfigMap.Keys.Select(n => new MeterViewModel { MeterName = n }));
+                _meterConfigMap.Values.Select(CreateMeterViewModel));
 
             // Configure the multi-meter service with the saved MetersConfig list
             //try
@@ -174,6 +176,13 @@ namespace IECGUI.ViewModel
                         {
                             continue;
                         }
+
+                        // Update the register-driven card row regardless of whether
+                        // this is one of the application's legacy standard fields.
+                        var parameter = vm.Parameters.FirstOrDefault(p =>
+                            p.RegisterAddress == reg.RegisterAddress);
+                        if (parameter != null)
+                            parameter.Value = valueFloat;
 
                         // Map parameter name to MeterViewModel property
                         // Normalize parameter name for comparisons
@@ -322,6 +331,25 @@ namespace IECGUI.ViewModel
                 }
                 return;
             }
+        }
+
+        private static MeterViewModel CreateMeterViewModel(MetersConfig config)
+        {
+            var meter = new MeterViewModel { MeterName = config.MeterName };
+
+            foreach (var register in config.Registers.Where(r => r.IsEnabled))
+            {
+                meter.Parameters.Add(new MeterParameterViewModel
+                {
+                    ParameterName = string.IsNullOrWhiteSpace(register.ParameterName)
+                        ? $"Register {register.RegisterAddress}"
+                        : register.ParameterName,
+                    RegisterAddress = register.RegisterAddress,
+                    Unit = register.Unit ?? string.Empty
+                });
+            }
+
+            return meter;
         }
 
         public void Dispose()

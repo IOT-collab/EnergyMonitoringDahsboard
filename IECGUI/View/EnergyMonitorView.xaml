@@ -47,13 +47,13 @@
         
 
         <!-- Meter Panels -->
-        <ScrollViewer Grid.Row="1" Background="Transparent">
+        <ScrollViewer Grid.Row="1" Background="Transparent" VerticalScrollBarVisibility="Auto">
 
             <ItemsControl ItemsSource="{Binding Meters}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"/>
+                        <WrapPanel HorizontalAlignment="Center"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
@@ -63,7 +63,7 @@
 
                         <Border Margin="8"
                                 Width="430"
-                                Height="430"
+                                Height="500"
                                 Background="#6614263A" 
                                 BorderBrush="#667ECBE5"
                                 CornerRadius="8"
@@ -110,96 +110,44 @@
 
                                 <!--================ BODY =================-->
 
-                                <Grid Grid.Row="1">
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              Margin="0,8,0,0">
+                                    <ItemsControl ItemsSource="{Binding Parameters}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Height="31">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2.5*"/>
+                                                        <ColumnDefinition Width="1.2*"/>
+                                                        <ColumnDefinition Width="0.8*"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2.8*"/>
-                                        <ColumnDefinition Width="1.3*"/>
-                                        <ColumnDefinition Width="0.8*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                        <RowDefinition Height="28"/>
-                                    </Grid.RowDefinitions>
-
-                                    <!-- Row 1 -->
-                                    <TextBlock Text="Voltage A-N" Grid.Row="0" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding VoltageA_N,StringFormat={}{0:F2}}" Grid.Row="0" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="V" Grid.Row="0" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 2 -->
-                                    <TextBlock Text="Voltage B-N" Grid.Row="1" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding VoltageB_N,StringFormat={}{0:F2}}" Grid.Row="1" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="V" Grid.Row="1" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 3 -->
-                                    <TextBlock Text="Voltage C-N" Grid.Row="2" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding VoltageC_N,StringFormat={}{0:F2}}" Grid.Row="2" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="V" Grid.Row="2" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 4 -->
-                                    <TextBlock Text="Voltage L-N Avg" Grid.Row="3" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding VoltageL_N_Avg,StringFormat={}{0:F2}}" Grid.Row="3" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="V" Grid.Row="3" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 5 -->
-                                    <TextBlock Text="Current A" Grid.Row="4" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding CurrentA,StringFormat={}{0:F2}}" Grid.Row="4" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="A" Grid.Row="4" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 6 -->
-                                    <TextBlock Text="Current B" Grid.Row="5" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding CurrentB,StringFormat={}{0:F2}}" Grid.Row="5" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="A" Grid.Row="5" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 7 -->
-                                    <TextBlock Text="Current C" Grid.Row="6" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding CurrentC,StringFormat={}{0:F2}}" Grid.Row="6" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="A" Grid.Row="6" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 8 -->
-                                    <TextBlock Text="Current Avg" Grid.Row="7" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding CurrentAvg,StringFormat={}{0:F2}}" Grid.Row="7" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="A" Grid.Row="7" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 9 -->
-                                    <TextBlock Text="Total Active Power" Grid.Row="8" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding TotalActivePower,StringFormat={}{0:F2}}" Grid.Row="8" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="kW" Grid.Row="8" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 10 -->
-                                    <TextBlock Text="Total Reactive Power" Grid.Row="9" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding TotalReactivePower,StringFormat={}{0:F2}}" Grid.Row="9" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="kVAR" Grid.Row="9" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 11 -->
-                                    <TextBlock Text="Total Apparent Power" Grid.Row="10" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding TotalApparentPower,StringFormat={}{0:F2}}" Grid.Row="10" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="kVA" Grid.Row="10" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 12 -->
-                                    <TextBlock Text="Frequency" Grid.Row="11" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding Frequency,StringFormat={}{0:F2}}" Grid.Row="11" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="Hz" Grid.Row="11" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                    <!-- Row 13 -->
-                                    <TextBlock Text="Power Factor" Grid.Row="12" Foreground="#A8EEFF" FontSize="20"/>
-                                    <TextBlock Text="{Binding TotalPowerFactor,StringFormat={}{0:F3}}" Grid.Row="12" Grid.Column="1" FontSize="18" Foreground="White"/>
-                                    <TextBlock Text="PF" Grid.Row="12" Grid.Column="2" FontSize="18" Foreground="White"/>
-
-                                </Grid>
+                                                    <TextBlock Grid.Column="0"
+                                                               Text="{Binding ParameterName}"
+                                                               Foreground="#A8EEFF"
+                                                               FontSize="18"
+                                                               VerticalAlignment="Center"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               ToolTip="{Binding ParameterName}"/>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding DisplayValue}"
+                                                               Foreground="White"
+                                                               FontSize="17"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Right"
+                                                               Margin="6,0,10,0"/>
+                                                    <TextBlock Grid.Column="2"
+                                                               Text="{Binding Unit}"
+                                                               Foreground="White"
+                                                               FontSize="17"
+                                                               VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
 
                             </Grid>
 

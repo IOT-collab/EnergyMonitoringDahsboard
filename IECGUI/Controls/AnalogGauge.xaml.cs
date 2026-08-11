@@ -32,7 +32,7 @@ namespace IECGUI.Controls
                 nameof(Value),
                 typeof(double),
                 typeof(AnalogGauge),
-                new PropertyMetadata(0.0, OnValueChanged));
+                new FrameworkPropertyMetadata(0.0, OnValueChanged, CoerceValue));
 
         public double Value
         {
@@ -45,7 +45,7 @@ namespace IECGUI.Controls
                 nameof(MinValue),
                 typeof(double),
                 typeof(AnalogGauge),
-                new PropertyMetadata(0.0));
+                new FrameworkPropertyMetadata(0.0, OnRangeChanged, CoerceMinimum));
 
         public double MinValue
         {
@@ -58,7 +58,7 @@ namespace IECGUI.Controls
                 nameof(MaxValue),
                 typeof(double),
                 typeof(AnalogGauge),
-                new PropertyMetadata(100.0));
+                new FrameworkPropertyMetadata(100.0, OnRangeChanged, CoerceMaximum));
 
         public double MaxValue
         {
@@ -99,19 +99,66 @@ namespace IECGUI.Controls
             ((AnalogGauge)d).UpdateNeedle();
         }
 
+        private static void OnRangeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var gauge = (AnalogGauge)d;
+            gauge.CoerceValue(ValueProperty);
+            gauge.UpdateNeedle();
+        }
+
+        private static object CoerceValue(DependencyObject d, object baseValue)
+        {
+            var gauge = (AnalogGauge)d;
+            var value = (double)baseValue;
+            var minimum = IsFinite(gauge.MinValue) ? gauge.MinValue : 0.0;
+            var maximum = IsFinite(gauge.MaxValue) && gauge.MaxValue > minimum
+                ? gauge.MaxValue
+                : minimum + 1.0;
+
+            if (!IsFinite(value))
+                return minimum;
+
+            return Math.Max(minimum, Math.Min(maximum, value));
+        }
+
+        private static object CoerceMinimum(DependencyObject d, object baseValue)
+        {
+            var value = (double)baseValue;
+            return IsFinite(value) ? value : 0.0;
+        }
+
+        private static object CoerceMaximum(DependencyObject d, object baseValue)
+        {
+            var gauge = (AnalogGauge)d;
+            var value = (double)baseValue;
+            var minimum = IsFinite(gauge.MinValue) ? gauge.MinValue : 0.0;
+            return IsFinite(value) && value > minimum ? value : minimum + 1.0;
+        }
+
+        private static bool IsFinite(double value) =>
+            !double.IsNaN(value) && !double.IsInfinity(value);
+
         private void UpdateNeedle()
         {
             if (NeedleRotate == null)
                 return;
 
-            double percent =
-                (Value - MinValue) /
-                (MaxValue - MinValue);
+            var minimum = IsFinite(MinValue) ? MinValue : 0.0;
+            var maximum = IsFinite(MaxValue) && MaxValue > minimum ? MaxValue : minimum + 1.0;
+            var safeValue = IsFinite(Value) ? Value : minimum;
+
+            double percent = (safeValue - minimum) / (maximum - minimum);
+
+            if (!IsFinite(percent))
+                percent = 0.0;
 
             percent = Math.Max(0, Math.Min(1, percent));
 
             // 0..180 degrees
             double angle = -90 + (percent * 180);
+
+            if (!IsFinite(angle))
+                angle = -90;
 
             var animation = new DoubleAnimation
             {

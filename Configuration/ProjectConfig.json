@@ -4,6 +4,7 @@
     {
       "MeterId": 1,
       "MeterName": "DG INCOMMER 1",
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -139,6 +140,7 @@
     {
       "MeterId": 2,
       "MeterName": "DG INCOMMER 2",
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -274,6 +276,7 @@
     {
       "MeterId": 3,
       "MeterName": "DG INCOMMER 3",
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -409,6 +412,7 @@
     {
       "MeterId": 4,
       "MeterName": "DG INCOMMER 4",
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -535,6 +539,42 @@
           "RegisterAddress": 3084,
           "IsEnabled": true,
           "Unit": "",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "VoltageA L-L ",
+          "RegisterAddress": 3028,
+          "IsEnabled": true,
+          "Unit": "kV",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "VoltageB L-L ",
+          "RegisterAddress": 3030,
+          "IsEnabled": true,
+          "Unit": "kV",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "VoltageC L-L ",
+          "RegisterAddress": 3032,
+          "IsEnabled": true,
+          "Unit": "kV",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage L-L Agv",
+          "RegisterAddress": 3036,
+          "IsEnabled": true,
+          "Unit": "kV",
           "ScaleFactor": 1,
           "Length": 2,
           "DataType": "Float"

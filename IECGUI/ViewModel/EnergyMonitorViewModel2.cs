@@ -54,7 +54,7 @@ namespace IECGUI.ViewModel
             _meterService = meterService;
 
             var configuredMeters = config.Configuration?.Meters?
-                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.MeterName))
+                .Where(m => m != null && m.IsEnabled && !string.IsNullOrWhiteSpace(m.MeterName))
                 .ToList() ?? new List<MetersConfig>();
 
             _meterConfigMap = configuredMeters
@@ -107,11 +107,16 @@ namespace IECGUI.ViewModel
 
             foreach (var meter in Meters)
             {
+                MeterReading? reading = null;
+                if (!string.IsNullOrWhiteSpace(meter.MeterName))
+                    readings.TryGetValue(meter.MeterName, out reading);
+
                 if (string.IsNullOrWhiteSpace(meter.MeterName) ||
-                    !readings.TryGetValue(meter.MeterName, out var reading) ||
-                    reading == null)
+                    reading == null || !reading.Values.Any(v => v.Value != null))
                 {
-                    meter.MeterStatus = "No data";
+                    meter.MeterStatus = string.IsNullOrWhiteSpace(reading?.CommunicationError)
+                        ? "No data"
+                        : reading.CommunicationError;
                     continue;
                 }
 
@@ -136,6 +141,12 @@ namespace IECGUI.ViewModel
                 float value;
                 try { value = Convert.ToSingle(rawValue); }
                 catch { continue; }
+
+                // Meters commonly return IEEE NaN for calculated quantities such
+                // as power factor when there is no load. Gauges and WPF animations
+                // require a finite value, so represent that condition as zero.
+                if (float.IsNaN(value) || float.IsInfinity(value))
+                    value = 0f;
 
                 switch (Normalize(register.ParameterName))
                 {
