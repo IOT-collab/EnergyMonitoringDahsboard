@@ -1,5 +1,6 @@
 using IEC.Shared;
 using IEC.Shared.Models;
+using IEC.Shared.Services;
 using IECGUI.Converters;
 using IECGUI.Services;
 using System.Collections.ObjectModel;
@@ -18,6 +19,7 @@ namespace IECGUI.ViewModel
         public ObservableCollection<ReportFormatConfig> ReportFormats { get; set; } = new();
         public ObservableCollection<string> AvailableColumns { get; set; } = new();
         public ObservableCollection<string> SelectedColumns { get; set; } = new();
+        public ObservableCollection<string> MeterNames { get; } = new();
         public IEnumerable<string> SelectedColumnsView
             => SelectedFormat != null ? SelectedFormat.SelectedColumns : SelectedColumns;
 
@@ -26,6 +28,13 @@ namespace IECGUI.ViewModel
         {
             get => _reportName;
             set { _reportName = value; OnPropertyChanged(nameof(ReportName)); }
+        }
+
+        private string _selectedMeterName;
+        public string SelectedMeterName
+        {
+            get => _selectedMeterName;
+            set { _selectedMeterName = value; OnPropertyChanged(nameof(SelectedMeterName)); }
         }
 
         private ReportFormatConfig _selectedFormat;
@@ -37,6 +46,8 @@ namespace IECGUI.ViewModel
                 _selectedFormat = value;
                 OnPropertyChanged(nameof(SelectedFormat));
                 OnPropertyChanged(nameof(SelectedColumnsView));
+                ReportName = value?.Name ?? string.Empty;
+                SelectedMeterName = value?.MeterName;
                 SelectedColumns.Clear();
                 if (value != null && value.SelectedColumns != null)
                 {
@@ -74,9 +85,19 @@ namespace IECGUI.ViewModel
 
         private readonly string _configPath = AppPaths.ReportFormatFile;
 
-        public ReportConfigViewModel(INavigationService navigation)
+        public ReportConfigViewModel(INavigationService navigation, ConfigurationManagerService config)
         {
             _navigation = navigation;
+
+            foreach (var meterName in (config.Configuration?.Meters ?? new List<MetersConfig>())
+                // Keep disabled meters available because their historical reports
+                // must remain accessible after they are taken out of live polling.
+                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.MeterName))
+                .Select(m => m.MeterName.Trim())
+                .Distinct(System.StringComparer.OrdinalIgnoreCase))
+            {
+                MeterNames.Add(meterName);
+            }
 
             // New energy-meter columns (replace old production columns)
             var columns = new List<string>
@@ -115,9 +136,18 @@ namespace IECGUI.ViewModel
 
             LoadReportFormats();
 
+            // Older formats did not store a meter. Assign the first configured
+            // meter so they remain usable, then persist the migration.
+            var meterMigration = false;
+            foreach (var format in ReportFormats.Where(f => string.IsNullOrWhiteSpace(f.MeterName)))
+            {
+                format.MeterName = MeterNames.FirstOrDefault();
+                meterMigration = true;
+            }
+
             // Clean existing saved formats so they only contain columns that match current AvailableColumns
             bool changed = CleanAndNormalizeSavedFormats();
-            if (changed) SaveReportFormats();
+            if (changed || meterMigration) SaveReportFormats();
 
             SelectedColumns.CollectionChanged += (s, e) => OnPropertyChanged(nameof(SelectedColumnsView));
         }
@@ -165,15 +195,23 @@ namespace IECGUI.ViewModel
 
         private void SaveFormat()
         {
-            if (string.IsNullOrWhiteSpace(ReportName) || !SelectedColumns.Any()) return;
+            if (string.IsNullOrWhiteSpace(ReportName) ||
+                string.IsNullOrWhiteSpace(SelectedMeterName) ||
+                !SelectedColumns.Any()) return;
             var existing = ReportFormats.FirstOrDefault(f => f.Name == ReportName);
             if (existing != null)
             {
+                existing.MeterName = SelectedMeterName;
                 existing.SelectedColumns = SelectedColumns.ToList();
             }
             else
             {
-                ReportFormats.Add(new ReportFormatConfig { Name = ReportName, SelectedColumns = SelectedColumns.ToList() });
+                ReportFormats.Add(new ReportFormatConfig
+                {
+                    Name = ReportName,
+                    MeterName = SelectedMeterName,
+                    SelectedColumns = SelectedColumns.ToList()
+                });
             }
             SelectedFormat = ReportFormats.FirstOrDefault(f => f.Name == ReportName);
             SaveReportFormats();
@@ -197,6 +235,7 @@ namespace IECGUI.ViewModel
         {
             SelectedFormat = null;
             ReportName = string.Empty;
+            SelectedMeterName = MeterNames.FirstOrDefault();
             SelectedColumns.Clear();
             OnPropertyChanged(nameof(SelectedColumnsView));
         }
@@ -206,6 +245,7 @@ namespace IECGUI.ViewModel
             if (SelectedFormat != null)
             {
                 ReportName = SelectedFormat.Name;
+                SelectedMeterName = SelectedFormat.MeterName;
                 SelectedColumns.Clear();
                 foreach (var col in SelectedFormat.SelectedColumns)
                     SelectedColumns.Add(NormalizeSavedColumn(col));

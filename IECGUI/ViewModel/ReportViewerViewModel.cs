@@ -42,10 +42,12 @@ namespace IECGUI.ViewModel
                 _selectedReportFormat = value;
                 OnPropertyChanged(nameof(SelectedReportFormat));
                 OnPropertyChanged(nameof(SelectedFormatColumns));
+                OnPropertyChanged(nameof(SelectedMeterName));
             }
         }
 
         public IEnumerable<string> SelectedFormatColumns => SelectedReportFormat?.SelectedColumns ?? Enumerable.Empty<string>();
+        public string SelectedMeterName => SelectedReportFormat?.MeterName ?? string.Empty;
 
         private DateTime _dateFrom = DateTime.Today.AddDays(-7  );
         public DateTime DateFrom
@@ -157,9 +159,11 @@ namespace IECGUI.ViewModel
                 // iterate date range and load either CSV or Excel files
                 for (var date = DateFrom.Date; date <= DateTo.Date; date = date.AddDays(1))
                 {
-                    // 1) CSV (legacy) file
+                    // Legacy CSV files have no meter identity. Only use them for
+                    // migrated/unassigned formats; meter-bound formats read the
+                    // appropriate worksheet from the Excel logger.
                     var csvPath = Path.Combine(_prodCsvFolder, $"Production_{date:yyyyMMdd}.csv");
-                    if (File.Exists(csvPath))
+                    if (string.IsNullOrWhiteSpace(SelectedReportFormat.MeterName) && File.Exists(csvPath))
                     {
                         AppendRowsFromCsv(csvPath, ReportDataTable, SelectedReportFormat.SelectedColumns);
                         continue;
@@ -172,7 +176,13 @@ namespace IECGUI.ViewModel
                         try
                         {
                             using var wb = new XLWorkbook(file);
-                            foreach (var ws in wb.Worksheets)
+                            var selectedMeter = SelectedReportFormat.MeterName;
+                            var worksheets = string.IsNullOrWhiteSpace(selectedMeter)
+                                ? wb.Worksheets
+                                : wb.Worksheets.Where(ws =>
+                                    string.Equals(ws.Name, SanitizeSheetName(selectedMeter), StringComparison.OrdinalIgnoreCase));
+
+                            foreach (var ws in worksheets)
                             {
                                 var sheetName = ws.Name;
                                 // ensure per-meter table exists
@@ -329,6 +339,14 @@ namespace IECGUI.ViewModel
             if (idx >= 0 && h.StartsWith("["))
                 return h.Substring(idx + 1).Trim();
             return h;
+        }
+
+        private static string SanitizeSheetName(string name)
+        {
+            var invalid = new[] { '\\', '/', '?', '*', '[', ']' };
+            var sanitized = new string((name ?? string.Empty).Where(c => !invalid.Contains(c)).ToArray());
+            if (sanitized.Length == 0) sanitized = "Meter";
+            return sanitized.Length > 31 ? sanitized.Substring(0, 31) : sanitized;
         }
 
     }

@@ -173,6 +173,14 @@
          <TextBox Text="{Binding ReportName, UpdateSourceTrigger=PropertyChanged}" Height="50" FontSize="30" />
              </StackPanel>
 
+        <StackPanel Margin="0,0,0,20">
+          <TextBlock Text="Meter" Style="{StaticResource HmiLabelStyle}"/>
+          <ComboBox ItemsSource="{Binding MeterNames}"
+                    SelectedItem="{Binding SelectedMeterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource HmiComboBoxStyle}"
+                    Foreground="#081421"/>
+        </StackPanel>
+
         <TextBlock Text="Available Columns" Style="{StaticResource HmiLabelStyle}"/>
     <TextBlock Text="Select columns to include in this report format" 
   FontSize="18" Foreground="#B7E9F7" Margin="0,0,0,10"/>
@@ -180,7 +188,7 @@
         <Border BorderBrush="#667ECBE5" BorderThickness="1" CornerRadius="6">
  <ListBox ItemsSource="{Binding AvailableColumns}" 
   SelectionMode="Multiple"     behaviors:ListBoxSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedColumns, Mode=TwoWay}"
-         Height="380"
+         Height="300"
                 FontSize="22"
               BorderThickness="0"
        Background="#4414263A"
@@ -223,10 +231,14 @@
    <TextBox Text="{Binding SelectedFormat.Name, Mode=OneWay}" 
          IsReadOnly="True"  Background="#4414263A" Foreground="White" FontSize="30" Height="50" />
 
+       <TextBlock Text="Meter" Style="{StaticResource HmiLabelStyle}" Margin="0,20,0,0"/>
+       <TextBox Text="{Binding SelectedFormat.MeterName, Mode=OneWay, TargetNullValue=Not selected}"
+                IsReadOnly="True" Background="#4414263A" Foreground="#68DBEF" FontSize="22" Height="44"/>
+
         <TextBlock Text="Columns in this report" Style="{StaticResource HmiLabelStyle}" Margin="0,20,0,0"/>
      <Border BorderBrush="#667ECBE5" BorderThickness="1" CornerRadius="6">
        <ListBox ItemsSource="{Binding SelectedColumnsView}" 
-  Height="380"
+  Height="300"
       FontSize="22"
        BorderThickness="0"
   Background="#4414263A"

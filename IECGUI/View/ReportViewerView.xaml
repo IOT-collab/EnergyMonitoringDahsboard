@@ -489,6 +489,11 @@
                                                        Foreground="#8FDDEA"
                                                        FontSize="13"
                                                        Margin="0,6,0,0"/>
+                                            <TextBlock Text="{Binding MeterName, StringFormat=Meter: {0}, TargetNullValue=Meter: Unassigned}"
+                                                       Foreground="#68DBEF"
+                                                       FontSize="12"
+                                                       Margin="0,3,0,0"
+                                                       TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </Border>
                                     <DataTemplate.Triggers>
