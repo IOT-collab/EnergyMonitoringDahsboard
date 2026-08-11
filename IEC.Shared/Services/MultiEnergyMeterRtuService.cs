@@ -49,7 +49,42 @@ namespace IEC.Shared.Services
             if (meters == null)
                 return;
 
-            foreach (var meter in meters)
+            // Reconfiguration must start from a clean bus. Otherwise stale meter
+            // mappings and a previously opened SerialPort/master remain active.
+            await DisconnectAll().ConfigureAwait(false);
+
+            var meterList = meters
+                .Where(m => m != null && !string.IsNullOrWhiteSpace(m.MeterName))
+                .ToList();
+
+            // Every slave sharing a physical RTU port must use identical serial settings.
+            foreach (var portGroup in meterList.GroupBy(m => m.Communication?.ComPort ?? "COM1", StringComparer.OrdinalIgnoreCase))
+            {
+                var first = portGroup.First().Communication ?? new CommunicationConfig();
+                if (portGroup.Skip(1).Any(m =>
+                {
+                    var comm = m.Communication ?? new CommunicationConfig();
+                    return comm.BaudRate != first.BaudRate ||
+                           comm.DataBits != first.DataBits ||
+                           comm.StopBits != first.StopBits ||
+                           !string.Equals(comm.Parity, first.Parity, StringComparison.OrdinalIgnoreCase);
+                }))
+                {
+                    throw new InvalidOperationException(
+                        $"Meters on {portGroup.Key} must use the same baud rate, parity, data bits and stop bits.");
+                }
+
+                var duplicateSlave = portGroup
+                    .GroupBy(m => m.Communication?.SlaveId ?? (byte)1)
+                    .FirstOrDefault(g => g.Count() > 1);
+                if (duplicateSlave != null)
+                {
+                    throw new InvalidOperationException(
+                        $"Slave ID {duplicateSlave.Key} is configured more than once on {portGroup.Key}.");
+                }
+            }
+
+            foreach (var meter in meterList)
             {
                 if (string.IsNullOrWhiteSpace(meter?.MeterName))
                     continue;
@@ -113,7 +148,14 @@ namespace IEC.Shared.Services
                         BaudRate = baud,
                         DataBits = comm.DataBits,
                         Parity = parity,
-                        StopBits = stopBits
+                        StopBits = stopBits,
+                        Handshake = Handshake.None,
+                        RtsEnable = false,
+                        DtrEnable = false,
+                        ReadTimeout = 2000,
+                        WriteTimeout = 2000,
+                        ReadBufferSize = 4096,
+                        WriteBufferSize = 2048
                     };
 
                     try
@@ -136,8 +178,12 @@ namespace IEC.Shared.Services
                     var transport = factory.CreateRtuTransport(port);
                     var master = factory.CreateMaster(transport);
 
-                    master.Transport.ReadTimeout = 1000;   // ms
-                    master.Transport.Retries = 2;
+                    master.Transport.ReadTimeout = 2000;
+                    master.Transport.WriteTimeout = 2000;
+                    // One retry is sufficient on a local RS-485 bus. Large retry
+                    // counts multiply the delay for every register of an offline slave.
+                    master.Transport.Retries = 1;
+                    master.Transport.WaitToRetryMilliseconds = 150;
 
                     _portConnections[portName] = new PortConnection
                     {
@@ -145,6 +191,12 @@ namespace IEC.Shared.Services
                         Master = master,
                         IsConnected = port.IsOpen
                     };
+
+                    // USB/RS-485 converters and some meters need a short quiet
+                    // period after the port is opened before the first request.
+                    port.DiscardInBuffer();
+                    port.DiscardOutBuffer();
+                    await Task.Delay(500).ConfigureAwait(false);
                 }
                 else
                 {
@@ -188,7 +240,9 @@ namespace IEC.Shared.Services
                     results[meterName] = new MeterReading { MeterName = meterName };
                 }
 
-                await Task.Delay(50); // settle time before switching to next slave on the bus
+                // Give the shared two-wire bus and converter direction control
+                // time to settle before addressing a different slave.
+                await Task.Delay(200).ConfigureAwait(false);
             }
 
             return results;
@@ -294,9 +348,16 @@ namespace IEC.Shared.Services
 
                             if (raw == null)
                             {
-                                // All attempts failed: rethrow with context so you can inspect it in the caller
-                                throw new InvalidOperationException(
-                                    $"ReadHoldingRegisters failed for meter='{meterName}', slave={meter.SlaveId}, register={reg.RegisterAddress}, count={count}. Last failure: {lastFailure}");
+                                // If a slave does not answer the first requested register,
+                                // do not repeat the same timeout for every remaining register.
+                                var noResponseKey = string.IsNullOrWhiteSpace(reg.ParameterName)
+                                    ? reg.RegisterAddress.ToString()
+                                    : reg.ParameterName;
+                                reading.Values[noResponseKey] = null;
+                                reading.CommunicationError = SimplifyCommunicationError(lastFailure);
+                                Console.WriteLine(
+                                    $"No RTU response: meter='{meterName}', slave={meter.SlaveId}, register={reg.RegisterAddress}. {lastFailure}");
+                                break;
                             }
 
                             // If device uses HighLow, swap words into the format expected by decoder
@@ -346,7 +407,9 @@ namespace IEC.Shared.Services
                         }
 
                         // tiny settle gap
-                        System.Threading.Thread.Sleep(5);
+                        // Conservative RTU inter-frame gap for field devices and
+                        // auto-direction USB/RS-485 converters.
+                        System.Threading.Thread.Sleep(40);
                     }
                 }
 
@@ -427,14 +490,42 @@ namespace IEC.Shared.Services
 
         public async Task DisconnectAll()
         {
-            foreach (var conn in _portConnections.Values)
-                conn.Port?.Close();
+            lock (_lock)
+            {
+                foreach (var conn in _portConnections.Values)
+                {
+                    try { conn.Master?.Dispose(); } catch { }
+                    try { conn.Port?.Close(); } catch { }
+                    try { conn.Port?.Dispose(); } catch { }
+                }
 
-            _portConnections.Clear();
-            _meters.Clear();
-            _meterConfigs.Clear();
+                _portConnections.Clear();
+                _meters.Clear();
+                _meterConfigs.Clear();
+            }
+
+            await Task.CompletedTask;
         }
 
-        public void Dispose() => DisconnectAll();
+        private static string SimplifyCommunicationError(string failure)
+        {
+            if (string.IsNullOrWhiteSpace(failure))
+                return "No response";
+
+            if (failure.IndexOf("timeout", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                failure.IndexOf("timed out", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "Timeout";
+
+            if (failure.IndexOf("checksum", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                failure.IndexOf("CRC", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CRC/frame error";
+
+            if (failure.IndexOf("SlaveException", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "Modbus exception";
+
+            return failure.Length > 80 ? failure.Substring(0, 80) : failure;
+        }
+
+        public void Dispose() => DisconnectAll().ConfigureAwait(false).GetAwaiter().GetResult();
     }
 }

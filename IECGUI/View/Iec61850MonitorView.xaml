@@ -39,12 +39,12 @@
             <TextBlock Text="IEC 61850 — Protection Relay Monitor"
                        Foreground="White" FontSize="22"
                        FontWeight="Bold" 
-                       VerticalAlignment="Center" Margin="520,0,0,0"/>
+                       VerticalAlignment="Center" Margin="510,0,100,0"/>
             <Button Content="Connect" Command="{Binding ConnectCommand}"
-                    Width="100" Height="35" DockPanel.Dock="Right" Style="{StaticResource GlassButton.Green}"
+                    Width="100" Height="35" DockPanel.Dock="Left"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Green}"
                     Foreground="White" />
             <Button Content="Disconnect" Command="{Binding DisconnectCommand}"
-                    Width="100" Height="35" Margin="500,0,0,0" Style="{StaticResource GlassButton.Red}"
+                    Width="100" Height="35" Margin="0,0,0,0" Style="{StaticResource GlassButton.Red}"
                     Foreground="White" />
 
         </DockPanel>

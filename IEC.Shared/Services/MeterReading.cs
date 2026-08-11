@@ -12,5 +12,8 @@ namespace IEC.Shared.Services
         public Dictionary<string, object> Values { get; } = new();
 
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+        // Populated when the slave did not return a usable Modbus frame.
+        public string CommunicationError { get; set; }
     }
 }

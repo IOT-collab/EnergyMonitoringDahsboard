@@ -11,7 +11,7 @@ namespace IEC.CommonService
         private readonly System.Timers.Timer _timer;
         private readonly Func<Dictionary<int, object>, Task> _asyncAction; // Simplified action
         private readonly Action<Exception> _onError;
-        private bool _isBusy;
+        private int _isBusy;
         private bool _disposed;
 
         public SafePoller(TimeSpan interval, Func<Dictionary<int,Object>,Task> asyncAction, Action<Exception> onError = null)
@@ -25,11 +25,10 @@ namespace IEC.CommonService
 
         private async void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_disposed || _isBusy) return;
+            if (_disposed || Interlocked.Exchange(ref _isBusy, 1) == 1) return;
 
             try
             {
-                _isBusy = true;
                 await _asyncAction(new Dictionary<int, object>() ); // Runs your passed method
             }
             catch (Exception ex)
@@ -38,12 +37,29 @@ namespace IEC.CommonService
             }
             finally
             {
-                _isBusy = false;
+                Interlocked.Exchange(ref _isBusy, 0);
             }
         }
 
-        public void Start() => _timer.Start();
+        public void Start()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(SafePoller));
+
+            _timer.Start();
+        }
+
         public void Stop() => _timer.Stop();
-        public void Dispose() { /* ... cleanup ... */ }
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            _timer.Stop();
+            _timer.Elapsed -= Timer_Elapsed;
+            _timer.Dispose();
+        }
     }
 }

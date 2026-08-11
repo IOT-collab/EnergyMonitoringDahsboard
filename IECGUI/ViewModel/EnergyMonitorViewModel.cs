@@ -17,7 +17,7 @@ using IEC.Shared.Services.Logging;
 
 namespace IECGUI.ViewModel
 {
-    public class EnergyMonitorViewModel : BaseViewModel
+    public class EnergyMonitorViewModel : BaseViewModel, IDisposable
     {
         public ICommand ReturnToHome { get; }
         public ICommand Connect { get; set; }
@@ -42,12 +42,10 @@ namespace IECGUI.ViewModel
         private readonly INavigationService _navigation;
 
         private CancellationTokenSource _cts;
+        private bool _isConnected;
 
         public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, IMultiEnergyMeterService multiEnergyMeterService , IDialogService dialogService)
         {
-            _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(500), RunBackgroundService, ex => Console.WriteLine(ex.Message));
-            _liveDataTimer.Start();
-
             _multiEnergyMeterService = multiEnergyMeterService;
             _dialogService = dialogService;
             _navigation = navigation;
@@ -56,6 +54,10 @@ namespace IECGUI.ViewModel
 
 
             _config = config;
+
+            // Polling is intentionally started only after ConnectMeters has
+            // configured and opened the shared Modbus bus successfully.
+            _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(500), RunBackgroundService, ex => Console.WriteLine(ex.Message));
 
             // Build UI collection from saved configuration
             var configMeters = _config.Configuration?.Meters ?? new List<MetersConfig>();
@@ -93,13 +95,18 @@ namespace IECGUI.ViewModel
         // Optional explicit connect method if you want to re-configure/reopen ports at runtime
         public async Task ConnectMeters()
         {
+            if (_isConnected)
+                return;
+
             try
             {
-               await _multiEnergyMeterService.Configure(_meterConfigMap.Values);
+               _liveDataTimer.Stop();
                foreach (var vm in Meters)
-               {
-                   vm.MeterStatus = "Connected";
-               }
+                   vm.MeterStatus = "Connecting...";
+
+               await _multiEnergyMeterService.Configure(_meterConfigMap.Values);
+               _isConnected = true;
+               _liveDataTimer.Start();
 
                 // start CSV logging using meter names currently in UI
                 var meterNames = Meters.Select(m => m.MeterName).Where(n => !string.IsNullOrWhiteSpace(n)).ToList();
@@ -130,12 +137,17 @@ namespace IECGUI.ViewModel
                     if (string.IsNullOrWhiteSpace(vm?.MeterName))
                         continue;
 
-                    if (!readings.TryGetValue(vm.MeterName, out var reading) || reading == null)
+                    if (!readings.TryGetValue(vm.MeterName, out var reading) || reading == null ||
+                        !reading.Values.Any(v => v.Value != null))
                     {
                         Console.WriteLine($"No data for {vm.MeterName}");
-                        vm.MeterStatus = $"No data for {vm.MeterName}";
+                        vm.MeterStatus = string.IsNullOrWhiteSpace(reading?.CommunicationError)
+                            ? "No response"
+                            : reading.CommunicationError;
                         continue;
                     }
+
+                    vm.MeterStatus = "Online";
 
                     // Find corresponding config and its registers to map parameter names
                     if (!_meterConfigMap.TryGetValue(vm.MeterName, out var cfg) || cfg.Registers == null)
@@ -284,6 +296,7 @@ namespace IECGUI.ViewModel
 
         private void NavigateToHome()
         {
+            _liveDataTimer.Stop();
             _navigation.NavigateTo<HomePageViewModel>();
         }
 
@@ -291,9 +304,13 @@ namespace IECGUI.ViewModel
         {
             try
             {
+               _liveDataTimer.Stop();
+               _isConnected = false;
                await  _multiEnergyMeterService.DisconnectAll();
 
                 _energyLogger?.Stop();
+                foreach (var vm in Meters)
+                    vm.MeterStatus = "Disconnected";
             }
             catch (Exception ex)
             {
@@ -305,6 +322,12 @@ namespace IECGUI.ViewModel
                 }
                 return;
             }
+        }
+
+        public void Dispose()
+        {
+            _liveDataTimer.Dispose();
+            _energyLogger?.Stop();
         }
     }
 }
