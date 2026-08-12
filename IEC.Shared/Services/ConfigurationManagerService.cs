@@ -49,6 +49,8 @@ namespace IEC.Shared.Services
                 Configuration.Meters = new List<MetersConfig>();
             if (Configuration.SldBreakers == null)
                 Configuration.SldBreakers = new List<SldBreakerConfig>();
+            if (Configuration.AlarmRules == null)
+                Configuration.AlarmRules = new List<AlarmRuleConfig>();
 
             // Ensure UserSettings object exists after load (so UI/ViewModel can bind safely)
             if (Configuration.UserSettings == null)

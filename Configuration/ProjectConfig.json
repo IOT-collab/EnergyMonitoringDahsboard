@@ -4,7 +4,7 @@
     {
       "MeterId": 1,
       "MeterName": "DG INCOMMER 1",
-      "IsEnabled": false,
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -153,7 +153,7 @@
     {
       "MeterId": 2,
       "MeterName": "DG INCOMMER 2",
-      "IsEnabled": false,
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -851,6 +851,38 @@
       "FeedbackArea": "Coil",
       "FeedbackInverted": false,
       "IsEnabled": true
+    }
+  ],
+  "AlarmRules": [
+    {
+      "Id": "4a7c767e1dcf48d3999e7af7ea4eb91d",
+      "AlarmName": "High Current Detected",
+      "RuleKind": "Numeric",
+      "MeterName": "FX5S",
+      "ParameterName": "D4",
+      "BreakerKey": "Incomer1",
+      "Operator": "GreaterThan",
+      "SetValue": 120,
+      "ExpectedBoolean": true,
+      "DelaySeconds": 2,
+      "Severity": "Warning",
+      "IsEnabled": true,
+      "ExpressionText": "FX5S / D4 \u003E 120"
+    },
+    {
+      "Id": "d3d50400646c4559a6ca47bf1bfb15a1",
+      "AlarmName": "Incommer Breaker 1 Fail to Operate",
+      "RuleKind": "Boolean",
+      "MeterName": "FX5S",
+      "ParameterName": "M0",
+      "BreakerKey": "Incomer1",
+      "Operator": "Equal",
+      "SetValue": 1,
+      "ExpectedBoolean": true,
+      "DelaySeconds": 3,
+      "Severity": "Critical",
+      "IsEnabled": true,
+      "ExpressionText": "FX5S / M0 = True"
     }
   ],
   "UserSettings": {

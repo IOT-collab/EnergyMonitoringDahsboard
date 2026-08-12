@@ -39,6 +39,7 @@ namespace IECGUI.ViewModel
             Navigation = navigation;
             _dialogService = dialogService;
             AlarmService = alarmService;
+            _ = StartAlarmMonitoringAsync();
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
             Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));
@@ -52,6 +53,18 @@ namespace IECGUI.ViewModel
 
             // Set initial time immediately
             SystemTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
+        }
+
+        private async Task StartAlarmMonitoringAsync()
+        {
+            try
+            {
+                await AlarmService.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Alarm monitoring startup: {ex.Message}");
+            }
         }
 
         private async Task PollAsync(Dictionary<int, object> parameters)

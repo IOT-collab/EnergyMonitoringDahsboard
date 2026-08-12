@@ -108,15 +108,16 @@
 
             <Grid Grid.Row="1" Margin="36,28,36,34">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="420"/>
+                    <ColumnDefinition Width="570"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" Margin="0,0,22,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="180"/>
+                        <RowDefinition Height="130"/>
+                        <RowDefinition Height="220"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="90"/>
+                        <RowDefinition Height="72"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
@@ -153,6 +154,7 @@
 
                             <ListBox Grid.Row="1"
                                      ItemsSource="{Binding AlarmService.Rules}"
+                                     SelectedItem="{Binding SelectedRule}"
                                      Background="Transparent"
                                      BorderThickness="0"
                                      Foreground="White"
@@ -167,8 +169,7 @@
                                                 Margin="0,0,0,10">
                                             <StackPanel>
                                                 <TextBlock Text="{Binding AlarmName}" Foreground="White" FontSize="15" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding ParameterName}" Foreground="#BCEFFF" FontSize="13" Margin="0,5,0,0"/>
-                                                <TextBlock Text="{Binding RangeText}" Foreground="#8FDDEA" FontSize="12" Margin="0,4,0,0"/>
+                                                <TextBlock Text="{Binding ExpressionText}" Foreground="#BCEFFF" FontSize="13" Margin="0,5,0,0"/>
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>
@@ -177,7 +178,53 @@
                         </Grid>
                     </Border>
 
-                    <Grid Grid.Row="2" Margin="0,22,0,0">
+                    <Border Grid.Row="2" Style="{StaticResource AlarmPanel}" Margin="0,18,0,0" Padding="16">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="36"/><RowDefinition Height="36"/><RowDefinition Height="36"/>
+                                    <RowDefinition Height="36"/><RowDefinition Height="36"/><RowDefinition Height="36"/>
+                                    <RowDefinition Height="36"/><RowDefinition Height="36"/><RowDefinition Height="36"/>
+                                    <RowDefinition Height="42"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.ColumnSpan="2" Text="ALARM CONFIGURATION" Style="{StaticResource AlarmTitle}" FontSize="17"/>
+                                <TextBlock Grid.Row="1" Text="Alarm name" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AlarmName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Grid.Row="2" Text="Rule type" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/> 
+                                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RuleKinds}" SelectedItem="{Binding SelectedRuleKind}" Style="{StaticResource GlassComboBoxAlt}"/>
+                                <TextBlock Grid.Row="3" Text="Device" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding MeterNames}" SelectedItem="{Binding SelectedMeterName}" Style="{StaticResource GlassComboBoxAlt}"/>
+                                <TextBlock Grid.Row="4" Text="Parameter" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding ParameterNames}" SelectedItem="{Binding SelectedParameterName}" Style="{StaticResource GlassComboBoxAlt}"/>
+                                <TextBlock Grid.Row="5" Text="SLD breaker" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding BreakerKeys}" SelectedItem="{Binding SelectedBreakerKey}" Style="{StaticResource GlassComboBoxAlt}"/>
+                                <TextBlock Grid.Row="6" Text="Operator / value" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <Grid Grid.Row="6" Grid.Column="1"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <ComboBox ItemsSource="{Binding Operators}" SelectedItem="{Binding SelectedOperator}" Margin="0,0,6,0" Style="{StaticResource GlassComboBoxAlt}"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SetValue, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0"/>
+                                </Grid>
+                                <TextBlock Grid.Row="7" Text="Boolean true" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <CheckBox Grid.Row="7" Grid.Column="1" IsChecked="{Binding ExpectedBoolean}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Row="8" Text="Delay / severity" Style="{StaticResource AlarmLabel}" VerticalAlignment="Center"/>
+                                <Grid Grid.Row="8" Grid.Column="1"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <TextBox Text="{Binding DelaySeconds, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,6,0" ToolTip="Delay in seconds"/>
+                                    <ComboBox Grid.Column="1" ItemsSource="{Binding Severities}" SelectedItem="{Binding SelectedSeverity}" Margin="6,0,0,0" Style="{StaticResource GlassComboBoxAlt}"/>
+                                </Grid>
+                                <CheckBox Grid.Row="9" Content="Enabled" IsChecked="{Binding IsRuleEnabled}" Foreground="White" VerticalAlignment="Center" />
+                                <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="NEW" Command="{Binding NewRuleCommand}" Style="{StaticResource GlassButton.Ghost}" Width="90" Margin="0,0,8,0"/>
+                                    <Button Content="DELETE" Command="{Binding DeleteRuleCommand}" Style="{StaticResource GlassButton.Ghost}" Width="90" Margin="0,0,8,0"/>
+                                    <Button Content="SAVE RULE" Command="{Binding SaveRuleCommand}" Style="{StaticResource GlassButton.Cyan}" Width="120"/>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Row="3" Margin="0,16,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -194,6 +241,7 @@
                                 Style="{StaticResource GlassButton.Ghost}"
                                 Height="54"
                                 Margin="10,0,0,0"/>
+                        <TextBlock Grid.ColumnSpan="2" Text="{Binding ConfigurationStatus}" Foreground="#8FDDEA" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                     </Grid>
                 </Grid>
 

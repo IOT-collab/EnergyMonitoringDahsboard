@@ -16,6 +16,9 @@ namespace IEC.Shared.Models
         public List<SldBreakerConfig> SldBreakers { get; set; }
             = new List<SldBreakerConfig>();
 
+        public List<AlarmRuleConfig> AlarmRules { get; set; }
+            = new List<AlarmRuleConfig>();
+
         // New: persisted user settings
         public UserSettings UserSettings { get; set; } = new UserSettings();
 
