@@ -23,6 +23,7 @@ namespace IECGUI.ViewModel
         private readonly INavigationService _navigation;
         private readonly IMultiEnergyMeterService _deviceService;
         private readonly List<SldBreakerConfig> _sldMappings;
+        private readonly Task _deviceInitialization;
         private readonly IDialogService _dialog;
 
         public ICommand EventsCommand { get; }
@@ -553,7 +554,7 @@ namespace IECGUI.ViewModel
             _navigation = navigation;
             _deviceService = deviceService;
             _sldMappings = configuration.Configuration.SldBreakers ?? new List<SldBreakerConfig>();
-            _ = _deviceService.Configure(configuration.Configuration.Meters.Where(m => m.IsEnabled));
+            _deviceInitialization = _deviceService.Configure(configuration.Configuration.Meters.Where(m => m.IsEnabled));
             EventsCommand = new RelayCommand(OpenRelayCard);
             HomeCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>()); //_navigation.NavigateTo(new Dashboard1ViewModel(_navigation));
             AlarmCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
@@ -620,6 +621,7 @@ namespace IECGUI.ViewModel
 
         public async Task RunBackgroundService(Dictionary<int, object> parameters)
         {
+            await _deviceInitialization.ConfigureAwait(false);
             foreach (var mapping in _sldMappings.Where(m => m.IsEnabled && !string.IsNullOrWhiteSpace(m.MeterName)))
             {
                 try

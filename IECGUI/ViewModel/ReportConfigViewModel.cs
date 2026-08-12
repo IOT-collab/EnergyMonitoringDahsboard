@@ -167,7 +167,7 @@ namespace IECGUI.ViewModel
 
         private List<string> GetAvailableColumns(string meterName)
         {
-            var columns = new List<string> { "Timestamp" };
+            var columns = new List<string> { "Timestamp", "Username" };
             var meter = (_configuration.Configuration?.Meters ?? new List<MetersConfig>())
                 .FirstOrDefault(m => string.Equals(m?.MeterName, meterName, System.StringComparison.OrdinalIgnoreCase));
 

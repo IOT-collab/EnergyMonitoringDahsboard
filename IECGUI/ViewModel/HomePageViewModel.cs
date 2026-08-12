@@ -53,12 +53,14 @@ namespace IECGUI.ViewModel
 
         // the main app screens are visible to Supervisor and Operator as well; Admin can see them too
         public bool CanSeeMainScreens => _auth?.CurrentUser != null;
+        public string CurrentUsername => _auth?.CurrentUser?.Username ?? "Not signed in";
 
         // Helper to raise change notifications for the properties bound to UI
         private void RaiseAllVisibility()
         {
             OnPropertyChanged(nameof(CanSeeUserConfig));
             OnPropertyChanged(nameof(CanSeeMainScreens));
+            OnPropertyChanged(nameof(CurrentUsername));
         }
     }
 }

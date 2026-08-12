@@ -15,10 +15,12 @@ namespace IEC.Shared.Services.Logging
         private string _filePath = string.Empty;
         private List<string> _meterNames = new();
         private readonly object _sync = new();
+        private readonly string _username;
 
-        public EnergyLoggingService(string dataFolder)
+        public EnergyLoggingService(string dataFolder, string username = null)
         {
             _dir = string.IsNullOrWhiteSpace(dataFolder) ? AppPaths.Logs : dataFolder;
+            _username = string.IsNullOrWhiteSpace(username) ? "Unknown" : username.Trim();
         }
 
         public void Start(IEnumerable<string> meterNames, string fileName = null)
@@ -84,12 +86,13 @@ namespace IEC.Shared.Services.Logging
                     if (ws.LastRowUsed() == null)
                         WriteHeader(ws);
 
-                    EnsureHeaders(ws, kv.Value?.Keys ?? Enumerable.Empty<string>());
+                    EnsureHeaders(ws, new[] { "Username" }.Concat(kv.Value?.Keys ?? Enumerable.Empty<string>()));
                     var headerMap = ws.Row(1).CellsUsed()
                         .ToDictionary(c => c.GetString(), c => c.Address.ColumnNumber, StringComparer.OrdinalIgnoreCase);
                     var nextRow = ws.LastRowUsed().RowNumber() + 1;
                     ws.Cell(nextRow, headerMap["Timestamp"]).Value = DateTime.Now;
                     ws.Cell(nextRow, headerMap["Timestamp"]).Style.DateFormat.Format = "yyyy-mm-dd hh:mm:ss";
+                    ws.Cell(nextRow, headerMap["Username"]).Value = _username;
                     foreach (var reading in kv.Value ?? new Dictionary<string, object>())
                     {
                         if (!headerMap.TryGetValue(reading.Key, out var column)) continue;
@@ -125,7 +128,7 @@ namespace IEC.Shared.Services.Logging
 
         private static void WriteHeader(IXLWorksheet ws)
         {
-            var headers = new[] { "Timestamp" };
+            var headers = new[] { "Timestamp", "Username" };
             for (int i = 0; i < headers.Length; i++)
                 ws.Cell(1, i + 1).Value = headers[i];
             ws.Row(1).Style.Font.Bold = true;

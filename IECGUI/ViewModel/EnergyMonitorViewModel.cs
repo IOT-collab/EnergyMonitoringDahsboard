@@ -44,13 +44,13 @@ namespace IECGUI.ViewModel
         private CancellationTokenSource _cts;
         private bool _isConnected;
 
-        public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, IMultiEnergyMeterService multiEnergyMeterService , IDialogService dialogService)
+        public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, IMultiEnergyMeterService multiEnergyMeterService, IDialogService dialogService, IAuthService authService)
         {
             _multiEnergyMeterService = multiEnergyMeterService;
             _dialogService = dialogService;
             _navigation = navigation;
 
-            _energyLogger = new EnergyLoggingService(AppPaths.Data);
+            _energyLogger = new EnergyLoggingService(AppPaths.Data, authService.CurrentUser?.Username);
 
 
             _config = config;

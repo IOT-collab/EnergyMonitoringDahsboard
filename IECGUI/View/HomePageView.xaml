@@ -189,8 +189,8 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Ellipse Width="13" Height="13" Fill="#4BD050" VerticalAlignment="Center"/>
-                    <TextBlock Text="System Online" Foreground="{StaticResource HomeText}" FontSize="17" Margin="14,0,42,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="30" Foreground="#35E8FF" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentUsername, StringFormat=User: {0}}" Foreground="{StaticResource HomeText}" FontSize="17" Margin="14,0,42,0" VerticalAlignment="Center"/>
                     <Rectangle Width="1.4" Height="30" Fill="#88A8C3D4" Margin="0,0,42,0"/>
                     <TextBlock Text="&#xE83D;" FontFamily="Segoe MDL2 Assets" FontSize="34" Foreground="#47D946" VerticalAlignment="Center"/>
                     <TextBlock Text="Secure" Foreground="{StaticResource HomeText}" FontSize="17" Margin="14,0,42,0" VerticalAlignment="Center"/>

@@ -693,16 +693,6 @@
           "ScaleFactor": 1,
           "Length": 1,
           "DataType": "Bool"
-        },
-        {
-          "ParameterName": "Barcode",
-          "RegisterAddress": 20,
-          "DataArea": "HoldingRegister",
-          "IsEnabled": true,
-          "Unit": "",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "AsciiString"
         }
       ]
     }

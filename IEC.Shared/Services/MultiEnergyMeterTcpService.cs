@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -442,17 +443,42 @@ namespace IEC.Shared.Services
 
         public async Task<bool> ReadBooleanAsync(string meterName, ModbusDataArea area, ushort address)
         {
-            var target = GetWritableConnection(meterName);
-            return await Task.Run(() =>
+            try
             {
-                lock (_lock) return (bool)(area switch
+                var target = GetWritableConnection(meterName);
+                return await Task.Run(() =>
                 {
-                    ModbusDataArea.Coil => target.Master.ReadCoils(target.SlaveId, address, 1)[0],
-                    ModbusDataArea.DiscreteInput => target.Master.ReadInputs(target.SlaveId, address, 1)[0],
-                    ModbusDataArea.InputRegister => target.Master.ReadInputRegisters(target.SlaveId, address, 1)[0] != 0,
-                    _ => target.Master.ReadHoldingRegisters(target.SlaveId, address, 1)[0] != 0
-                });
-            }).ConfigureAwait(false);
+                    lock (_lock)
+                    {
+                        return area switch
+                        {
+                            ModbusDataArea.Coil => ReadFirstBit(target.Master.ReadCoils(target.SlaveId, address, 1), meterName, area, address),
+                            ModbusDataArea.DiscreteInput => ReadFirstBit(target.Master.ReadInputs(target.SlaveId, address, 1), meterName, area, address),
+                            ModbusDataArea.InputRegister => ReadFirstRegister(target.Master.ReadInputRegisters(target.SlaveId, address, 1), meterName, area, address) != 0,
+                            _ => ReadFirstRegister(target.Master.ReadHoldingRegisters(target.SlaveId, address, 1), meterName, area, address) != 0
+                        };
+                    }
+                }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"TCP Boolean feedback failed: device='{meterName}', area={area}, address={address}. {ex.Message}");
+                return false;
+            }
+        }
+
+        private static bool ReadFirstBit(bool[] values, string meterName, ModbusDataArea area, ushort address)
+        {
+            if (values == null || values.Length == 0)
+                throw new IOException($"Empty Modbus response from '{meterName}' for {area} {address}.");
+            return values[0];
+        }
+
+        private static ushort ReadFirstRegister(ushort[] values, string meterName, ModbusDataArea area, ushort address)
+        {
+            if (values == null || values.Length == 0)
+                throw new IOException($"Empty Modbus response from '{meterName}' for {area} {address}.");
+            return values[0];
         }
 
         private (byte SlaveId, IModbusMaster Master) GetWritableConnection(string meterName)
