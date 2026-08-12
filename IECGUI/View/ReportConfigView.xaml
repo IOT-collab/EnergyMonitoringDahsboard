@@ -177,7 +177,7 @@
           <TextBlock Text="Meter" Style="{StaticResource HmiLabelStyle}"/>
           <ComboBox ItemsSource="{Binding MeterNames}"
                     SelectedItem="{Binding SelectedMeterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{StaticResource HmiComboBoxStyle}"
+                    Style="{StaticResource GlassComboBox}"
                     Foreground="#081421"/>
         </StackPanel>
 

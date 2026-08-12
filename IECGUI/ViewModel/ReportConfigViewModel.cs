@@ -16,6 +16,7 @@ namespace IECGUI.ViewModel
     public class ReportConfigViewModel : BaseViewModel
     {
         private readonly INavigationService _navigation;
+        private readonly ConfigurationManagerService _configuration;
         public ObservableCollection<ReportFormatConfig> ReportFormats { get; set; } = new();
         public ObservableCollection<string> AvailableColumns { get; set; } = new();
         public ObservableCollection<string> SelectedColumns { get; set; } = new();
@@ -34,7 +35,14 @@ namespace IECGUI.ViewModel
         public string SelectedMeterName
         {
             get => _selectedMeterName;
-            set { _selectedMeterName = value; OnPropertyChanged(nameof(SelectedMeterName)); }
+            set
+            {
+                if (string.Equals(_selectedMeterName, value, System.StringComparison.Ordinal)) return;
+                _selectedMeterName = value;
+                OnPropertyChanged(nameof(SelectedMeterName));
+                RefreshAvailableColumns(value);
+                SelectedColumns.Clear();
+            }
         }
 
         private ReportFormatConfig _selectedFormat;
@@ -88,6 +96,7 @@ namespace IECGUI.ViewModel
         public ReportConfigViewModel(INavigationService navigation, ConfigurationManagerService config)
         {
             _navigation = navigation;
+            _configuration = config;
 
             foreach (var meterName in (config.Configuration?.Meters ?? new List<MetersConfig>())
                 // Keep disabled meters available because their historical reports
@@ -99,34 +108,7 @@ namespace IECGUI.ViewModel
                 MeterNames.Add(meterName);
             }
 
-            // New energy-meter columns (replace old production columns)
-            var columns = new List<string>
-            {
-                "Timestamp",
-                "VoltageA",
-                "VoltageB",
-                "VoltageC",
-                "CurrentA",
-                "CurrentB",
-                "CurrentC",
-                "ActivePower",
-                "ReactivePower",
-                "ApparentPower",
-                "Frequency",
-                "PowerFactor"
-            };
-
-            // If you still need station-type CSV columns, add here as required.
-            // Example for legacy station columns (remove if not needed):
-            // for (int i = 0; i < 13; i++)
-            // {
-            //     columns.Add($"St{i}_result");
-            //     columns.Add($"St{i}_X");
-            //     columns.Add($"St{i}_Y");
-            //     columns.Add($"St{i}_Z");
-            // }
-
-            AvailableColumns = new ObservableCollection<string>(columns);
+            AvailableColumns = new ObservableCollection<string>();
             SaveCommand = new RelayCommand(SaveFormat);
             DeleteCommand = new RelayCommand(DeleteFormat, () => SelectedFormat != null);
             NewCommand = new RelayCommand(NewFormat);
@@ -145,6 +127,8 @@ namespace IECGUI.ViewModel
                 meterMigration = true;
             }
 
+            SelectedMeterName = MeterNames.FirstOrDefault();
+
             // Clean existing saved formats so they only contain columns that match current AvailableColumns
             bool changed = CleanAndNormalizeSavedFormats();
             if (changed || meterMigration) SaveReportFormats();
@@ -158,13 +142,13 @@ namespace IECGUI.ViewModel
             foreach (var fmt in ReportFormats)
             {
                 if (fmt.SelectedColumns == null) continue;
+                var availableForMeter = GetAvailableColumns(fmt.MeterName);
                 var original = fmt.SelectedColumns.ToList();
                 var newList = new List<string>();
                 foreach (var col in original)
                 {
                     var normalized = NormalizeSavedColumn(col);
-                    var match = AvailableColumns.FirstOrDefault(a => string.Equals(a, normalized, System.StringComparison.OrdinalIgnoreCase))
-                                ?? AvailableColumns.FirstOrDefault(a => normalized.EndsWith(a, System.StringComparison.OrdinalIgnoreCase));
+                    var match = availableForMeter.FirstOrDefault(a => string.Equals(a, normalized, System.StringComparison.OrdinalIgnoreCase));
                     if (match != null)
                     {
                         newList.Add(match);
@@ -179,6 +163,33 @@ namespace IECGUI.ViewModel
                 }
             }
             return anyChange;
+        }
+
+        private List<string> GetAvailableColumns(string meterName)
+        {
+            var columns = new List<string> { "Timestamp" };
+            var meter = (_configuration.Configuration?.Meters ?? new List<MetersConfig>())
+                .FirstOrDefault(m => string.Equals(m?.MeterName, meterName, System.StringComparison.OrdinalIgnoreCase));
+
+            if (meter?.Registers != null)
+            {
+                columns.AddRange(meter.Registers
+                    .Where(r => r != null && r.IsEnabled)
+                    .Select(r => string.IsNullOrWhiteSpace(r.ParameterName)
+                        ? $"Register {r.RegisterAddress}"
+                        : r.ParameterName.Trim())
+                    .Distinct(System.StringComparer.OrdinalIgnoreCase));
+            }
+
+            return columns;
+        }
+
+        private void RefreshAvailableColumns(string meterName)
+        {
+            AvailableColumns.Clear();
+            foreach (var column in GetAvailableColumns(meterName))
+                AvailableColumns.Add(column);
+            OnPropertyChanged(nameof(AvailableColumns));
         }
 
         private static string NormalizeSavedColumn(string saved)

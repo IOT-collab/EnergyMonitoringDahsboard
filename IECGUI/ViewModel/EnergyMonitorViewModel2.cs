@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace IECGUI.ViewModel
@@ -73,7 +74,7 @@ namespace IECGUI.ViewModel
             BackCommand = new RelayCommand(NavigateToHome);
             RelayPage = new RelayCommand(() => _navigation.NavigateTo<Iec61850MonitorViewModel>());
             MqttBrowserCommand = new RelayCommand(() => _navigation.NavigateTo<MqttMonitorViewModel>());
-
+            
             _liveDataTimer = new SafePoller(
                 TimeSpan.FromMilliseconds(500),
                 PollAsync,

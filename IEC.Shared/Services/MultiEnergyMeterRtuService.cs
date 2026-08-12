@@ -226,7 +226,7 @@ namespace IEC.Shared.Services
                         catch (Exception ex)
                         {
                             conn.IsConnected = false;
-                            MessageBox.Show($"Unable to Connect: {ex.Message}");
+                            //MessageBox.Show($"Unable to Connect: {ex.Message}");
                         }
                     }
                 }

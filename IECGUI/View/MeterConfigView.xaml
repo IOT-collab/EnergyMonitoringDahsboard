@@ -285,7 +285,7 @@
             </TabItem>-->
             
             <!-- Regiseters Mapping-->
-            <TabItem Header="Register Mapping" Height="44" VerticalAlignment="Bottom">
+            <TabItem Header="Address Mapping" Height="44" VerticalAlignment="Bottom">
 
                 <Grid Margin="10">
 

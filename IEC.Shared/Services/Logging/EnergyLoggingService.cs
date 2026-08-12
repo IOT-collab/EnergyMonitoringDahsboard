@@ -69,7 +69,7 @@ namespace IEC.Shared.Services.Logging
             _meterNames.Clear();
         }
 
-        // readings: meterName -> (key -> value). Expected keys: VoltageA,VoltageB,VoltageC,CurrentA,CurrentB,CurrentC,ActivePower,ReactivePower,ApparentPower,Frequency,PowerFactor
+        // readings: meterName -> configured parameter name -> value.
         public void AppendReadings(IDictionary<string, IDictionary<string, object>> readings)
         {
             if (string.IsNullOrEmpty(_filePath) || readings == null || !readings.Any()) return;
@@ -84,36 +84,48 @@ namespace IEC.Shared.Services.Logging
                     if (ws.LastRowUsed() == null)
                         WriteHeader(ws);
 
+                    EnsureHeaders(ws, kv.Value?.Keys ?? Enumerable.Empty<string>());
+                    var headerMap = ws.Row(1).CellsUsed()
+                        .ToDictionary(c => c.GetString(), c => c.Address.ColumnNumber, StringComparer.OrdinalIgnoreCase);
                     var nextRow = ws.LastRowUsed().RowNumber() + 1;
-                    ws.Cell(nextRow, 1).Value = DateTime.Now.ToLongTimeString() ;
-                    ws.Cell(nextRow, 2).Value = Safe(kv.Value, "VoltageA");
-                    ws.Cell(nextRow, 3).Value = Safe(kv.Value, "VoltageB");
-                    ws.Cell(nextRow, 4).Value = Safe(kv.Value, "VoltageC");
-                    ws.Cell(nextRow, 5).Value = Safe(kv.Value, "CurrentA");
-                    ws.Cell(nextRow, 6).Value = Safe(kv.Value, "CurrentB");
-                    ws.Cell(nextRow, 7).Value = Safe(kv.Value, "CurrentC");
-                    ws.Cell(nextRow, 8).Value = Safe(kv.Value, "ActivePower");
-                    ws.Cell(nextRow, 9).Value = Safe(kv.Value, "ReactivePower");
-                    ws.Cell(nextRow, 10).Value = Safe(kv.Value, "ApparentPower");
-                    ws.Cell(nextRow, 11).Value = Safe(kv.Value, "Frequency");
-                    ws.Cell(nextRow, 12).Value = Safe(kv.Value, "PowerFactor");
+                    ws.Cell(nextRow, headerMap["Timestamp"]).Value = DateTime.Now;
+                    ws.Cell(nextRow, headerMap["Timestamp"]).Style.DateFormat.Format = "yyyy-mm-dd hh:mm:ss";
+                    foreach (var reading in kv.Value ?? new Dictionary<string, object>())
+                    {
+                        if (!headerMap.TryGetValue(reading.Key, out var column)) continue;
+                        WriteValue(ws.Cell(nextRow, column), reading.Value);
+                    }
                 }
                 wb.SaveAs(_filePath);
             }
         }
 
-        private static string Safe(IDictionary<string, object> d, string k)
-            => d != null && d.TryGetValue(k, out var v) ? v?.ToString() ?? string.Empty : string.Empty;
+        private static void EnsureHeaders(IXLWorksheet ws, IEnumerable<string> parameterNames)
+        {
+            var existing = new HashSet<string>(ws.Row(1).CellsUsed().Select(c => c.GetString()), StringComparer.OrdinalIgnoreCase);
+            var nextColumn = Math.Max(2, (ws.LastColumnUsed()?.ColumnNumber() ?? 1) + 1);
+            foreach (var parameterName in parameterNames.Where(n => !string.IsNullOrWhiteSpace(n)))
+            {
+                if (!existing.Add(parameterName)) continue;
+                ws.Cell(1, nextColumn++).Value = parameterName;
+            }
+            ws.Row(1).Style.Font.Bold = true;
+        }
+
+        private static void WriteValue(IXLCell cell, object value)
+        {
+            if (value == null) return;
+            if (value is double d) cell.Value = double.IsFinite(d) ? d : 0d;
+            else if (value is float f) cell.Value = float.IsFinite(f) ? f : 0f;
+            else if (value is decimal dec) cell.Value = dec;
+            else if (value is int i) cell.Value = i;
+            else if (value is long l) cell.Value = l;
+            else cell.Value = value.ToString();
+        }
 
         private static void WriteHeader(IXLWorksheet ws)
         {
-            var headers = new[]
-            {
-                "Timestamp","VoltageA","VoltageB","VoltageC",
-                "CurrentA","CurrentB","CurrentC",
-                "ActivePower","ReactivePower","ApparentPower",
-                "Frequency","PowerFactor"
-            };
+            var headers = new[] { "Timestamp" };
             for (int i = 0; i < headers.Length; i++)
                 ws.Cell(1, i + 1).Value = headers[i];
             ws.Row(1).Style.Font.Bold = true;

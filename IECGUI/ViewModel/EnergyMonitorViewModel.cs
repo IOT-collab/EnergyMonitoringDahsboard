@@ -266,21 +266,27 @@ namespace IECGUI.ViewModel
                 var loggerReadings = new Dictionary<string, IDictionary<string, object>>();
                 foreach (var vm in Meters)
                 {
-                    var values = new Dictionary<string, object>
+                    if (string.IsNullOrWhiteSpace(vm.MeterName) ||
+                        !readings.TryGetValue(vm.MeterName, out var meterReading) ||
+                        meterReading == null)
+                        continue;
+
+                    var values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                    if (_meterConfigMap.TryGetValue(vm.MeterName, out var meterConfig))
                     {
-                        ["VoltageA"] = vm.VoltageA_N,
-                        ["VoltageB"] = vm.VoltageB_N,
-                        ["VoltageC"] = vm.VoltageC_N,
-                        ["CurrentA"] = vm.CurrentA,
-                        ["CurrentB"] = vm.CurrentB,
-                        ["CurrentC"] = vm.CurrentC,
-                        ["ActivePower"] = vm.TotalActivePower,
-                        ["ReactivePower"] = vm.TotalReactivePower,
-                        ["ApparentPower"] = vm.TotalApparentPower,
-                        ["Frequency"] = vm.Frequency,
-                        ["PowerFactor"] = vm.TotalPowerFactor
-                    };
-                    loggerReadings[vm.MeterName ?? $"Meter_{Guid.NewGuid():N}"] = values;
+                        foreach (var register in meterConfig.Registers.Where(r => r.IsEnabled))
+                        {
+                            var parameterName = string.IsNullOrWhiteSpace(register.ParameterName)
+                                ? $"Register {register.RegisterAddress}"
+                                : register.ParameterName.Trim();
+                            var readingKey = register.ParameterName ?? register.RegisterAddress.ToString();
+                            if (meterReading.Values.TryGetValue(readingKey, out var value) && value != null)
+                                values[parameterName] = value;
+                        }
+                    }
+
+                    if (values.Count > 0)
+                        loggerReadings[vm.MeterName] = values;
                 }
                 _energyLogger?.AppendReadings(loggerReadings);
 
