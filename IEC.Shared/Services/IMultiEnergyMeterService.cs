@@ -19,5 +19,8 @@ namespace IEC.Shared.Services
         Task DisconnectAll();
 
         bool HasMeter(string meterName);
+        Task WriteCoilAsync(string meterName, ushort address, bool value);
+        Task WriteRegisterAsync(string meterName, ushort address, ushort value);
+        Task<bool> ReadBooleanAsync(string meterName, ModbusDataArea area, ushort address);
     }
 }

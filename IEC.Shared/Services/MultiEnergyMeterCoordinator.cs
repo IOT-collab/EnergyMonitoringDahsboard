@@ -123,5 +123,20 @@ namespace IEC.Shared.Services
 
             return false;
         }
+
+        public Task WriteCoilAsync(string meterName, ushort address, bool value) =>
+            _rtuService.HasMeter(meterName) ? _rtuService.WriteCoilAsync(meterName, address, value) :
+            _tcpService.HasMeter(meterName) ? _tcpService.WriteCoilAsync(meterName, address, value) :
+            throw new InvalidOperationException($"Device '{meterName}' is not configured.");
+
+        public Task WriteRegisterAsync(string meterName, ushort address, ushort value) =>
+            _rtuService.HasMeter(meterName) ? _rtuService.WriteRegisterAsync(meterName, address, value) :
+            _tcpService.HasMeter(meterName) ? _tcpService.WriteRegisterAsync(meterName, address, value) :
+            throw new InvalidOperationException($"Device '{meterName}' is not configured.");
+
+        public Task<bool> ReadBooleanAsync(string meterName, ModbusDataArea area, ushort address) =>
+            _rtuService.HasMeter(meterName) ? _rtuService.ReadBooleanAsync(meterName, area, address) :
+            _tcpService.HasMeter(meterName) ? _tcpService.ReadBooleanAsync(meterName, area, address) :
+            throw new InvalidOperationException($"Device '{meterName}' is not configured.");
     }
 }

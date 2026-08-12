@@ -47,6 +47,8 @@ namespace IEC.Shared.Services
 
             if (Configuration.Meters == null)
                 Configuration.Meters = new List<MetersConfig>();
+            if (Configuration.SldBreakers == null)
+                Configuration.SldBreakers = new List<SldBreakerConfig>();
 
             // Ensure UserSettings object exists after load (so UI/ViewModel can bind safely)
             if (Configuration.UserSettings == null)

@@ -1,5 +1,6 @@
 ﻿using IEC.Shared.Services;
 using IECGUI.Services;
+using IEC.Shared.Models;
 using IECGUI.ViewModel;
 using IEC.CommonService;
 using System;
@@ -20,6 +21,9 @@ namespace IECGUI.ViewModel
         private readonly SafePoller _liveDataTimer;
 
         private readonly INavigationService _navigation;
+        private readonly IMultiEnergyMeterService _deviceService;
+        private readonly List<SldBreakerConfig> _sldMappings;
+        private readonly IDialogService _dialog;
 
         public ICommand EventsCommand { get; }
 
@@ -543,10 +547,13 @@ namespace IECGUI.ViewModel
 
 
 
-        public Dashboard1ViewModel(INavigationService navigation )
+        public Dashboard1ViewModel(INavigationService navigation, ConfigurationManagerService configuration, IMultiEnergyMeterService deviceService , IDialogService dialog)
         {
-
+            _dialog = dialog;
             _navigation = navigation;
+            _deviceService = deviceService;
+            _sldMappings = configuration.Configuration.SldBreakers ?? new List<SldBreakerConfig>();
+            _ = _deviceService.Configure(configuration.Configuration.Meters.Where(m => m.IsEnabled));
             EventsCommand = new RelayCommand(OpenRelayCard);
             HomeCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>()); //_navigation.NavigateTo(new Dashboard1ViewModel(_navigation));
             AlarmCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
@@ -555,7 +562,7 @@ namespace IECGUI.ViewModel
             UserSettingCommand = new RelayCommand(() => _navigation.NavigateTo<UserSettingsViewModel>());
 
 
-            _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(100), RunBackgroundService, ex => Console.WriteLine(ex.Message));
+            _liveDataTimer = new SafePoller(TimeSpan.FromSeconds(1), RunBackgroundService, ex => Console.WriteLine(ex.Message));
             _liveDataTimer.Start();
 
             OUTBRK1OPEN = new RelayCommand(OUTBRK1OPEN_Execute);
@@ -613,6 +620,16 @@ namespace IECGUI.ViewModel
 
         public async Task RunBackgroundService(Dictionary<int, object> parameters)
         {
+            foreach (var mapping in _sldMappings.Where(m => m.IsEnabled && !string.IsNullOrWhiteSpace(m.MeterName)))
+            {
+                try
+                {
+                    var state = await _deviceService.ReadBooleanAsync(mapping.MeterName, mapping.FeedbackArea, mapping.FeedbackAddress);
+                    var feedbackState = mapping.FeedbackInverted ? !state : state;
+                    Application.Current.Dispatcher.Invoke(() => ApplyBreakerState(mapping.BreakerKey, feedbackState));
+                }
+                catch (Exception ex) { Console.WriteLine($"SLD feedback failed for {mapping.DisplayName}: {ex.Message}"); }
+            }
             if(_status10 || _status11 || ((_status12  || _status14) && _status13)) { Feeder5LineColor = Brushes.Red; } else { Feeder5LineColor = Brushes.Gray; }
             if(_status12 || _status14 || (( _status10 || _status11) && _status13)) { Feeder6LineColor = Brushes.Red; } else { Feeder6LineColor = Brushes.Gray; }
             if(Feeder5LineColor != Brushes.Red) 
@@ -652,6 +669,7 @@ namespace IECGUI.ViewModel
 
         public void OUTBRK1OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing1", _status1)) return;
             _status1 = !_status1;
             breakerstatusopen1 = !_status1 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose1 = _status1 ? Visibility.Visible : Visibility.Hidden;
@@ -659,6 +677,7 @@ namespace IECGUI.ViewModel
         }
         public void OUTBRK2OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing2", _status2)) return;
             _status2 = !_status2;
             breakerstatusopen2 = !_status2 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose2 = _status2 ? Visibility.Visible : Visibility.Hidden;
@@ -667,6 +686,7 @@ namespace IECGUI.ViewModel
 
         public void OUTBRK3OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing3", _status3)) return;
             _status3 = !_status3;
             breakerstatusopen3 = !_status3 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose3 = _status3 ? Visibility.Visible : Visibility.Hidden;
@@ -674,6 +694,7 @@ namespace IECGUI.ViewModel
         }
         public void OUTBRK4OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing4", _status4)) return;
             _status4 = !_status4;
             breakerstatusopen4 = !_status4 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose4 = _status4 ? Visibility.Visible : Visibility.Hidden;
@@ -682,6 +703,7 @@ namespace IECGUI.ViewModel
 
         public void OUTBRK5OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing5", _status5)) return;
             _status5 = !_status5;
             breakerstatusopen5 = !_status5 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose5 = _status5 ? Visibility.Visible : Visibility.Hidden;
@@ -689,6 +711,7 @@ namespace IECGUI.ViewModel
         }
         public void OUTBRK6OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing6", _status6)) return;
             _status6 = !_status6;
             breakerstatusopen6 = !_status6 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose6 = _status6 ? Visibility.Visible : Visibility.Hidden;
@@ -696,6 +719,7 @@ namespace IECGUI.ViewModel
         }
         public void OUTBRK7OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing7", _status7)) return;
             _status7 = !_status7;
             breakerstatusopen7 = !_status7 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose7 = _status7 ? Visibility.Visible : Visibility.Hidden;
@@ -703,6 +727,7 @@ namespace IECGUI.ViewModel
         }
         public void OUTBRK8OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing8", _status8)) return;
             _status8 = !_status8;
             breakerstatusopen8 = !_status8 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose8 = _status8 ? Visibility.Visible : Visibility.Hidden;
@@ -710,6 +735,7 @@ namespace IECGUI.ViewModel
         }
         public void OUTBRK9OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Outgoing9", _status9)) return;
             _status9 = !_status9;
             breakerstatusopen9 = !_status9 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose9 = _status9 ? Visibility.Visible : Visibility.Hidden;
@@ -718,6 +744,7 @@ namespace IECGUI.ViewModel
 
         public void INCBRK10OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Incomer1", _status10)) return;
             _status10 = !_status10;
             breakerstatusopen10 = !_status10 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose10 = _status10 ? Visibility.Visible : Visibility.Hidden;
@@ -727,6 +754,7 @@ namespace IECGUI.ViewModel
 
         public void INCBRK20OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Incomer2", _status11)) return;
             _status11 = !_status11;
             breakerstatusopen11 = !_status11 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose11 = _status11 ? Visibility.Visible : Visibility.Hidden;
@@ -735,6 +763,7 @@ namespace IECGUI.ViewModel
 
         public void INCBRK30OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Incomer3", _status12)) return;
             _status12 = !_status12;
             breakerstatusopen12 = !_status12 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose12 = _status12 ? Visibility.Visible : Visibility.Hidden;
@@ -744,6 +773,7 @@ namespace IECGUI.ViewModel
 
         public void BCBRK30OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("BusCoupler", _status13)) return;
             _status13 = !_status13;
             breakerstatusopen13 = !_status13 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose13 = _status13 ? Visibility.Visible : Visibility.Hidden;
@@ -754,10 +784,61 @@ namespace IECGUI.ViewModel
 
         public void INCBRK40OPEN_Execute()
         {
+            if (TryOperateMappedBreaker("Incomer4", _status14)) return;
             _status14 = !_status14;
             breakerstatusopen14 = !_status14 ? Visibility.Visible : Visibility.Hidden;
             breakerstatusclose14 = _status14 ? Visibility.Visible : Visibility.Hidden;
             Feeder4LineColor = _status14  ? Brushes.Red : Brushes.Gray;
+        }
+
+        private bool TryOperateMappedBreaker(string key, bool currentState)
+        {
+            var mapping = _sldMappings.FirstOrDefault(m => m.IsEnabled && string.Equals(m.BreakerKey, key, StringComparison.OrdinalIgnoreCase));
+            if (mapping == null) return false;
+            var desired = !currentState;
+            if (_dialog.ShowYesNo($"Confirm {(desired ? "CLOSE / ON" : "OPEN / OFF")} command for {mapping.DisplayName}?",
+                "Breaker Operation Confirmation")) ;
+            _ = SendBreakerCommandAsync(mapping, desired);
+            return true;
+        }
+
+        private async Task SendBreakerCommandAsync(SldBreakerConfig mapping, bool desired)
+        {
+            try
+            {
+                if (mapping.CommandArea == ModbusDataArea.Coil)
+                    await _deviceService.WriteCoilAsync(mapping.MeterName, mapping.CommandAddress, desired);
+                else if (mapping.CommandArea == ModbusDataArea.HoldingRegister)
+                    await _deviceService.WriteRegisterAsync(mapping.MeterName, mapping.CommandAddress, desired ? (ushort)1 : (ushort)0);
+                else
+                    throw new InvalidOperationException("Command area must be Coil or Holding Register.");
+            }
+            catch (Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(() => _dialog.ShowWarning($"Breaker command failed for {mapping.DisplayName}.\n\n{ex.Message}"));
+                
+            }
+        }
+
+        private void ApplyBreakerState(string key, bool closed)
+        {
+            switch (key.ToLowerInvariant())
+            {
+                case "outgoing1": _status1 = closed; breakerstatusopen1 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose1 = closed ? Visibility.Visible : Visibility.Hidden; Feeder7LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing2": _status2 = closed; breakerstatusopen2 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose2 = closed ? Visibility.Visible : Visibility.Hidden; Feeder8LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing3": _status3 = closed; breakerstatusopen3 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose3 = closed ? Visibility.Visible : Visibility.Hidden; Feeder9LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing4": _status4 = closed; breakerstatusopen4 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose4 = closed ? Visibility.Visible : Visibility.Hidden; Feeder10LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing5": _status5 = closed; breakerstatusopen5 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose5 = closed ? Visibility.Visible : Visibility.Hidden; Feeder11LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing6": _status6 = closed; breakerstatusopen6 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose6 = closed ? Visibility.Visible : Visibility.Hidden; Feeder12LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing7": _status7 = closed; breakerstatusopen7 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose7 = closed ? Visibility.Visible : Visibility.Hidden; Feeder13LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing8": _status8 = closed; breakerstatusopen8 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose8 = closed ? Visibility.Visible : Visibility.Hidden; Feeder14LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "outgoing9": _status9 = closed; breakerstatusopen9 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose9 = closed ? Visibility.Visible : Visibility.Hidden; Feeder15LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "incomer1": _status10 = closed; breakerstatusopen10 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose10 = closed ? Visibility.Visible : Visibility.Hidden; Feeder1LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "incomer2": _status11 = closed; breakerstatusopen11 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose11 = closed ? Visibility.Visible : Visibility.Hidden; Feeder2LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "incomer3": _status12 = closed; breakerstatusopen12 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose12 = closed ? Visibility.Visible : Visibility.Hidden; Feeder3LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+                case "buscoupler": _status13 = closed; breakerstatusopen13 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose13 = closed ? Visibility.Visible : Visibility.Hidden; break;
+                case "incomer4": _status14 = closed; breakerstatusopen14 = closed ? Visibility.Hidden : Visibility.Visible; breakerstatusclose14 = closed ? Visibility.Visible : Visibility.Hidden; Feeder4LineColor = closed ? Brushes.Red : Brushes.Gray; break;
+            }
         }
 
 

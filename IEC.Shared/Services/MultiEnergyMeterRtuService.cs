@@ -632,5 +632,41 @@ namespace IEC.Shared.Services
         }
 
         public void Dispose() => DisconnectAll().ConfigureAwait(false).GetAwaiter().GetResult();
+
+        public Task WriteCoilAsync(string meterName, ushort address, bool value) => Task.Run(() =>
+        {
+            var target = GetWritableConnection(meterName);
+            lock (_lock) target.Master.WriteSingleCoil(target.SlaveId, address, value);
+        });
+
+        public Task WriteRegisterAsync(string meterName, ushort address, ushort value) => Task.Run(() =>
+        {
+            var target = GetWritableConnection(meterName);
+            lock (_lock) target.Master.WriteSingleRegister(target.SlaveId, address, value);
+        });
+
+        public async Task<bool> ReadBooleanAsync(string meterName, ModbusDataArea area, ushort address)
+        {
+            var target = GetWritableConnection(meterName);
+            return await Task.Run(() =>
+            {
+                lock (_lock) return (bool)(area switch
+                {
+                    ModbusDataArea.Coil => target.Master.ReadCoils(target.SlaveId, address, 1)[0],
+                    ModbusDataArea.DiscreteInput => target.Master.ReadInputs(target.SlaveId, address, 1)[0],
+                    ModbusDataArea.InputRegister => target.Master.ReadInputRegisters(target.SlaveId, address, 1)[0] != 0,
+                    _ => target.Master.ReadHoldingRegisters(target.SlaveId, address, 1)[0] != 0
+                });
+            }).ConfigureAwait(false);
+        }
+
+        private (byte SlaveId, IModbusMaster Master) GetWritableConnection(string meterName)
+        {
+            if (!_meters.TryGetValue(meterName, out var meter) ||
+                !_portConnections.TryGetValue(meter.PortName, out var connection) ||
+                connection?.Master == null || connection.Port == null || !connection.Port.IsOpen)
+                throw new InvalidOperationException($"RTU device '{meterName}' is not connected.");
+            return (meter.SlaveId, connection.Master);
+        }
     }
 }

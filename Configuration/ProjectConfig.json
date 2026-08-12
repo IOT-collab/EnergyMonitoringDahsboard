@@ -707,6 +707,162 @@
       ]
     }
   ],
+  "SldBreakers": [
+    {
+      "BreakerKey": "Incomer1",
+      "DisplayName": "Incomer1",
+      "MeterName": "FX5S",
+      "CommandAddress": 8192,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 0,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Incomer2",
+      "DisplayName": "Incomer2",
+      "MeterName": "FX5S",
+      "CommandAddress": 8193,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 1,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Incomer3",
+      "DisplayName": "Incomer3",
+      "MeterName": "FX5S",
+      "CommandAddress": 8194,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 2,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Incomer4",
+      "DisplayName": "Incomer4",
+      "MeterName": "FX5S",
+      "CommandAddress": 8195,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 3,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "BusCoupler",
+      "DisplayName": "BusCoupler",
+      "MeterName": "FX5S",
+      "CommandAddress": 8196,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 4,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing1",
+      "DisplayName": "Outgoing1",
+      "MeterName": "FX5S",
+      "CommandAddress": 8197,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 5,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing2",
+      "DisplayName": "Outgoing2",
+      "MeterName": "FX5S",
+      "CommandAddress": 8198,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 6,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing3",
+      "DisplayName": "Outgoing3",
+      "MeterName": "FX5S",
+      "CommandAddress": 8199,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 7,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing4",
+      "DisplayName": "Outgoing4",
+      "MeterName": "FX5S",
+      "CommandAddress": 8200,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 8,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing5",
+      "DisplayName": "Outgoing5",
+      "MeterName": "FX5S",
+      "CommandAddress": 8201,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 9,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing6",
+      "DisplayName": "Outgoing6",
+      "MeterName": "FX5S",
+      "CommandAddress": 8202,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 10,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing7",
+      "DisplayName": "Outgoing7",
+      "MeterName": "FX5S",
+      "CommandAddress": 8203,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 10,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing8",
+      "DisplayName": "Outgoing8",
+      "MeterName": "FX5S",
+      "CommandAddress": 8204,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 11,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    },
+    {
+      "BreakerKey": "Outgoing9",
+      "DisplayName": "Outgoing9",
+      "MeterName": "FX5S",
+      "CommandAddress": 8205,
+      "CommandArea": "Coil",
+      "FeedbackAddress": 12,
+      "FeedbackArea": "Coil",
+      "FeedbackInverted": false,
+      "IsEnabled": true
+    }
+  ],
   "UserSettings": {
     "Users": [
       {

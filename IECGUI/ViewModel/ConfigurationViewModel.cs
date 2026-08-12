@@ -35,11 +35,14 @@ namespace IECGUI.ViewModel
 
         public ObservableCollection<RegisterConfig> Registers => SelectedMeter?.Registers;
         public ObservableCollection<MetersConfig> Meters { get; }
+        public ObservableCollection<string> DeviceNames { get; }
+        public ObservableCollection<SldBreakerConfig> SldBreakers { get; }
 
         public ICommand MenuCommand { get; }
         public ICommand AddMeterCommand { get; }
         public ICommand DeleteMeterCommand { get; }
         public ICommand SaveCommand { get; }
+        public ICommand SaveSldMappingCommand { get; }
         public ICommand AddRegisterCommand { get; }
         public ICommand DeleteRegisterCommand { get; }
         public ICommand EditRegisterCommand { get; }
@@ -55,6 +58,17 @@ namespace IECGUI.ViewModel
         public ObservableCollection<ModbusDataArea> DataAreas { get; } =
             new ObservableCollection<ModbusDataArea>(
                 Enum.GetValues(typeof(ModbusDataArea)).Cast<ModbusDataArea>());
+
+        public ObservableCollection<ModbusDataArea> SldCommandAreas { get; } = new()
+        {
+            ModbusDataArea.Coil, ModbusDataArea.HoldingRegister
+        };
+
+        public ObservableCollection<ModbusDataArea> SldFeedbackAreas { get; } = new()
+        {
+            ModbusDataArea.Coil, ModbusDataArea.DiscreteInput,
+            ModbusDataArea.InputRegister, ModbusDataArea.HoldingRegister
+        };
 
         // Protocol list for the Protocol ComboBox
         public ObservableCollection<ProtocolsType> Protocols { get; } =
@@ -98,10 +112,20 @@ namespace IECGUI.ViewModel
         public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config , IDialogService dialogService)
         {
             _config = config;
+            SldBreakers = new ObservableCollection<SldBreakerConfig>(_config.Configuration.SldBreakers);
+            if (SldBreakers.Count == 0)
+            {
+                var defaults = new[] { "Incomer1", "Incomer2", "Incomer3", "Incomer4", "BusCoupler",
+                    "Outgoing1", "Outgoing2", "Outgoing3", "Outgoing4", "Outgoing5", "Outgoing6", "Outgoing7", "Outgoing8", "Outgoing9" };
+                foreach (var key in defaults) SldBreakers.Add(new SldBreakerConfig { BreakerKey = key, DisplayName = key });
+            }
             _navigation = navigation;
             _dialogService = dialogService;
             Meters = new ObservableCollection<MetersConfig>(
                 _config.Configuration.Meters);
+            DeviceNames = new ObservableCollection<string>(Meters
+                .Where(m => !string.IsNullOrWhiteSpace(m.MeterName))
+                .Select(m => m.MeterName));
 
             AddMeterCommand =
                 new RelayCommand(AddMeter);
@@ -111,6 +135,9 @@ namespace IECGUI.ViewModel
 
             SaveCommand =
                 new RelayCommand(Save);
+
+            SaveSldMappingCommand =
+                new RelayCommand(SaveSldMapping);
 
             SaveRegisterCommand =
                 new RelayCommand(Save);
@@ -181,6 +208,7 @@ namespace IECGUI.ViewModel
             };
 
             Meters.Add(meter);
+            DeviceNames.Add(meter.MeterName);
             SelectedMeter = meter;
         }
 
@@ -190,6 +218,7 @@ namespace IECGUI.ViewModel
                 return;
 
             Meters.Remove(SelectedMeter);
+            DeviceNames.Remove(SelectedMeter.MeterName);
         }
 
         private void Save()
@@ -198,6 +227,18 @@ namespace IECGUI.ViewModel
             foreach (var meter in Meters)
                 _config.Configuration.Meters.Add(meter);
 
+            _config.Configuration.SldBreakers.Clear();
+            foreach (var breaker in SldBreakers)
+                _config.Configuration.SldBreakers.Add(breaker);
+
+            _config.Save();
+        }
+
+        private void SaveSldMapping()
+        {
+            // Never clear DeviceNames during this save. It is the live ItemsSource
+            // and doing so causes WPF to write null into every selected MeterName.
+            _config.Configuration.SldBreakers = SldBreakers.ToList();
             _config.Save();
         }
 

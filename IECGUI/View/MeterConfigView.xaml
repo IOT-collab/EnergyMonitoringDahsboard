@@ -436,6 +436,59 @@
 
             </TabItem>
 
+            <TabItem Header="SLD Mapping" Height="44" VerticalAlignment="Bottom">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Breaker command and feedback mapping"
+                                   Foreground="White" FontSize="20" FontWeight="Bold"
+                                   VerticalAlignment="Center" Margin="5,0,25,0"/>
+                        <Button Content="Save SLD Mapping" Command="{Binding SaveSldMappingCommand}"
+                                Width="180" Margin="5" Foreground="White"
+                                Style="{StaticResource GlassButton.Blue}"/>
+                    </StackPanel>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding SldBreakers}"
+                              AutoGenerateColumns="False" CanUserAddRows="False"
+                              RowHeight="40" FontSize="15" Foreground="White"
+                              Background="#6614263A" RowBackground="#4414263A"
+                              AlternatingRowBackground="#55203349" GridLinesVisibility="None">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="SLD Breaker" Binding="{Binding DisplayName}" Width="150"/>
+                            <DataGridTemplateColumn Header="Device" Width="190">
+                                <DataGridTemplateColumn.CellTemplate><DataTemplate>
+                                    <ComboBox ItemsSource="{Binding DataContext.DeviceNames, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                              SelectedItem="{Binding MeterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource GlassComboBox}"/>
+                                </DataTemplate></DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Command Area" Width="155">
+                                <DataGridTemplateColumn.CellTemplate><DataTemplate>
+                                    <ComboBox ItemsSource="{Binding DataContext.SldCommandAreas, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                              SelectedItem="{Binding CommandArea, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              IsSynchronizedWithCurrentItem="False"
+                                              Style="{StaticResource GlassComboBox}"/>
+                                </DataTemplate></DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Command Address" Binding="{Binding CommandAddress}" Width="135"/>
+                            <DataGridTemplateColumn Header="Feedback Area" Width="155">
+                                <DataGridTemplateColumn.CellTemplate><DataTemplate>
+                                    <ComboBox ItemsSource="{Binding DataContext.SldFeedbackAreas, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                              SelectedItem="{Binding FeedbackArea, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              IsSynchronizedWithCurrentItem="False"
+                                              Style="{StaticResource GlassComboBox}"/>
+                                </DataTemplate></DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Feedback Address" Binding="{Binding FeedbackAddress}" Width="135"/>
+                            <DataGridCheckBoxColumn Header="Invert Feedback" Binding="{Binding FeedbackInverted}" Width="110"/>
+                            <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding IsEnabled}" Width="85"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
         </TabControl>
     </Grid>
 </UserControl>
