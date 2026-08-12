@@ -298,10 +298,11 @@ namespace IEC.Shared.Services
                         try
                         {
                             // Length is number of registers to read (clamp to Modbus limit 125)
-                            int count = Math.Max(1, reg.Length);
+                            int count = Math.Max(Math.Max(1, reg.Length), RequiredRegisterCount(reg.DataType));
                             if (count > 125) count = 125;
 
                             ushort[] raw = null;
+                            bool[] rawBits = null;
 
                             // Helper to attempt a read and return true on success
                             bool TryRead(ushort startAddress, ushort readCount, out ushort[] result, out string failure)
@@ -310,7 +311,32 @@ namespace IEC.Shared.Services
                                 failure = null!;
                                 try
                                 {
-                                    result = conn.Master.ReadHoldingRegisters(meter.SlaveId, startAddress, readCount);
+                                    result = reg.DataArea == ModbusDataArea.InputRegister
+                                        ? conn.Master.ReadInputRegisters(meter.SlaveId, startAddress, readCount)
+                                        : conn.Master.ReadHoldingRegisters(meter.SlaveId, startAddress, readCount);
+                                    return true;
+                                }
+                                catch (NModbus.SlaveException sex)
+                                {
+                                    failure = $"SlaveException: FunctionCode={sex.FunctionCode}, ExceptionCode={sex.SlaveExceptionCode}";
+                                    return false;
+                                }
+                                catch (Exception ex)
+                                {
+                                    failure = $"Exception: {ex.Message}";
+                                    return false;
+                                }
+                            }
+
+                            bool TryReadBits(ushort startAddress, ushort readCount, out bool[] result, out string failure)
+                            {
+                                result = null!;
+                                failure = null!;
+                                try
+                                {
+                                    result = reg.DataArea == ModbusDataArea.Coil
+                                        ? conn.Master.ReadCoils(meter.SlaveId, startAddress, readCount)
+                                        : conn.Master.ReadInputs(meter.SlaveId, startAddress, readCount);
                                     return true;
                                 }
                                 catch (NModbus.SlaveException sex)
@@ -350,17 +376,30 @@ namespace IEC.Shared.Services
                             string lastFailure = null;
                             foreach (var start in uniqueCandidates)
                             {
-                                if (TryRead(start, (ushort)count, out var attemptRaw, out var fail))
+                                var isBitArea = reg.DataArea == ModbusDataArea.Coil || reg.DataArea == ModbusDataArea.DiscreteInput;
+                                if (isBitArea)
                                 {
-                                    raw = attemptRaw;
-                                    break;
+                                    if (TryReadBits(start, (ushort)count, out var attemptBits, out var bitFailure))
+                                    {
+                                        rawBits = attemptBits;
+                                        break;
+                                    }
+                                    lastFailure = bitFailure;
                                 }
-                                lastFailure = fail;
+                                else
+                                {
+                                    if (TryRead(start, (ushort)count, out var attemptRaw, out var registerFailure))
+                                    {
+                                        raw = attemptRaw;
+                                        break;
+                                    }
+                                    lastFailure = registerFailure;
+                                }
                                 // small settle between attempts
                                 System.Threading.Thread.Sleep(10);
                             }
 
-                            if (raw == null)
+                            if (raw == null && rawBits == null)
                             {
                                 // If a slave does not answer the first requested register,
                                 // do not repeat the same timeout for every remaining register.
@@ -394,15 +433,12 @@ namespace IEC.Shared.Services
                             }
 
                             // Use enum-typed DataType
-                            object value = DecodeRegister(rawForDecode, reg.DataType);
+                            object value = rawBits != null
+                                ? DecodeBits(rawBits, reg.DataType)
+                                : DecodeRegister(rawForDecode, reg.DataType);
 
                             // apply scale factor
-                            if (value is double d)
-                                value = d * reg.ScaleFactor;
-                            else if (value is float f)
-                                value = f * reg.ScaleFactor;
-                            else if (value is int i)
-                                value = (double)i * reg.ScaleFactor;
+                            value = ApplyScale(value, reg.ScaleFactor);
 
                             var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
                             reading.Values[key] = value;
@@ -439,6 +475,12 @@ namespace IEC.Shared.Services
 
             switch (dataType)
             {
+                case RegisterDataType.Bool:
+                    return registers[0] != 0;
+                case RegisterDataType.Byte:
+                    return (byte)(registers[0] & 0xFF);
+                case RegisterDataType.SByte:
+                    return unchecked((sbyte)(registers[0] & 0xFF));
                 case RegisterDataType.Float:
                     if (registers.Length < 2)
                         return (float)registers[0];
@@ -481,10 +523,59 @@ namespace IEC.Shared.Services
                         return BitConverter.ToUInt32(bytes, 0);
                     }
 
+                case RegisterDataType.Int64:
+                    return BitConverter.ToInt64(ToHostBytes(registers, 4), 0);
+                case RegisterDataType.UInt64:
+                    return BitConverter.ToUInt64(ToHostBytes(registers, 4), 0);
+                case RegisterDataType.AsciiString:
+                    return Encoding.ASCII.GetString(registers.SelectMany(r => new[] { (byte)(r >> 8), (byte)r }).ToArray()).TrimEnd('\0', ' ');
+
                 default:
                     // Fallback: return first register as ushort
                     return registers[0];
             }
+        }
+
+        private static object DecodeBits(bool[] bits, RegisterDataType dataType)
+        {
+            if (bits == null || bits.Length == 0) return false;
+            if (dataType == RegisterDataType.AsciiString) return string.Join(",", bits.Select(b => b ? "1" : "0"));
+            ulong packed = 0;
+            for (var i = 0; i < Math.Min(bits.Length, 64); i++) if (bits[i]) packed |= 1UL << i;
+            return dataType switch
+            {
+                RegisterDataType.Bool => bits[0],
+                RegisterDataType.Byte => (byte)packed,
+                RegisterDataType.SByte => unchecked((sbyte)packed),
+                RegisterDataType.Int16 => unchecked((short)packed),
+                RegisterDataType.UInt16 => (ushort)packed,
+                RegisterDataType.Int32 => unchecked((int)packed),
+                RegisterDataType.UInt32 => (uint)packed,
+                RegisterDataType.Int64 => unchecked((long)packed),
+                RegisterDataType.UInt64 => packed,
+                _ => bits[0]
+            };
+        }
+
+        private static int RequiredRegisterCount(RegisterDataType type) => type switch
+        {
+            RegisterDataType.Int64 or RegisterDataType.UInt64 or RegisterDataType.Double => 4,
+            RegisterDataType.Int32 or RegisterDataType.UInt32 or RegisterDataType.Float => 2,
+            _ => 1
+        };
+
+        private static object ApplyScale(object value, float scale)
+        {
+            if (value == null || value is bool || value is string || scale == 1f) return value;
+            return Convert.ToDouble(value) * scale;
+        }
+
+        private byte[] ToHostBytes(ushort[] registers, int requiredRegisters)
+        {
+            var padded = registers.Concat(Enumerable.Repeat((ushort)0, requiredRegisters)).Take(requiredRegisters).ToArray();
+            var bytes = RegistersToBigEndianBytes(padded);
+            if (BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            return bytes;
         }
 
         // Build big-endian byte array from register array taking into account previous word ordering

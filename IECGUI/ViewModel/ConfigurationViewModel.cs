@@ -52,6 +52,10 @@ namespace IECGUI.ViewModel
             new ObservableCollection<RegisterDataType>(
                 Enum.GetValues(typeof(RegisterDataType)).Cast<RegisterDataType>());
 
+        public ObservableCollection<ModbusDataArea> DataAreas { get; } =
+            new ObservableCollection<ModbusDataArea>(
+                Enum.GetValues(typeof(ModbusDataArea)).Cast<ModbusDataArea>());
+
         // Protocol list for the Protocol ComboBox
         public ObservableCollection<ProtocolsType> Protocols { get; } =
             new ObservableCollection<ProtocolsType>(
@@ -261,6 +265,7 @@ namespace IECGUI.ViewModel
                         {
                             ParameterName = r.ParameterName,
                             RegisterAddress = r.RegisterAddress,
+                            DataArea = r.DataArea,
                             DataType = r.DataType,
                             Unit = r.Unit,
                             ScaleFactor = r.ScaleFactor,

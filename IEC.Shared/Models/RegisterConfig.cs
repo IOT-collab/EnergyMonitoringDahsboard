@@ -15,6 +15,8 @@ namespace IEC.Shared.Models
 
         public ushort RegisterAddress { get; set; }
 
+        public ModbusDataArea DataArea { get; set; } = ModbusDataArea.HoldingRegister;
+
         public bool IsEnabled { get; set; } = true;
 
         public string Unit { get; set; }

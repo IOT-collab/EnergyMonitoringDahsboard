@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using NModbus;
 using NModbus.Utility;
@@ -234,18 +235,25 @@ namespace IEC.Shared.Services
                     {
                         try
                         {
-                            int count = Math.Max(1, reg.Length);
-                            ushort[] raw = conn.Master.ReadHoldingRegisters(meter.SlaveId, reg.RegisterAddress, (ushort)count);
-
-                            object value = DecodeRegister(raw, reg.DataType);
+                            int count = Math.Max(Math.Max(1, reg.Length), RequiredRegisterCount(reg.DataType));
+                            object value;
+                            if (reg.DataArea == ModbusDataArea.Coil || reg.DataArea == ModbusDataArea.DiscreteInput)
+                            {
+                                var bits = reg.DataArea == ModbusDataArea.Coil
+                                    ? conn.Master.ReadCoils(meter.SlaveId, reg.RegisterAddress, (ushort)count)
+                                    : conn.Master.ReadInputs(meter.SlaveId, reg.RegisterAddress, (ushort)count);
+                                value = DecodeBits(bits, reg.DataType);
+                            }
+                            else
+                            {
+                                var raw = reg.DataArea == ModbusDataArea.InputRegister
+                                    ? conn.Master.ReadInputRegisters(meter.SlaveId, reg.RegisterAddress, (ushort)count)
+                                    : conn.Master.ReadHoldingRegisters(meter.SlaveId, reg.RegisterAddress, (ushort)count);
+                                value = DecodeRegister(raw, reg.DataType);
+                            }
 
                             // apply scale factor
-                            if (value is double d)
-                                value = d * reg.ScaleFactor;
-                            else if (value is float f)
-                                value = f * reg.ScaleFactor;
-                            else if (value is int i)
-                                value = (double)i * reg.ScaleFactor;
+                            value = ApplyScale(value, reg.ScaleFactor);
 
                             var key = string.IsNullOrWhiteSpace(reg.ParameterName) ? reg.RegisterAddress.ToString() : reg.ParameterName;
                             reading.Values[key] = value;
@@ -272,6 +280,12 @@ namespace IEC.Shared.Services
 
             switch (dataType)
             {
+                case RegisterDataType.Bool:
+                    return registers[0] != 0;
+                case RegisterDataType.Byte:
+                    return (byte)(registers[0] & 0xFF);
+                case RegisterDataType.SByte:
+                    return unchecked((sbyte)(registers[0] & 0xFF));
                 case RegisterDataType.Float:
                     if (registers.Length < 2)
                         return (float)registers[0];
@@ -313,9 +327,58 @@ namespace IEC.Shared.Services
                         return BitConverter.ToUInt32(bytes, 0);
                     }
 
+                case RegisterDataType.Int64:
+                    return BitConverter.ToInt64(ToHostBytes(registers, 4), 0);
+                case RegisterDataType.UInt64:
+                    return BitConverter.ToUInt64(ToHostBytes(registers, 4), 0);
+                case RegisterDataType.AsciiString:
+                    return Encoding.ASCII.GetString(registers.SelectMany(r => new[] { (byte)(r >> 8), (byte)r }).ToArray()).TrimEnd('\0', ' ');
+
                 default:
                     return registers[0];
             }
+        }
+
+        private static object DecodeBits(bool[] bits, RegisterDataType dataType)
+        {
+            if (bits == null || bits.Length == 0) return false;
+            if (dataType == RegisterDataType.AsciiString) return string.Join(",", bits.Select(b => b ? "1" : "0"));
+            ulong packed = 0;
+            for (var i = 0; i < Math.Min(bits.Length, 64); i++) if (bits[i]) packed |= 1UL << i;
+            return dataType switch
+            {
+                RegisterDataType.Bool => bits[0],
+                RegisterDataType.Byte => (byte)packed,
+                RegisterDataType.SByte => unchecked((sbyte)packed),
+                RegisterDataType.Int16 => unchecked((short)packed),
+                RegisterDataType.UInt16 => (ushort)packed,
+                RegisterDataType.Int32 => unchecked((int)packed),
+                RegisterDataType.UInt32 => (uint)packed,
+                RegisterDataType.Int64 => unchecked((long)packed),
+                RegisterDataType.UInt64 => packed,
+                _ => bits[0]
+            };
+        }
+
+        private static int RequiredRegisterCount(RegisterDataType type) => type switch
+        {
+            RegisterDataType.Int64 or RegisterDataType.UInt64 or RegisterDataType.Double => 4,
+            RegisterDataType.Int32 or RegisterDataType.UInt32 or RegisterDataType.Float => 2,
+            _ => 1
+        };
+
+        private static object ApplyScale(object value, float scale)
+        {
+            if (value == null || value is bool || value is string || scale == 1f) return value;
+            return Convert.ToDouble(value) * scale;
+        }
+
+        private byte[] ToHostBytes(ushort[] registers, int requiredRegisters)
+        {
+            var padded = registers.Concat(Enumerable.Repeat((ushort)0, requiredRegisters)).Take(requiredRegisters).ToArray();
+            var bytes = RegistersToBigEndianBytes(padded);
+            if (BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            return bytes;
         }
 
         private byte[] RegistersToBigEndianBytes(ushort[] registers)

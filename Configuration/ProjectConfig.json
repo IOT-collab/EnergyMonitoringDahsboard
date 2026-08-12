@@ -4,7 +4,7 @@
     {
       "MeterId": 1,
       "MeterName": "DG INCOMMER 1",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -21,6 +21,7 @@
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -30,6 +31,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -39,6 +41,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -48,6 +51,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -57,6 +61,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -66,6 +71,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -75,6 +81,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -84,6 +91,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -93,6 +101,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
           "ScaleFactor": 1,
@@ -102,6 +111,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
           "ScaleFactor": 1,
@@ -111,6 +121,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
           "ScaleFactor": 1,
@@ -120,6 +131,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
           "ScaleFactor": 1,
@@ -129,6 +141,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
           "ScaleFactor": 1,
@@ -140,7 +153,7 @@
     {
       "MeterId": 2,
       "MeterName": "DG INCOMMER 2",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -157,6 +170,7 @@
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -166,6 +180,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -175,6 +190,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -184,6 +200,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -193,6 +210,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -202,6 +220,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -211,6 +230,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -220,6 +240,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -229,6 +250,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
           "ScaleFactor": 1,
@@ -238,6 +260,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
           "ScaleFactor": 1,
@@ -247,6 +270,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
           "ScaleFactor": 1,
@@ -256,6 +280,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
           "ScaleFactor": 1,
@@ -265,6 +290,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
           "ScaleFactor": 1,
@@ -276,7 +302,7 @@
     {
       "MeterId": 3,
       "MeterName": "DG INCOMMER 3",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -293,6 +319,7 @@
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -302,6 +329,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -311,6 +339,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -320,6 +349,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -329,6 +359,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -338,6 +369,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -347,6 +379,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -356,6 +389,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -365,6 +399,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
           "ScaleFactor": 1,
@@ -374,6 +409,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
           "ScaleFactor": 1,
@@ -383,6 +419,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
           "ScaleFactor": 1,
@@ -392,6 +429,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
           "ScaleFactor": 1,
@@ -401,6 +439,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
           "ScaleFactor": 1,
@@ -412,7 +451,7 @@
     {
       "MeterId": 4,
       "MeterName": "DG INCOMMER 4",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -429,6 +468,7 @@
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -438,6 +478,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -447,6 +488,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -456,6 +498,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
@@ -465,6 +508,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -474,6 +518,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -483,6 +528,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -492,6 +538,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
           "ScaleFactor": 1,
@@ -501,6 +548,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
           "ScaleFactor": 1,
@@ -510,6 +558,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
           "ScaleFactor": 1,
@@ -519,6 +568,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
           "ScaleFactor": 1,
@@ -528,6 +578,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
           "ScaleFactor": 1,
@@ -537,6 +588,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
           "ScaleFactor": 1,
@@ -546,6 +598,7 @@
         {
           "ParameterName": "VoltageA L-L ",
           "RegisterAddress": 3028,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
           "ScaleFactor": 1,
@@ -555,6 +608,7 @@
         {
           "ParameterName": "VoltageB L-L ",
           "RegisterAddress": 3030,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
           "ScaleFactor": 1,
@@ -564,6 +618,7 @@
         {
           "ParameterName": "VoltageC L-L ",
           "RegisterAddress": 3032,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
           "ScaleFactor": 1,
@@ -573,11 +628,81 @@
         {
           "ParameterName": "Voltage L-L Agv",
           "RegisterAddress": 3036,
+          "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
           "ScaleFactor": 1,
           "Length": 2,
           "DataType": "Float"
+        }
+      ]
+    },
+    {
+      "MeterId": 5,
+      "MeterName": "FX5S",
+      "IsEnabled": true,
+      "Communication": {
+        "Protocol": "ModbusTcp",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 1,
+        "WordOrder": "LowHigh",
+        "IpAddress": "192.168.3.5",
+        "TcpPort": 502
+      },
+      "Registers": [
+        {
+          "ParameterName": "D0",
+          "RegisterAddress": 0,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kW",
+          "ScaleFactor": 1,
+          "Length": 1,
+          "DataType": "Int16"
+        },
+        {
+          "ParameterName": "D4",
+          "RegisterAddress": 4,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "C*",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "D10",
+          "RegisterAddress": 10,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "psi",
+          "ScaleFactor": 1,
+          "Length": 1,
+          "DataType": "Int16"
+        },
+        {
+          "ParameterName": "M0",
+          "RegisterAddress": 8192,
+          "DataArea": "Coil",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 1,
+          "DataType": "Bool"
+        },
+        {
+          "ParameterName": "Barcode",
+          "RegisterAddress": 20,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "AsciiString"
         }
       ]
     }
