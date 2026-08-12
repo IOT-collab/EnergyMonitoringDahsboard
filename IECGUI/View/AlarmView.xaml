@@ -228,20 +228,27 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0"
                                 Content="TEST ALARM"
                                 Command="{Binding AlarmService.GenerateTestAlarmCommand}"
                                 Style="{StaticResource GlassButton.Cyan}"
                                 Height="54"
-                                Margin="0,0,10,0"/>
+                                Margin="0,0,6,0"/>
                         <Button Grid.Column="1"
                                 Content="CLEAR LOGS"
                                 Command="{Binding AlarmService.ClearLogsCommand}"
                                 Style="{StaticResource GlassButton.Ghost}"
                                 Height="54"
-                                Margin="10,0,0,0"/>
-                        <TextBlock Grid.ColumnSpan="2" Text="{Binding ConfigurationStatus}" Foreground="#8FDDEA" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                Margin="6,0,6,0"/>
+                        <Button Grid.Column="2"
+                                Content="EXPORT CSV"
+                                Command="{Binding AlarmService.ExportCsvCommand}"
+                                Style="{StaticResource GlassButton.Cyan}"
+                                Height="54"
+                                Margin="6,0,0,0"/>
+                        <TextBlock Grid.ColumnSpan="3" Text="{Binding ConfigurationStatus}" Foreground="#8FDDEA" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                     </Grid>
                 </Grid>
 
@@ -296,6 +303,7 @@
                                 <DataGridTextColumn Header="Value" Binding="{Binding ValueText}" Width="120"/>
                                 <DataGridTextColumn Header="Severity" Binding="{Binding SeverityText}" Width="120"/>
                                 <DataGridTextColumn Header="State" Binding="{Binding StateText}" Width="120"/>
+                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="130"/>
                                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>

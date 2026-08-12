@@ -7,7 +7,9 @@ namespace IECGUI.Models
         private AlarmState _state;
         private bool _isAcknowledged;
 
+        public string AlarmId { get; set; } = Guid.NewGuid().ToString("N");
         public string RuleId { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
         public string AlarmName { get; set; } = string.Empty;
         public string MeterName { get; set; } = string.Empty;
         public string ParameterName { get; set; } = string.Empty;
