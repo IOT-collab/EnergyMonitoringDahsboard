@@ -120,8 +120,8 @@
                     </StackPanel>
                     <Button Grid.Column="1" Command="{Binding HomeCommand}"
                             Style="{StaticResource GlassButton.Cyan}"
-                            Width="190" Height="60" FontSize="21" FontWeight="SemiBold"
-                            Content="⌂  Home" VerticalAlignment="Center"/>
+                            Width="120" Height="40" FontSize="21" FontWeight="SemiBold"
+                            Content="Back" VerticalAlignment="Center"/>
                 </Grid>
 
                 <Border Grid.Row="1" Style="{StaticResource SettingsCard}" Padding="22">

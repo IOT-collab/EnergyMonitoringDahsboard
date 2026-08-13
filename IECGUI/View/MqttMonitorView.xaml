@@ -22,14 +22,14 @@
 
         <!-- Header -->
         <DockPanel Grid.Row="0">
-            <Button Content="◄ Back" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Blue}"
-                    Width="100" Height="35" DockPanel.Dock="Left"
-                    Foreground="White" Background="#3D5A80"/>
+            <Button Content="◄ Back" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" DockPanel.Dock="Left"
+                    Foreground="White" />
             <Button Content="Connect" Command="{Binding ConnectCommand}" Style="{StaticResource GlassButton.Green}"
-                    Width="100" Height="35" DockPanel.Dock="Right"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"
                     Foreground="White" Background="#27AE60" Margin="5,0"/>
             <Button Content="Disconnect" Command="{Binding DisconnectCommand}" Style="{StaticResource GlassButton.Red}"
-                    Width="100" Height="35" DockPanel.Dock="Right"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"
                     Foreground="White" Background="#C0392B"/>
             <TextBlock Text="MQTT — Remote Meter Monitor"
                        Foreground="White" FontSize="22" FontWeight="Bold"

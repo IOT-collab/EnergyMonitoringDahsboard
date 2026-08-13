@@ -28,23 +28,23 @@
         <DockPanel Grid.Row="0">
             <Button Content="◄ Back"
                     Command="{Binding BackCommand}"
-                    Width="100" Height="35"
-                    DockPanel.Dock="Left" Style="{StaticResource GlassButton.Blue}"
-                    Foreground="White" Background="#3D5A80"/>
-            <Button Content="⚙ Configuration"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
+                    DockPanel.Dock="Left" Style="{StaticResource GlassButton.Cyan}"
+                    Foreground="White" />
+            <Button Content="⚙ Config"
                     Command="{Binding ConfigurationCommand}"
-                    Width="130" Height="35"
-                    DockPanel.Dock="Left" Margin="10,0,0,0" Style="{StaticResource GlassButton.Purple}"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
+                    DockPanel.Dock="Left" Margin="10,0,0,0" Style="{StaticResource GlassButton.Cyan}"
                     Foreground="White" />
             <TextBlock Text="IEC 61850 — Protection Relay Monitor"
                        Foreground="White" FontSize="22"
                        FontWeight="Bold" 
                        VerticalAlignment="Center" Margin="510,0,100,0"/>
             <Button Content="Connect" Command="{Binding ConnectCommand}"
-                    Width="100" Height="35" DockPanel.Dock="Left"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Green}"
+                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Green}"
                     Foreground="White" />
             <Button Content="Disconnect" Command="{Binding DisconnectCommand}"
-                    Width="100" Height="35" Margin="0,0,0,0" Style="{StaticResource GlassButton.Red}"
+                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Red}"
                     Foreground="White" />
 
         </DockPanel>

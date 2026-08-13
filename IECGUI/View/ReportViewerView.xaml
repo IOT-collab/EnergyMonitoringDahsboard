@@ -324,10 +324,10 @@
                     Padding="30,0,172,0">
                 <DockPanel LastChildFill="True">
                     <Button DockPanel.Dock="Right"
-                            Content="Main Menu"
+                            Content="Back"
                             Command="{Binding MenuCommand}"
-                            Style="{StaticResource GlassButton.Ghost}"
-                            Width="180"
+                            Style="{StaticResource GlassButton.Cyan}"
+                            Width="120"
                             Height="44"
                             FontSize="18"
                             Margin="0,0,12,0"/>

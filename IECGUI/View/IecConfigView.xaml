@@ -15,15 +15,15 @@
         <!-- Header -->
         <DockPanel Grid.Row="0">
             <Button Content="◄ Back"
-                    Command="{Binding BackCommand}" Style="{StaticResource GlassButton}"
-                    Width="100" Height="35"
+                    Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
                     DockPanel.Dock="Left"
-                    Foreground="White" Background="#3D5A80"/>
+                    Foreground="White" />
             <Button Content="💾 Save All"
-                    Command="{Binding SaveCommand}" Style="{StaticResource GlassButton.Green}"
-                    Width="120" Height="35"
+                    Command="{Binding SaveCommand}" Style="{StaticResource GlassButton.Cyan}"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
                     DockPanel.Dock="Right"
-                    Foreground="White" Background="#27AE60"/>
+                    Foreground="White"/>
             <TextBlock Text="IEC 61850 — Configuration"
                        Foreground="White" FontSize="22"
                        FontWeight="Bold"
@@ -94,16 +94,16 @@
                                         Orientation="Horizontal"
                                         Margin="0,10,0,0">
                                 <Button Content="+ Add"
-                                        Command="{Binding AddRelayCommand}" Style="{StaticResource GlassButton}"
-                                        Width="90" Height="32"
+                                        Command="{Binding AddRelayCommand}" Style="{StaticResource GlassButton.Cyan}"
+                                        Height="40" Width="100" FontSize="21" FontWeight="SemiBold"
                                         Margin="0,0,5,0"
                                         Foreground="White"
-                                        Background="#27AE60"/>
+                                            />
                                 <Button Content="Delete"
-                                        Command="{Binding DeleteRelayCommand}" Style="{StaticResource GlassButton}"
-                                        Width="90" Height="32"
+                                        Command="{Binding DeleteRelayCommand}" Style="{StaticResource GlassButton.Cyan}"
+                                       Height="40" Width="100" FontSize="21" FontWeight="SemiBold"
                                         Foreground="White"
-                                        Background="#C0392B"/>
+                                        />
                             </StackPanel>
 
                             <TextBlock DockPanel.Dock="Top"
@@ -237,16 +237,16 @@
                                         Orientation="Horizontal"
                                         Margin="0,10,0,0">
                                 <Button Content="+ Add"
-                                        Command="{Binding AddLnCommand}" Style="{StaticResource GlassButton}"
-                                        Width="90" Height="32"
+                                        Command="{Binding AddLnCommand}" Style="{StaticResource GlassButton.Cyan}"
+                                       Height="40" Width="100" FontSize="21" FontWeight="SemiBold" 
                                         Margin="0,0,5,0"
                                         Foreground="White"
-                                        Background="#27AE60"/>
+                                        />
                                 <Button Content="Delete"
-                                        Command="{Binding DeleteLnCommand}" Style="{StaticResource GlassButton}"
-                                        Width="90" Height="32"
+                                        Command="{Binding DeleteLnCommand}" Style="{StaticResource GlassButton.Cyan}"
+                                       Height="40" Width="100" FontSize="21" FontWeight="SemiBold" 
                                         Foreground="White"
-                                        Background="#C0392B"/>
+                                        />
                             </StackPanel>
 
                             <!-- Relay Selector -->
@@ -394,19 +394,19 @@
                         </ComboBox>
 
                         <Button Content="+ Add"
-                                Command="{Binding AddMappingCommand}" Style="{StaticResource GlassButton}"
-                                Width="80" Height="32"
+                                Command="{Binding AddMappingCommand}" Style="{StaticResource GlassButton.Cyan}"
+                            Height="40" Width="100" FontSize="21" FontWeight="SemiBold"
                                 Margin="0,0,5,0"
-                                Foreground="White" Background="#27AE60"/>
+                                Foreground="White" />
                         <Button Content="Delete"
-                                Command="{Binding DeleteMappingCommand}" Style="{StaticResource GlassButton}"
-                                Width="80" Height="32"
+                                Command="{Binding DeleteMappingCommand}" Style="{StaticResource GlassButton.Cyan}"
+                              Height="40" Width="100" FontSize="21" FontWeight="SemiBold"
                                 Margin="0,0,5,0"
-                                Foreground="White" Background="#C0392B"/>
+                                Foreground="White" />
                         <Button Content="Load Defaults"
-                                Command="{Binding LoadDefaultMappingsCommand}" Style="{StaticResource GlassButton}"
-                                Width="120" Height="32"
-                                Foreground="White" Background="#8E44AD"/>
+                                Command="{Binding LoadDefaultMappingsCommand}" Style="{StaticResource GlassButton.Cyan}"
+                               Height="40" Width="160" FontSize="21" FontWeight="SemiBold" 
+                                Foreground="White" />
                     </StackPanel>
 
                     <!-- Mapping DataGrid -->

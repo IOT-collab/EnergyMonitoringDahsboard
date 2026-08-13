@@ -79,9 +79,7 @@
                     Padding="10,0,172,0">
                 <DockPanel LastChildFill="True">
                     <Button DockPanel.Dock="Left"
-                            Content="BACK"
-                            Width="120"
-                            Height="40"
+                            Content="BACK" Height="40" Width="100" FontSize="21" FontWeight="SemiBold"
                             Command="{Binding BackCommand}"
                             Style="{StaticResource GlassButton.Cyan}"/>
 

@@ -153,7 +153,7 @@
     {
       "MeterId": 2,
       "MeterName": "DG INCOMMER 2",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -302,7 +302,7 @@
     {
       "MeterId": 3,
       "MeterName": "DG INCOMMER 3",
-      "IsEnabled": false,
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -451,7 +451,7 @@
     {
       "MeterId": 4,
       "MeterName": "DG INCOMMER 4",
-      "IsEnabled": false,
+      "IsEnabled": true,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
