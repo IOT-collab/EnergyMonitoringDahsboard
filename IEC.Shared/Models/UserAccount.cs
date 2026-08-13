@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace IEC.Shared.Models
 {
-    // NOTE: For production store salted password hashes, not plain text.
     public class UserAccount : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -17,11 +17,19 @@ namespace IEC.Shared.Models
             set { if (_username == value) return; _username = value; Notify(); }
         }
 
-        private string _password = string.Empty; // placeholder - replace with hashed storage
+        private string _password = string.Empty;
         public string Password
         {
             get => _password;
             set { if (_password == value) return; _password = value; Notify(); }
+        }
+
+        private string _newPassword = string.Empty;
+        [JsonIgnore]
+        public string NewPassword
+        {
+            get => _newPassword;
+            set { if (_newPassword == value) return; _newPassword = value; Notify(); }
         }
 
         private UserRole _role = UserRole.Operator;

@@ -137,7 +137,7 @@
                                                 Binding="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
                                                 Width="*"/>
                             <DataGridTextColumn Header="Password"
-                                                Binding="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                                                Binding="{Binding NewPassword, UpdateSourceTrigger=PropertyChanged}"
                                                 Width="*"/>
                             <DataGridTemplateColumn Header="Role" Width="150">
                                 <!-- Display mode (non-editing) -->

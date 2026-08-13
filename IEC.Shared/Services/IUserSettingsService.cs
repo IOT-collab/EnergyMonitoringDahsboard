@@ -7,5 +7,7 @@ namespace IEC.Shared.Services
         UserSettings Load();
         bool Save(UserSettings settings);
         string GetFilePath();
+        bool VerifyPassword(UserAccount user, string password);
+        string HashPassword(string password);
     }
 }

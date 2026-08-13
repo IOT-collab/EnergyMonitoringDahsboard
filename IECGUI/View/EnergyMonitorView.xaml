@@ -19,7 +19,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="72"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
@@ -170,14 +170,8 @@
 
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="Time"
-                                    Binding="{Binding Time}"/>
 
-                <DataGridTextColumn Header="Source"
-                                    Binding="{Binding Source}"/>
-
-                <DataGridTextColumn Header="Message"
-                                    Binding="{Binding Message}"/>
+                <DataGridTextColumn Header="Message"    Binding="{Binding Message}"/>
 
             </DataGrid.Columns>
 

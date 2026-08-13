@@ -45,6 +45,7 @@ namespace IECGUI.ViewModel
                 {
                     Username = u.Username,
                     Password = u.Password,
+                    NewPassword = string.Empty,
                     Role = u.Role,
                     IsEnabled = u.IsEnabled
                 });
@@ -93,7 +94,9 @@ namespace IECGUI.ViewModel
                 settings.Users.Add(new UserAccount
                 {
                     Username = u.Username,
-                    Password = u.Password,
+                    Password = string.IsNullOrWhiteSpace(u.NewPassword)
+                        ? u.Password
+                        : _userService.HashPassword(u.NewPassword),
                     Role = u.Role,
                     IsEnabled = u.IsEnabled
                 });

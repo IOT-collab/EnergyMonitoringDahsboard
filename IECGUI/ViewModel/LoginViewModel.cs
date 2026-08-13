@@ -43,13 +43,13 @@ namespace IECGUI.ViewModel
             var settings = _userService.Load();
             var user = settings.Users.FirstOrDefault(u => u.Username == Username && u.IsEnabled);
 
-            if (user != null && user.Password == Password)
+            if (user != null && _userService.VerifyPassword(user, Password))
             {
                 // set current user in auth service (notifying subscribers)
                 _authService.CurrentUser = new UserAccount
                 {
                     Username = user.Username,
-                    Password = user.Password,
+                    Password = string.Empty,
                     Role = user.Role,
                     IsEnabled = user.IsEnabled
                 };
