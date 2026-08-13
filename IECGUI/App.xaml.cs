@@ -43,6 +43,7 @@ namespace IECGUI
             services.AddTransient<MqttMonitorViewModel>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<AlarmMonitoringService>();
+            services.AddSingleton<DeviceRuntimeService>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
             services.AddSingleton<IAuthService, AuthService>();
 

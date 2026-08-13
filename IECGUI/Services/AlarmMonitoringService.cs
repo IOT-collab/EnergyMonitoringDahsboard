@@ -21,6 +21,7 @@ namespace IECGUI.Services
     {
         private readonly ConfigurationManagerService _configuration;
         private readonly IMultiEnergyMeterService _meters;
+        private readonly DeviceRuntimeService _deviceRuntime;
         private readonly IAuthService _auth;
         private readonly SafePoller _poller;
         private readonly string _auditFile = Path.Combine(AppPaths.Logs, "AlarmAudit.csv");
@@ -44,10 +45,11 @@ namespace IECGUI.Services
         public int ActiveAlarmCount => AlarmLogs.Count(x => x.State is AlarmState.Active or AlarmState.Acknowledged);
         public int CriticalAlarmCount => AlarmLogs.Count(x => x.Severity >= AlarmSeverity.Critical && x.State is AlarmState.Active or AlarmState.Acknowledged);
 
-        public AlarmMonitoringService(ConfigurationManagerService configuration, IMultiEnergyMeterService meters, IAuthService auth)
+        public AlarmMonitoringService(ConfigurationManagerService configuration, IMultiEnergyMeterService meters, DeviceRuntimeService deviceRuntime, IAuthService auth)
         {
             _configuration = configuration;
             _meters = meters;
+            _deviceRuntime = deviceRuntime;
             _auth = auth;
             ReloadRules();
             LoadAuditHistory();
@@ -61,8 +63,7 @@ namespace IECGUI.Services
 
         public async Task StartAsync()
         {
-            var devices = _configuration.Configuration.Meters.Where(x => x.IsEnabled).ToList();
-            await _meters.Configure(devices).ConfigureAwait(false);
+            await _deviceRuntime.StartAsync().ConfigureAwait(false);
             if (!_started)
             {
                 _started = true;
@@ -91,7 +92,7 @@ namespace IECGUI.Services
 
             Dictionary<string, MeterReading> readings = new(StringComparer.OrdinalIgnoreCase);
             if (enabled.Any(x => x.RuleKind != AlarmRuleKind.BreakerFeedbackMismatch))
-                readings = await _meters.ReadAllAsync().ConfigureAwait(false);
+                readings = _deviceRuntime.GetSnapshot();
 
             foreach (var rule in enabled)
             {

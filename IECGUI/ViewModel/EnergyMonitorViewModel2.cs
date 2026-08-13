@@ -15,7 +15,7 @@ namespace IECGUI.ViewModel
     public class EnergyMonitorViewModel2 : BaseViewModel, IDisposable
     {
         private readonly INavigationService _navigation;
-        private readonly IMultiEnergyMeterService _meterService;
+        private readonly DeviceRuntimeService _deviceRuntime;
         private readonly Dictionary<string, MetersConfig> _meterConfigMap;
         private readonly SafePoller _liveDataTimer;
         private MeterViewModel? _selectedMeter;
@@ -49,10 +49,10 @@ namespace IECGUI.ViewModel
         public EnergyMonitorViewModel2(
             INavigationService navigation,
             ConfigurationManagerService config,
-            IMultiEnergyMeterService meterService)
+            DeviceRuntimeService deviceRuntime)
         {
             _navigation = navigation;
-            _meterService = meterService;
+            _deviceRuntime = deviceRuntime;
 
             var configuredMeters = config.Configuration?.Meters?
                 .Where(m => m != null && m.IsEnabled && !string.IsNullOrWhiteSpace(m.MeterName))
@@ -90,7 +90,7 @@ namespace IECGUI.ViewModel
 
             try
             {
-                await _meterService.Configure(_meterConfigMap.Values);
+                await _deviceRuntime.StartAsync();
                 _liveDataTimer.Start();
             }
             catch (Exception ex)
@@ -103,7 +103,7 @@ namespace IECGUI.ViewModel
 
         private async Task PollAsync(Dictionary<int, object> parameters)
         {
-            var readings = await _meterService.ReadAllAsync();
+            var readings = _deviceRuntime.GetSnapshot();
             var connected = 0;
 
             foreach (var meter in Meters)

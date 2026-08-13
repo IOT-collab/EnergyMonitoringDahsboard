@@ -4,7 +4,7 @@
     {
       "MeterId": 1,
       "MeterName": "DG INCOMMER 1",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -302,7 +302,7 @@
     {
       "MeterId": 3,
       "MeterName": "DG INCOMMER 3",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -451,7 +451,7 @@
     {
       "MeterId": 4,
       "MeterName": "DG INCOMMER 4",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
         "ComPort": "COM6",
@@ -655,44 +655,134 @@
       },
       "Registers": [
         {
-          "ParameterName": "D0",
-          "RegisterAddress": 0,
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
-          "Unit": "kW",
-          "ScaleFactor": 1,
-          "Length": 1,
-          "DataType": "Int16"
-        },
-        {
-          "ParameterName": "D4",
-          "RegisterAddress": 4,
-          "DataArea": "HoldingRegister",
-          "IsEnabled": true,
-          "Unit": "C*",
+          "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
           "DataType": "Float"
         },
         {
-          "ParameterName": "D10",
-          "RegisterAddress": 10,
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 3022,
           "DataArea": "HoldingRegister",
-          "IsEnabled": true,
-          "Unit": "psi",
-          "ScaleFactor": 1,
-          "Length": 1,
-          "DataType": "Int16"
-        },
-        {
-          "ParameterName": "M0",
-          "RegisterAddress": 8192,
-          "DataArea": "Coil",
           "IsEnabled": true,
           "Unit": "V",
           "ScaleFactor": 1,
-          "Length": 1,
-          "DataType": "Bool"
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3024,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage L-N Avg",
+          "RegisterAddress": 3026,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current A",
+          "RegisterAddress": 3000,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current B",
+          "RegisterAddress": 3002,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current C",
+          "RegisterAddress": 3004,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current Avg",
+          "RegisterAddress": 3010,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Active Power",
+          "RegisterAddress": 3060,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kW",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Reactive Power",
+          "RegisterAddress": 3068,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kVAR",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Apparent Power",
+          "RegisterAddress": 3076,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kVA",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Frequency",
+          "RegisterAddress": 3110,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "Hz",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Power Factor",
+          "RegisterAddress": 3084,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
         }
       ]
     }
@@ -853,38 +943,7 @@
       "IsEnabled": true
     }
   ],
-  "AlarmRules": [
-    {
-      "Id": "4a7c767e1dcf48d3999e7af7ea4eb91d",
-      "AlarmName": "High Current Detected",
-      "RuleKind": "Numeric",
-      "MeterName": "FX5S",
-      "ParameterName": "D4",
-      "BreakerKey": "Incomer1",
-      "Operator": "GreaterThan",
-      "SetValue": 120,
-      "ExpectedBoolean": true,
-      "DelaySeconds": 2,
-      "Severity": "Warning",
-      "IsEnabled": true,
-      "ExpressionText": "FX5S / D4 \u003E 120"
-    },
-    {
-      "Id": "d3d50400646c4559a6ca47bf1bfb15a1",
-      "AlarmName": "Incommer Breaker 1 Fail to Operate",
-      "RuleKind": "Boolean",
-      "MeterName": "FX5S",
-      "ParameterName": "M0",
-      "BreakerKey": "Incomer1",
-      "Operator": "Equal",
-      "SetValue": 1,
-      "ExpectedBoolean": true,
-      "DelaySeconds": 3,
-      "Severity": "Critical",
-      "IsEnabled": true,
-      "ExpressionText": "FX5S / M0 = True"
-    }
-  ],
+  "AlarmRules": [],
   "UserSettings": {
     "Users": [
       {

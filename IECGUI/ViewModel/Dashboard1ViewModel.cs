@@ -548,13 +548,13 @@ namespace IECGUI.ViewModel
 
 
 
-        public Dashboard1ViewModel(INavigationService navigation, ConfigurationManagerService configuration, IMultiEnergyMeterService deviceService , IDialogService dialog)
+        public Dashboard1ViewModel(INavigationService navigation, ConfigurationManagerService configuration, IMultiEnergyMeterService deviceService, DeviceRuntimeService deviceRuntime, IDialogService dialog)
         {
             _dialog = dialog;
             _navigation = navigation;
             _deviceService = deviceService;
             _sldMappings = configuration.Configuration.SldBreakers ?? new List<SldBreakerConfig>();
-            _deviceInitialization = _deviceService.Configure(configuration.Configuration.Meters.Where(m => m.IsEnabled));
+            _deviceInitialization = deviceRuntime.StartAsync();
             EventsCommand = new RelayCommand(OpenRelayCard);
             HomeCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>()); //_navigation.NavigateTo(new Dashboard1ViewModel(_navigation));
             AlarmCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());

@@ -19,6 +19,7 @@ namespace IECGUI.ViewModel
         private readonly INavigationService _navigation;
         private MetersConfig _selectedMeter;
         private readonly IDialogService _dialogService;
+        private readonly DeviceRuntimeService _deviceRuntime;
 
         public MetersConfig SelectedMeter
         {
@@ -47,6 +48,9 @@ namespace IECGUI.ViewModel
         public ICommand DeleteRegisterCommand { get; }
         public ICommand EditRegisterCommand { get; }
         public ICommand SaveRegisterCommand { get; }
+        public ICommand ConnectDevicesCommand { get; }
+        public ICommand DisconnectDevicesCommand { get; }
+        public DeviceRuntimeService DeviceRuntime => _deviceRuntime;
 
         // New: Load default registers command
         public ICommand LoadDefaultRegistersCommand { get; }
@@ -109,9 +113,10 @@ namespace IECGUI.ViewModel
         public ObservableCollection<byte> SlaveIds { get; } = new ObservableCollection<byte>(
             Enumerable.Range(1, 255).Select(i => (byte)i));
 
-        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config , IDialogService dialogService)
+        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config, IDialogService dialogService, DeviceRuntimeService deviceRuntime)
         {
             _config = config;
+            _deviceRuntime = deviceRuntime;
             SldBreakers = new ObservableCollection<SldBreakerConfig>(_config.Configuration.SldBreakers);
             if (SldBreakers.Count == 0)
             {
@@ -141,6 +146,9 @@ namespace IECGUI.ViewModel
 
             SaveRegisterCommand =
                 new RelayCommand(Save);
+
+            ConnectDevicesCommand = new RelayCommand(async () => await ReconfigureDevicesAsync());
+            DisconnectDevicesCommand = new RelayCommand(async () => await _deviceRuntime.StopAsync());
 
             RefreshComPortsCommand = new RelayCommand(RefreshComPorts);
 
@@ -221,7 +229,7 @@ namespace IECGUI.ViewModel
             DeviceNames.Remove(SelectedMeter.MeterName);
         }
 
-        private void Save()
+        private async void Save()
         {
             _config.Configuration.Meters.Clear();
             foreach (var meter in Meters)
@@ -231,7 +239,14 @@ namespace IECGUI.ViewModel
             foreach (var breaker in SldBreakers)
                 _config.Configuration.SldBreakers.Add(breaker);
 
-            _config.Save();
+            if (_config.Save())
+                await ReconfigureDevicesAsync();
+        }
+
+        private async Task ReconfigureDevicesAsync()
+        {
+            try { await _deviceRuntime.ReconfigureAsync(); }
+            catch (Exception ex) { _dialogService.ShowMessage(ex.Message, "Device Connection Error"); }
         }
 
         private void SaveSldMapping()

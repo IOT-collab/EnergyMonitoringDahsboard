@@ -34,12 +34,12 @@ namespace IECGUI.ViewModel
 
         private readonly IDialogService _dialogService;
 
-        public MainWindowViewModel(INavigationService navigation , IDialogService dialogService, AlarmMonitoringService alarmService)
+        public MainWindowViewModel(INavigationService navigation , IDialogService dialogService, AlarmMonitoringService alarmService, DeviceRuntimeService deviceRuntime)
         {
             Navigation = navigation;
             _dialogService = dialogService;
             AlarmService = alarmService;
-            _ = StartAlarmMonitoringAsync();
+            _ = StartRuntimeAsync(deviceRuntime);
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
             Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));
@@ -55,10 +55,11 @@ namespace IECGUI.ViewModel
             SystemTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
         }
 
-        private async Task StartAlarmMonitoringAsync()
+        private async Task StartRuntimeAsync(DeviceRuntimeService deviceRuntime)
         {
             try
             {
+                await deviceRuntime.StartAsync();
                 await AlarmService.StartAsync();
             }
             catch (Exception ex)
