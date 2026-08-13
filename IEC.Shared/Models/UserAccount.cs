@@ -45,5 +45,7 @@ namespace IEC.Shared.Models
             get => _isEnabled;
             set { if (_isEnabled == value) return; _isEnabled = value; Notify(); }
         }
+
+        public ScreenPermissions ScreenPermissions { get; set; } = new ScreenPermissions();
     }
 }

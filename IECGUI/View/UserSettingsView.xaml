@@ -161,6 +161,15 @@
                             <DataGridCheckBoxColumn Header="Enabled"
                                                     Binding="{Binding IsEnabled, Mode=TwoWay}"
                                                     Width="180"/>
+                            <DataGridCheckBoxColumn Header="SLD" Binding="{Binding ScreenPermissions.SldView, Mode=TwoWay}" Width="90"/>
+                            <DataGridCheckBoxColumn Header="Energy" Binding="{Binding ScreenPermissions.EnergyMonitor, Mode=TwoWay}" Width="105"/>
+                            <DataGridCheckBoxColumn Header="Gauge" Binding="{Binding ScreenPermissions.GaugeView, Mode=TwoWay}" Width="100"/>
+                            <DataGridCheckBoxColumn Header="Device Config" Binding="{Binding ScreenPermissions.DeviceConfiguration, Mode=TwoWay}" Width="145"/>
+                            <DataGridCheckBoxColumn Header="Relay" Binding="{Binding ScreenPermissions.RelayMonitor, Mode=TwoWay}" Width="95"/>
+                            <DataGridCheckBoxColumn Header="Remote" Binding="{Binding ScreenPermissions.RemoteView, Mode=TwoWay}" Width="105"/>
+                            <DataGridCheckBoxColumn Header="Reports" Binding="{Binding ScreenPermissions.Reports, Mode=TwoWay}" Width="105"/>
+                            <DataGridCheckBoxColumn Header="Alarms" Binding="{Binding ScreenPermissions.Alarms, Mode=TwoWay}" Width="100"/>
+                            <DataGridCheckBoxColumn Header="Users" Binding="{Binding ScreenPermissions.UserConfiguration, Mode=TwoWay}" Width="95"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

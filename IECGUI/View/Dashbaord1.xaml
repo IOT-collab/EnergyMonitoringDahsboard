@@ -134,7 +134,6 @@
                 <TextBox Text="Incommer-1 UPPCL" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="120" Canvas.Top="70"/>
                 
                 <controls:TriangleIndicator Canvas.Left="191" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down" Visibility="{Binding Feeder1arrowVisible}"/>
-                <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="90" Width="60" Height="60"/> 
 
                 <!-- Feeder2 -->
 
@@ -145,7 +144,6 @@
                 <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK2OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="370" Canvas.Top="195" />
                 <controls:TriangleIndicator Canvas.Left="391" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <TextBox Text="Incommer-2 DG Panel" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="320" Canvas.Top="70"/>
-                <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="300" Width="60" Height="60"/>
 
                 <!-- Feeder3 -->
 
@@ -156,7 +154,6 @@
                 <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK3OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1115" Canvas.Top="195" />
                 <controls:TriangleIndicator Canvas.Left="1141" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <TextBox Text="Incommer-3 UPPCL" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1070" Canvas.Top="70"/>
-                <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="1200" Width="60" Height="60"/>
 
 
                 <!-- Feeder4 -->
@@ -168,7 +165,6 @@
                 <Button  Style="{StaticResource GlassButton.Blue}"  Command="{Binding INCBRK4OPEN}" Width="60" Height="60" Background="Transparent" Canvas.Left="1365" Canvas.Top="195" />
                 <controls:TriangleIndicator Canvas.Left="1391" Canvas.Top="110" Width="18" Height="18" Fill="red" Stroke="Red" Direction="Down"/>
                 <TextBox Text="Incommer-4 DG Panel" Foreground="White" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontWeight="Bold" Canvas.Left="1320" Canvas.Top="70"/>
-                <controls:SevenSegMeter Canvas.Top="150" Canvas.Left="1450" Width="60" Height="60"/>
 
                 <!-- OUTommer 1 set -->
                 <Line X1="150" Y1="300" X2="150" Y2="400" Stroke="{Binding Feeder5LineColor}" StrokeThickness="5"/>

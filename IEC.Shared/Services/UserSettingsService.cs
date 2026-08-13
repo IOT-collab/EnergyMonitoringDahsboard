@@ -35,6 +35,7 @@ namespace IEC.Shared.Services
                     Username = "admin",
                     Password = HashPassword("admin"),
                     Role = UserRole.Admin,
+                    ScreenPermissions = ScreenPermissions.ForRole(UserRole.Admin),
                     IsEnabled = true
                 });
                 Save(defaultSettings);
@@ -50,12 +51,15 @@ namespace IEC.Shared.Services
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 options.Converters.Add(new JsonStringEnumConverter());
                 var json = File.ReadAllText(_filePath);
+                var containsScreenPermissions = json.Contains("\"ScreenPermissions\"", StringComparison.OrdinalIgnoreCase);
                 var settings = JsonSerializer.Deserialize<UserSettings>(json, options) ?? new UserSettings();
                 // ensure list not null
                 settings.Users ??= new System.Collections.Generic.List<UserAccount>();
                 var migrated = false;
                 foreach (var user in settings.Users)
                 {
+                    if (!containsScreenPermissions || user.ScreenPermissions == null)
+                        user.ScreenPermissions = ScreenPermissions.ForRole(user.Role);
                     if (!string.IsNullOrEmpty(user.Password) && !IsPasswordHash(user.Password))
                     {
                         user.Password = HashPassword(user.Password);
@@ -77,6 +81,7 @@ namespace IEC.Shared.Services
             {
                 foreach (var user in settings.Users)
                 {
+                    user.ScreenPermissions ??= ScreenPermissions.ForRole(user.Role);
                     if (!string.IsNullOrWhiteSpace(user.NewPassword))
                         user.Password = HashPassword(user.NewPassword);
                     else if (!string.IsNullOrEmpty(user.Password) && !IsPasswordHash(user.Password))

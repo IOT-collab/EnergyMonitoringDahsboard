@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace IECGUI.ViewModel
 {
@@ -19,6 +20,7 @@ namespace IECGUI.ViewModel
         public ICommand ReportViewerCommand { get; }
         public ICommand AlarmViewCommand { get; }
         public ICommand UserConfigCommand { get; }
+        public ObservableCollection<HomeScreenTile> ScreenTiles { get; } = new();
 
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigation;
@@ -53,13 +55,17 @@ namespace IECGUI.ViewModel
             ReportViewerCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
             AlarmViewCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
             UserConfigCommand = new RelayCommand(() => _navigation.NavigateTo<UserSettingsViewModel>());
+            RebuildScreenTiles();
 
             // subscribe to auth changes to update visibility properties
             if (_auth != null)
                 _auth.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName == nameof(_auth.CurrentUser))
+                    {
                         RaiseAllVisibility();
+                        RebuildScreenTiles();
+                    }
                 };
 
             _deviceRuntime.SnapshotUpdated += RefreshLiveSummary;
@@ -128,6 +134,16 @@ namespace IECGUI.ViewModel
 
         // the main app screens are visible to Supervisor and Operator as well; Admin can see them too
         public bool CanSeeMainScreens => _auth?.CurrentUser != null;
+        private IEC.Shared.Models.ScreenPermissions Permissions => _auth?.CurrentUser?.ScreenPermissions ?? new();
+        public bool CanSeeSld => CanSeeMainScreens && Permissions.SldView;
+        public bool CanSeeEnergy => CanSeeMainScreens && Permissions.EnergyMonitor;
+        public bool CanSeeGauge => CanSeeMainScreens && Permissions.GaugeView;
+        public bool CanSeeDeviceConfig => CanSeeMainScreens && Permissions.DeviceConfiguration;
+        public bool CanSeeRelay => CanSeeMainScreens && Permissions.RelayMonitor;
+        public bool CanSeeRemote => CanSeeMainScreens && Permissions.RemoteView;
+        public bool CanSeeReports => CanSeeMainScreens && Permissions.Reports;
+        public bool CanSeeAlarms => CanSeeMainScreens && Permissions.Alarms;
+        public bool CanSeeUserSettings => CanSeeMainScreens && Permissions.UserConfiguration;
         public string CurrentUsername => _auth?.CurrentUser?.Username ?? "Not signed in";
 
         // Helper to raise change notifications for the properties bound to UI
@@ -136,6 +152,38 @@ namespace IECGUI.ViewModel
             OnPropertyChanged(nameof(CanSeeUserConfig));
             OnPropertyChanged(nameof(CanSeeMainScreens));
             OnPropertyChanged(nameof(CurrentUsername));
+            OnPropertyChanged(nameof(CanSeeSld)); OnPropertyChanged(nameof(CanSeeEnergy));
+            OnPropertyChanged(nameof(CanSeeGauge)); OnPropertyChanged(nameof(CanSeeDeviceConfig));
+            OnPropertyChanged(nameof(CanSeeRelay)); OnPropertyChanged(nameof(CanSeeRemote));
+            OnPropertyChanged(nameof(CanSeeReports)); OnPropertyChanged(nameof(CanSeeAlarms));
+            OnPropertyChanged(nameof(CanSeeUserSettings));
         }
+
+        private void RebuildScreenTiles()
+        {
+            RunOnUi(() =>
+            {
+                ScreenTiles.Clear();
+                if (CanSeeSld) ScreenTiles.Add(new("SLD View", "\uE968", SldViewCommand));
+                if (CanSeeEnergy) ScreenTiles.Add(new("Energy Monitor", "\uE945", EnergyViewCommand));
+                if (CanSeeGauge) ScreenTiles.Add(new("Gauge View", "\uE9D9", GaugeViewCommand));
+                if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Config", "\uE713", ConfigViewCommand));
+                if (CanSeeRelay) ScreenTiles.Add(new("Relay Monitor", "\uE7F4", ProtRelayMonitorViewCommand));
+                if (CanSeeRemote) ScreenTiles.Add(new("Remote View", "\uE774", MqttViewCommad));
+                if (CanSeeReports) ScreenTiles.Add(new("Reports", "\uE9D2", ReportViewerCommand));
+                if (CanSeeAlarms) ScreenTiles.Add(new("Alarms", "\uE7BA", AlarmViewCommand, true));
+                if (CanSeeUserSettings) ScreenTiles.Add(new("User Config", "\uE77B", UserConfigCommand));
+            });
+        }
+    }
+
+    public class HomeScreenTile
+    {
+        public HomeScreenTile(string title, string icon, ICommand command, bool isDanger = false)
+        { Title = title; Icon = icon; Command = command; IsDanger = isDanger; }
+        public string Title { get; }
+        public string Icon { get; }
+        public ICommand Command { get; }
+        public bool IsDanger { get; }
     }
 }

@@ -52,6 +52,7 @@ namespace IECGUI.ViewModel
                     Password = string.Empty,
                     Role = user.Role,
                     IsEnabled = user.IsEnabled
+                    ,ScreenPermissions = user.ScreenPermissions ?? ScreenPermissions.ForRole(user.Role)
                 };
 
                 _navigation.NavigateTo<HomePageViewModel>();

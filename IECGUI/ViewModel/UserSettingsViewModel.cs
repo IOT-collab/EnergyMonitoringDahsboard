@@ -48,6 +48,7 @@ namespace IECGUI.ViewModel
                     NewPassword = string.Empty,
                     Role = u.Role,
                     IsEnabled = u.IsEnabled
+                    ,ScreenPermissions = u.ScreenPermissions ?? ScreenPermissions.ForRole(u.Role)
                 });
 
             AddUserCommand = new RelayCommand(AddUser);
@@ -65,6 +66,7 @@ namespace IECGUI.ViewModel
                 Password = string.Empty,
                 Role = UserRole.Operator,
                 IsEnabled = true
+                ,ScreenPermissions = ScreenPermissions.ForRole(UserRole.Operator)
             };
 
             Users.Add(user);
@@ -99,6 +101,7 @@ namespace IECGUI.ViewModel
                         : _userService.HashPassword(u.NewPassword),
                     Role = u.Role,
                     IsEnabled = u.IsEnabled
+                    ,ScreenPermissions = u.ScreenPermissions ?? ScreenPermissions.ForRole(u.Role)
                 });
             }
 

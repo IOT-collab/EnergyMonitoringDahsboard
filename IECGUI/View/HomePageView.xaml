@@ -293,87 +293,34 @@
 
             <!-- Replace the existing Grid Grid.Row="2" ... block with this ScrollViewer + WrapPanel block -->
             <Border Grid.Row="2" Padding="30" Background="Transparent">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <!-- WrapPanel allows tiles to flow into new rows automatically.
-             Use Orientation="Horizontal" so buttons fill left->right then new row below.
-             If you prefer strictly vertical list replace with a StackPanel. -->
-                    <WrapPanel Orientation="Horizontal" ItemWidth="460" ItemHeight="235" Margin="10"  HorizontalAlignment="Left">
-                        <!-- Existing tiles (kept commands) -->
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding SldViewCommand}"
-                             Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE968;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="SLD View"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding EnergyViewCommand}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE945;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="Energy Monitor"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding GaugeViewCommand}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE9D9;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="GaugeView"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding ConfigViewCommand}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE713;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="Device Config"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding ProtRelayMonitorViewCommand}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE7F4;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="Relay Monitor"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding MqttViewCommad}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE774;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="Remote View"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding ReportViewerCommand}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE9D2;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="Reports"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding AlarmViewCommand}"
-                    Visibility="{Binding CanSeeMainScreens, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE7BA;" Foreground="{StaticResource HomeDanger}"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="Alarms"/>
-                            </StackPanel>
-                        </Button>
-
-                        <!-- NEW: User Config button placed after existing buttons -->
-                        <Button Style="{StaticResource DashboardTileButton}" Margin="10" Command="{Binding UserConfigCommand}"
-                    Visibility="{Binding CanSeeUserConfig, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TileIconText}" Text="&#xE77B;"/>
-                                <TextBlock Style="{StaticResource TileTitleText}" Text="User Config"/>
-                            </StackPanel>
-                        </Button>
-
-                        <!-- Additional buttons you add later will flow automatically -->
-                    </WrapPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding ScreenTiles}" HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource DashboardTileButton}" Width="440" Margin="10" Command="{Binding Command}">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Icon}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource TileIconText}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsDanger}" Value="True">
+                                                            <Setter Property="Foreground" Value="{StaticResource HomeDanger}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Text="{Binding Title}" Style="{StaticResource TileTitleText}"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Border>
         </Grid>
