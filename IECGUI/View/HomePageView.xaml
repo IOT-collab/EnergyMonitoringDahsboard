@@ -219,12 +219,12 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="57" Foreground="#74E8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Live Load" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="Average Voltage" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <TextBlock Text="1,245" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold"/>
-                                <TextBlock Text=" MW" Foreground="{StaticResource HomeText}" FontSize="18" Margin="8,11,0,0"/>
+                                <TextBlock Text="{Binding AverageVoltage}" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold"/>
+                                <TextBlock Text=" V" Foreground="{StaticResource HomeText}" FontSize="18" Margin="8,11,0,0"/>
                             </StackPanel>
-                            <TextBlock Text="72% of Capacity" Foreground="{StaticResource HomeMutedText}" FontSize="16"/>
+                            <TextBlock Text="Across responding meters" Foreground="{StaticResource HomeMutedText}" FontSize="16"/>
                         </StackPanel>
                         <Polyline Grid.Column="2" Points="0,64 12,57 24,67 36,66 48,54 60,62 72,49 84,50 96,40 108,43"
                                   Stroke="#35E8FF" StrokeThickness="2" VerticalAlignment="Center"/>
@@ -240,12 +240,12 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="&#xEADF;" FontFamily="Segoe MDL2 Assets" FontSize="61" Foreground="#74E8FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Power Factor" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="Total Active Power" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <TextBlock Text="0.96" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold"/>
-                                <TextBlock Text=" PF" Foreground="{StaticResource HomeText}" FontSize="18" Margin="8,11,0,0"/>
+                                <TextBlock Text="{Binding TotalActivePower}" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold"/>
+                                <TextBlock Text=" kW" Foreground="{StaticResource HomeText}" FontSize="18" Margin="8,11,0,0"/>
                             </StackPanel>
-                            <TextBlock Text="Leading" Foreground="#4BD050" FontSize="16"/>
+                            <TextBlock Text="Live configured parameters" Foreground="#4BD050" FontSize="16"/>
                         </StackPanel>
                         <Polyline Grid.Column="2" Points="0,64 12,58 24,59 36,50 48,56 60,48 72,52 84,43 96,45 108,38"
                                   Stroke="#35E8FF" StrokeThickness="2" VerticalAlignment="Center"/>
@@ -261,12 +261,11 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" FontSize="59" Foreground="#BCEBFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Energy Today" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="Devices Online" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <TextBlock Text="18,742" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold"/>
-                                <TextBlock Text=" MWh" Foreground="{StaticResource HomeText}" FontSize="18" Margin="8,11,0,0"/>
+                                <TextBlock Text="{Binding DeviceSummary}" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold"/>
                             </StackPanel>
-                            <TextBlock Text="Up 8.4% vs Yesterday" Foreground="#4BD050" FontSize="16"/>
+                            <TextBlock Text="Responding / configured" Foreground="#4BD050" FontSize="16"/>
                         </StackPanel>
                         <Polyline Grid.Column="2" Points="0,64 12,58 24,62 36,51 48,59 60,49 72,53 84,43 96,48 108,38"
                                   Stroke="#35E8FF" StrokeThickness="2" VerticalAlignment="Center"/>
@@ -282,9 +281,9 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="60" Foreground="{StaticResource HomeDanger}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                            <TextBlock Text="Active Alerts" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
-                            <TextBlock Text="3" Foreground="{StaticResource HomeDanger}" FontSize="34" FontWeight="Bold" Margin="0,5,0,0"/>
-                            <TextBlock Text="High Priority" Foreground="{StaticResource HomeDanger}" FontSize="16"/>
+                            <TextBlock Text="Critical Alarms" Foreground="{StaticResource HomeText}" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding CriticalAlarmCount}" Foreground="{StaticResource HomeDanger}" FontSize="34" FontWeight="Bold" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding ActiveAlarmCount, StringFormat=Active alarms: {0}}" Foreground="{StaticResource HomeDanger}" FontSize="16"/>
                         </StackPanel>
                         <Polyline Grid.Column="2" Points="0,64 12,58 24,62 36,59 48,49 60,55 72,45 84,52 96,47 108,38"
                                   Stroke="#FF806F" StrokeThickness="2" VerticalAlignment="Center"/>

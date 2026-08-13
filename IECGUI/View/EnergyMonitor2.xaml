@@ -311,11 +311,11 @@
                                                 BorderBrush="#557ECBE5"
                                                 BorderThickness="1"
                                                 VerticalAlignment="Center">
-                                            <TextBlock Text="Search meter / feeder"
-                                                       Foreground="#8FDDEA"
-                                                       FontSize="13"
-                                                       VerticalAlignment="Center"
-                                                       Margin="12,0"/>
+                                            <TextBox Text="{Binding MeterFilter, UpdateSourceTrigger=PropertyChanged}"
+                                                     ToolTip="Filter by device name or status"
+                                                     Background="Transparent" BorderThickness="0"
+                                                     Foreground="#BCEFFF" CaretBrush="White"
+                                                     FontSize="13" VerticalContentAlignment="Center" Padding="10,0"/>
                                         </Border>
                                         <TextBlock Text="METER INDEX" Style="{StaticResource HudTitle}"/>
                                     </DockPanel>
@@ -326,21 +326,12 @@
                                         <TextBlock Text="{Binding MeterCount, StringFormat=All {0}}" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
                                     </Border>
                                     <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
-                                        <TextBlock Text="Alarm 7" Foreground="#FF746D" FontSize="13" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
-                                        <TextBlock Text="Warning 12" Foreground="#FFC24A" FontSize="13" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
-                                        <TextBlock Text="Feeder A" Foreground="#BCEFFF" FontSize="13" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28">
-                                        <TextBlock Text="Feeder B" Foreground="#BCEFFF" FontSize="13" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding ConnectedMeterCount, StringFormat=Online {0}}" Foreground="#62FF9B" FontSize="13" VerticalAlignment="Center"/>
                                     </Border>
                                 </StackPanel>
 
                                 <DataGrid Grid.Row="2" Margin="14,10,14,16"
-                                          ItemsSource="{Binding Meters}"
+                                          ItemsSource="{Binding FilteredMeters}"
                                           SelectedItem="{Binding SelectedMeter, Mode=TwoWay}"
                                           AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                                           HeadersVisibility="Column" RowHeaderWidth="0" GridLinesVisibility="None"

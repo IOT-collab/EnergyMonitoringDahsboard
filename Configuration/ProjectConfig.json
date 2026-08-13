@@ -943,7 +943,38 @@
       "IsEnabled": true
     }
   ],
-  "AlarmRules": [],
+  "AlarmRules": [
+    {
+      "Id": "d234392909674d3cac488807b2f51b89",
+      "AlarmName": "high current",
+      "RuleKind": "Numeric",
+      "MeterName": "FX5S",
+      "ParameterName": "Current Avg",
+      "BreakerKey": "Incomer1",
+      "Operator": "GreaterThanOrEqual",
+      "SetValue": 150,
+      "ExpectedBoolean": true,
+      "DelaySeconds": 3,
+      "Severity": "Warning",
+      "IsEnabled": true,
+      "ExpressionText": "FX5S / Current Avg \u003E= 150"
+    },
+    {
+      "Id": "345b95b09e214aa9a4a3cab5acca0657",
+      "AlarmName": "High Voltage",
+      "RuleKind": "Numeric",
+      "MeterName": "FX5S",
+      "ParameterName": "Voltage L-N Avg",
+      "BreakerKey": "Incomer1",
+      "Operator": "GreaterThanOrEqual",
+      "SetValue": 180,
+      "ExpectedBoolean": true,
+      "DelaySeconds": 3,
+      "Severity": "Critical",
+      "IsEnabled": true,
+      "ExpressionText": "FX5S / Voltage L-N Avg \u003E= 180"
+    }
+  ],
   "UserSettings": {
     "Users": [
       {

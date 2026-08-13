@@ -267,11 +267,11 @@
                                         BorderBrush="#557ECBE5"
                                         BorderThickness="1"
                                         VerticalAlignment="Center">
-                                    <TextBlock Text="Filter by meter / severity"
-                                               Foreground="#8FDDEA"
-                                               FontSize="13"
-                                               VerticalAlignment="Center"
-                                               Margin="12,0"/>
+                                    <TextBox Text="{Binding AlarmFilter, UpdateSourceTrigger=PropertyChanged}"
+                                             ToolTip="Filter by alarm, device, parameter, severity, state or username"
+                                             Background="Transparent" BorderThickness="0"
+                                             Foreground="#BCEFFF" CaretBrush="White"
+                                             FontSize="13" VerticalContentAlignment="Center" Padding="10,0"/>
                                 </Border>
                                 <TextBlock Text="ALARM EVENT HISTORY"
                                            Style="{StaticResource AlarmTitle}"
@@ -280,7 +280,7 @@
                         </Border>
 
                         <DataGrid Grid.Row="1"
-                                  ItemsSource="{Binding AlarmService.AlarmLogs}"
+                                  ItemsSource="{Binding FilteredAlarmLogs}"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
                                   CanUserAddRows="False"

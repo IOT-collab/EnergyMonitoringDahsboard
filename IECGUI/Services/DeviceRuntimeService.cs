@@ -26,6 +26,7 @@ namespace IECGUI.Services
         public bool IsRunning { get => _isRunning; private set => SetProperty(ref _isRunning, value); }
         public string Status { get => _status; private set => SetProperty(ref _status, value); }
         public DateTime? LastSuccessfulPoll { get => _lastSuccessfulPoll; private set => SetProperty(ref _lastSuccessfulPoll, value); }
+        public event Action? SnapshotUpdated;
 
         public DeviceRuntimeService(IMultiEnergyMeterService devices, ConfigurationManagerService configuration)
         {
@@ -98,6 +99,7 @@ namespace IECGUI.Services
                 var readings = await _devices.ReadAllAsync().ConfigureAwait(false);
                 lock (_snapshotLock)
                     _snapshot = new Dictionary<string, MeterReading>(readings, StringComparer.OrdinalIgnoreCase);
+                SnapshotUpdated?.Invoke();
                 LastSuccessfulPoll = DateTime.Now;
                 var online = readings.Values.Count(x => x != null && x.Values.Any(v => v.Value != null));
                 Status = $"Running - {online}/{readings.Count} responding";

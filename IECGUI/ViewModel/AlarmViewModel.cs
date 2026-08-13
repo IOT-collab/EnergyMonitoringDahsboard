@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace IECGUI.ViewModel
 {
@@ -26,8 +28,19 @@ namespace IECGUI.ViewModel
         private AlarmRuleSeverity _selectedSeverity = AlarmRuleSeverity.Warning;
         private bool _isRuleEnabled = true;
         private string _configurationStatus = "Ready";
+        private string _alarmFilter = string.Empty;
 
         public AlarmMonitoringService AlarmService { get; }
+        public ICollectionView FilteredAlarmLogs { get; }
+        public string AlarmFilter
+        {
+            get => _alarmFilter;
+            set
+            {
+                if (SetProperty(ref _alarmFilter, value))
+                    FilteredAlarmLogs.Refresh();
+            }
+        }
         public ObservableCollection<string> MeterNames { get; } = new();
         public ObservableCollection<string> ParameterNames { get; } = new();
         public ObservableCollection<string> BreakerKeys { get; } = new();
@@ -66,6 +79,19 @@ namespace IECGUI.ViewModel
             _navigation = navigation;
             AlarmService = alarmService;
             _configuration = configuration;
+            FilteredAlarmLogs = CollectionViewSource.GetDefaultView(AlarmService.AlarmLogs);
+            FilteredAlarmLogs.Filter = item =>
+            {
+                if (item is not Models.AlarmLogEntry alarm || string.IsNullOrWhiteSpace(AlarmFilter)) return true;
+                var filter = AlarmFilter.Trim();
+                return alarm.AlarmName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       alarm.MeterName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       alarm.ParameterName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       alarm.SeverityText.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       alarm.StateText.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       alarm.Username.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       alarm.Message.Contains(filter, StringComparison.OrdinalIgnoreCase);
+            };
             foreach (var meter in configuration.Configuration.Meters.Where(x => x.IsEnabled)) MeterNames.Add(meter.MeterName);
             foreach (var breaker in configuration.Configuration.SldBreakers.Where(x => x.IsEnabled)) BreakerKeys.Add(breaker.BreakerKey);
             BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());

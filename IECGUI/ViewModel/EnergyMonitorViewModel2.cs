@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace IECGUI.ViewModel
 {
@@ -20,8 +22,19 @@ namespace IECGUI.ViewModel
         private readonly SafePoller _liveDataTimer;
         private MeterViewModel? _selectedMeter;
         private int _connectedMeterCount;
+        private string _meterFilter = string.Empty;
 
         public ObservableCollection<MeterViewModel> Meters { get; }
+        public ICollectionView FilteredMeters { get; }
+        public string MeterFilter
+        {
+            get => _meterFilter;
+            set
+            {
+                if (SetProperty(ref _meterFilter, value))
+                    FilteredMeters.Refresh();
+            }
+        }
 
         public MeterViewModel? SelectedMeter
         {
@@ -68,6 +81,15 @@ namespace IECGUI.ViewModel
                     MeterName = name,
                     MeterStatus = "Connecting"
                 }));
+
+            FilteredMeters = CollectionViewSource.GetDefaultView(Meters);
+            FilteredMeters.Filter = item =>
+            {
+                if (item is not MeterViewModel meter || string.IsNullOrWhiteSpace(MeterFilter)) return true;
+                var filter = MeterFilter.Trim();
+                return (meter.MeterName?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                       (meter.MeterStatus?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false);
+            };
 
             SelectedMeter = Meters.FirstOrDefault();
 

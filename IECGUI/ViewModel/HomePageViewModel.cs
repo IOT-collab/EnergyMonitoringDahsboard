@@ -1,6 +1,9 @@
 ﻿using IEC.Shared.Services;
 using IECGUI.Services;
 using System;
+using System.Globalization;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace IECGUI.ViewModel
@@ -20,12 +23,26 @@ namespace IECGUI.ViewModel
         private readonly IDialogService _dialogService;
         private readonly INavigationService _navigation;
         private readonly IAuthService? _auth;
+        private readonly DeviceRuntimeService _deviceRuntime;
+        private readonly AlarmMonitoringService _alarmService;
+        private string _averageVoltage = "--";
+        private string _totalActivePower = "--";
+        private string _deviceSummary = "0 / 0";
 
-        public HomePageViewModel(INavigationService navigation, IDialogService dialogService, IAuthService? auth = null)
+        public string AverageVoltage { get => _averageVoltage; private set => SetProperty(ref _averageVoltage, value); }
+        public string TotalActivePower { get => _totalActivePower; private set => SetProperty(ref _totalActivePower, value); }
+        public string DeviceSummary { get => _deviceSummary; private set => SetProperty(ref _deviceSummary, value); }
+        public int CriticalAlarmCount => _alarmService.CriticalAlarmCount;
+        public int ActiveAlarmCount => _alarmService.ActiveAlarmCount;
+
+        public HomePageViewModel(INavigationService navigation, IDialogService dialogService,
+            DeviceRuntimeService deviceRuntime, AlarmMonitoringService alarmService, IAuthService? auth = null)
         {
             _navigation = navigation;
             _dialogService = dialogService;
             _auth = auth;
+            _deviceRuntime = deviceRuntime;
+            _alarmService = alarmService;
 
             SldViewCommand = new RelayCommand(SLDViewLogin);
             EnergyViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>());
@@ -44,6 +61,64 @@ namespace IECGUI.ViewModel
                     if (e.PropertyName == nameof(_auth.CurrentUser))
                         RaiseAllVisibility();
                 };
+
+            _deviceRuntime.SnapshotUpdated += RefreshLiveSummary;
+            _alarmService.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName is nameof(_alarmService.ActiveAlarmCount) or nameof(_alarmService.CriticalAlarmCount))
+                    RunOnUi(() =>
+                    {
+                        OnPropertyChanged(nameof(ActiveAlarmCount));
+                        OnPropertyChanged(nameof(CriticalAlarmCount));
+                    });
+            };
+            RefreshLiveSummary();
+        }
+
+        private void RefreshLiveSummary()
+        {
+            var readings = _deviceRuntime.GetSnapshot();
+            var voltages = readings.Values.SelectMany(x => x.Values)
+                .Where(x => IsVoltageAverage(x.Key) && TryFinite(x.Value, out _))
+                .Select(x => Convert.ToDouble(x.Value, CultureInfo.InvariantCulture)).ToList();
+            var powers = readings.Values.SelectMany(x => x.Values)
+                .Where(x => IsActivePower(x.Key) && TryFinite(x.Value, out _))
+                .Select(x => Convert.ToDouble(x.Value, CultureInfo.InvariantCulture)).ToList();
+            var responding = readings.Values.Count(x => x.Values.Any(v => v.Value != null));
+            var configured = readings.Count;
+            RunOnUi(() =>
+            {
+                AverageVoltage = voltages.Count == 0 ? "--" : voltages.Average().ToString("F1", CultureInfo.InvariantCulture);
+                TotalActivePower = powers.Count == 0 ? "--" : powers.Sum().ToString("F2", CultureInfo.InvariantCulture);
+                DeviceSummary = $"{responding} / {configured}";
+            });
+        }
+
+        private static bool IsVoltageAverage(string name)
+        {
+            var key = Normalize(name);
+            return key is "voltagelnavg" or "averagevoltage" or "voltageavg";
+        }
+
+        private static bool IsActivePower(string name)
+        {
+            var key = Normalize(name);
+            return key is "totalactivepower" or "activepower";
+        }
+
+        private static string Normalize(string value) =>
+            new((value ?? string.Empty).Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+
+        private static bool TryFinite(object value, out double result)
+        {
+            try { result = Convert.ToDouble(value, CultureInfo.InvariantCulture); return !double.IsNaN(result) && !double.IsInfinity(result); }
+            catch { result = 0; return false; }
+        }
+
+        private static void RunOnUi(Action action)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess()) action(); else dispatcher.BeginInvoke(action);
         }
 
         private void SLDViewLogin() => _navigation.NavigateTo<Dashboard1ViewModel>();
