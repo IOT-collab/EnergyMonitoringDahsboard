@@ -12,6 +12,8 @@ namespace IEC.Shared.Models
     {
         private string _meterName;
         private string _meterstatus;
+        private string _section = "General";
+        private string _utilityRoom = "Main Utility Room";
         private float _voltageA_N;
         private float _voltageB_N;
         private float _voltageC_N;
@@ -40,6 +42,9 @@ namespace IEC.Shared.Models
             get => _meterstatus;
             set => SetProperty(ref _meterstatus, value);
         }
+
+        public string Section { get => _section; set => SetProperty(ref _section, value); }
+        public string UtilityRoom { get => _utilityRoom; set => SetProperty(ref _utilityRoom, value); }
 
         public float VoltageA_N
         {

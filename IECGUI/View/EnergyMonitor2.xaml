@@ -328,6 +328,8 @@
                                     <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
                                         <TextBlock Text="{Binding ConnectedMeterCount, StringFormat=Online {0}}" Foreground="#62FF9B" FontSize="13" VerticalAlignment="Center"/>
                                     </Border>
+                                    <ComboBox ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}" Width="170" Height="28" Margin="8,0" ToolTip="Plant section"/>
+                                    <ComboBox ItemsSource="{Binding UtilityRooms}" SelectedItem="{Binding SelectedUtilityRoom}" Width="210" Height="28" Margin="0,0,8,0" ToolTip="Utility room / location"/>
                                 </StackPanel>
 
                                 <DataGrid Grid.Row="2" Margin="14,10,14,16"
@@ -340,6 +342,8 @@
                                           VerticalScrollBarVisibility="Auto">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Meter" Binding="{Binding MeterName}" Width="1.1*"/>
+                                        <DataGridTextColumn Header="Section" Binding="{Binding Section}" Width="1.0*"/>
+                                        <DataGridTextColumn Header="Utility Room" Binding="{Binding UtilityRoom}" Width="1.15*"/>
                                         <DataGridTextColumn Header="Current" Binding="{Binding CurrentAvg, StringFormat={}{0:F1} A}" Width="1.0*"/>
                                         <DataGridTextColumn Header="Voltage" Binding="{Binding VoltageL_N_Avg, StringFormat={}{0:F1} V}" Width="1.0*"/>
                                         <DataGridTextColumn Header="PF" Binding="{Binding TotalPowerFactor, StringFormat={}{0:F2}}" Width="0.75*"/>
@@ -408,58 +412,25 @@
                         </Border>
                     </Grid>
 
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="16">
-                            <StackPanel>
-                                <TextBlock Text="Incomer Group" Style="{StaticResource HudTitle}" FontSize="16"/>
-                                <DockPanel Margin="0,14,0,0">
-                                    <TextBlock Text="36 meters" Foreground="#BCEFFF" FontSize="14"/>
-                                    <TextBlock Text="98%" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
-                                </DockPanel>
-                                <ProgressBar Value="98" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#55EF87" Background="#33101F32"/>
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="1" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="16">
-                            <StackPanel>
-                                <TextBlock Text="Feeder Group A" Style="{StaticResource HudTitle}" FontSize="16"/>
-                                <DockPanel Margin="0,14,0,0">
-                                    <TextBlock Text="126 meters" Foreground="#BCEFFF" FontSize="14"/>
-                                    <TextBlock Text="92%" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
-                                </DockPanel>
-                                <ProgressBar Value="92" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#48D9FF" Background="#33101F32"/>
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="2" Style="{StaticResource HudPanel}" Margin="0,0,14,0" Padding="16">
-                            <StackPanel>
-                                <TextBlock Text="Transformer Bays" Style="{StaticResource HudTitle}" FontSize="16"/>
-                                <DockPanel Margin="0,14,0,0">
-                                    <TextBlock Text="54 meters" Foreground="#BCEFFF" FontSize="14"/>
-                                    <TextBlock Text="86%" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
-                                </DockPanel>
-                                <ProgressBar Value="86" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#FFC24A" Background="#33101F32"/>
-                            </StackPanel>
-                        </Border>
-
-                        <Border Grid.Column="3" Style="{StaticResource HudPanel}" Padding="16">
-                            <StackPanel>
-                                <TextBlock Text="Critical Watch" Style="{StaticResource HudTitle}" FontSize="16"/>
-                                <DockPanel Margin="0,14,0,0">
-                                    <TextBlock Text="7 meters" Foreground="#BCEFFF" FontSize="14"/>
-                                    <TextBlock Text="Alarm" Foreground="#FF746D" FontSize="14" HorizontalAlignment="Right"/>
-                                </DockPanel>
-                                <ProgressBar Value="34" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#FF746D" Background="#33101F32"/>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
+                    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding GroupSummaries}">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource HudPanel}" Width="390" Margin="0,0,14,0" Padding="16">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding GroupName}" Style="{StaticResource HudTitle}" FontSize="16" TextTrimming="CharacterEllipsis"/>
+                                            <DockPanel Margin="0,14,0,0">
+                                                <TextBlock Text="{Binding MeterSummary}" Foreground="#BCEFFF" FontSize="14"/>
+                                                <TextBlock Text="{Binding OnlinePercent, StringFormat={}{0:F0}%}" Foreground="#BCEFFF" FontSize="14" HorizontalAlignment="Right"/>
+                                            </DockPanel>
+                                            <ProgressBar Value="{Binding OnlinePercent}" Maximum="100" Height="8" Margin="0,14,0,0" Foreground="#55EF87" Background="#33101F32"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Grid>

@@ -29,15 +29,22 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Energy Monitoring Dashboard"
                        Foreground="White"
                        FontSize="28"
                        FontWeight="Bold"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Left"
                        VerticalAlignment="Center"/>
-                <Button Grid.Column="1" x:Name="BACK" Content="BACK"  Foreground="White" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" Margin="20,0" Style="{StaticResource GlassButton.Cyan}" Command="{Binding ReturnToHome}"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="Section" Foreground="#BCEFFF" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}" Style="{StaticResource GlassComboBoxAlt}" Width="180" Height="34" Margin="0,0,14,0"/>
+                    <TextBlock Text="Utility Room" Foreground="#BCEFFF" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox ItemsSource="{Binding UtilityRooms}" SelectedItem="{Binding SelectedUtilityRoom}" Style="{StaticResource GlassComboBoxAlt}" Width="220" Height="34"/>
+                </StackPanel>
+                <Button Grid.Column="2" x:Name="BACK" Content="BACK" Foreground="White" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" Margin="20,0" Style="{StaticResource GlassButton.Cyan}" Command="{Binding ReturnToHome}"/>
             </Grid>
         </Border>
         
@@ -45,7 +52,7 @@
         <!-- Meter Panels -->
         <ScrollViewer Grid.Row="1" Background="Transparent" VerticalScrollBarVisibility="Auto">
 
-            <ItemsControl ItemsSource="{Binding Meters}">
+            <ItemsControl ItemsSource="{Binding FilteredMeters}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -160,14 +167,17 @@
 
         <!-- Event Grid -->
         <DataGrid Grid.Row="2"
-                  ItemsSource="{Binding Events}"
-                  AutoGenerateColumns="False">
+                  ItemsSource="{Binding RuntimeMessages}"
+                  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                  Background="#CC0B1D2C" Foreground="White" RowHeight="34">
             
 
             <DataGrid.Columns>
 
 
-                <DataGridTextColumn Header="Message"    Binding="{Binding Message}"/>
+                <DataGridTextColumn Header="Time" Binding="{Binding TimestampText}" Width="210"/>
+                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="180"/>
+                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
 
             </DataGrid.Columns>
 

@@ -14,6 +14,8 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using IEC.Shared.Services.Logging;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace IECGUI.ViewModel
 {
@@ -32,6 +34,22 @@ namespace IECGUI.ViewModel
 
         // UI expects per-meter properties (VoltageA_N etc.) so expose MeterViewModel collection
         public ObservableCollection<MeterViewModel> Meters { get; }
+        public ICollectionView FilteredMeters { get; }
+        public ObservableCollection<string> Sections { get; } = new();
+        public ObservableCollection<string> UtilityRooms { get; } = new();
+        public ObservableCollection<DeviceRuntimeMessage> RuntimeMessages { get; } = new();
+        private string _selectedSection = "All Sections";
+        private string _selectedUtilityRoom = "All Utility Rooms";
+        public string SelectedSection
+        {
+            get => _selectedSection;
+            set { if (SetProperty(ref _selectedSection, value)) { RefreshUtilityRooms(); FilteredMeters.Refresh(); } }
+        }
+        public string SelectedUtilityRoom
+        {
+            get => _selectedUtilityRoom;
+            set { if (SetProperty(ref _selectedUtilityRoom, value)) FilteredMeters.Refresh(); }
+        }
 
         // Keep a map of the saved configuration for each meter (to access registers & comm settings)
         private readonly Dictionary<string, MetersConfig> _meterConfigMap = new();
@@ -69,6 +87,14 @@ namespace IECGUI.ViewModel
 
             Meters = new ObservableCollection<MeterViewModel>(
                 _meterConfigMap.Values.Select(CreateMeterViewModel));
+
+            Sections.Add("All Sections");
+            foreach (var section in Meters.Select(x => x.Section).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x)) Sections.Add(section);
+            RefreshUtilityRooms();
+            FilteredMeters = CollectionViewSource.GetDefaultView(Meters);
+            FilteredMeters.Filter = item => item is MeterViewModel meter &&
+                (SelectedSection == "All Sections" || string.Equals(meter.Section, SelectedSection, StringComparison.OrdinalIgnoreCase)) &&
+                (SelectedUtilityRoom == "All Utility Rooms" || string.Equals(meter.UtilityRoom, SelectedUtilityRoom, StringComparison.OrdinalIgnoreCase));
 
             // Configure the multi-meter service with the saved MetersConfig list
             //try
@@ -264,6 +290,18 @@ namespace IECGUI.ViewModel
                     if (values.Count > 0)
                         loggerReadings[vm.MeterName] = values;
                 }
+
+                var connected = readings.Values.Count(x => x != null && x.Values.Any(v => v.Value != null));
+                Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    RuntimeMessages.Clear();
+                    RuntimeMessages.Add(new DeviceRuntimeMessage
+                    {
+                        Timestamp = DateTime.Now,
+                        Source = "Device Runtime",
+                        Message = $"{connected} of {Meters.Count} enabled devices responding. Central status: {_deviceRuntime.Status}"
+                    });
+                }));
                 _energyLogger?.AppendReadings(loggerReadings);
 
 
@@ -293,7 +331,12 @@ namespace IECGUI.ViewModel
 
         private static MeterViewModel CreateMeterViewModel(MetersConfig config)
         {
-            var meter = new MeterViewModel { MeterName = config.MeterName };
+            var meter = new MeterViewModel
+            {
+                MeterName = config.MeterName,
+                Section = string.IsNullOrWhiteSpace(config.Section) ? "General" : config.Section.Trim(),
+                UtilityRoom = string.IsNullOrWhiteSpace(config.UtilityRoom) ? "Main Utility Room" : config.UtilityRoom.Trim()
+            };
 
             foreach (var register in config.Registers.Where(r => r.IsEnabled))
             {
@@ -310,10 +353,28 @@ namespace IECGUI.ViewModel
             return meter;
         }
 
+        private void RefreshUtilityRooms()
+        {
+            UtilityRooms.Clear();
+            UtilityRooms.Add("All Utility Rooms");
+            foreach (var room in Meters.Where(x => SelectedSection == "All Sections" || string.Equals(x.Section, SelectedSection, StringComparison.OrdinalIgnoreCase))
+                         .Select(x => x.UtilityRoom).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x))
+                UtilityRooms.Add(room);
+            if (!UtilityRooms.Contains(SelectedUtilityRoom)) SelectedUtilityRoom = "All Utility Rooms";
+        }
+
         public void Dispose()
         {
             _liveDataTimer.Dispose();
             _energyLogger?.Stop();
         }
+    }
+
+    public class DeviceRuntimeMessage
+    {
+        public DateTime Timestamp { get; set; }
+        public string TimestampText => Timestamp.ToString("dd-MMM-yyyy HH:mm:ss");
+        public string Source { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
     }
 }

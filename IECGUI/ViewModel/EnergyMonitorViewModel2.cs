@@ -23,8 +23,13 @@ namespace IECGUI.ViewModel
         private MeterViewModel? _selectedMeter;
         private int _connectedMeterCount;
         private string _meterFilter = string.Empty;
+        private string _selectedSection = "All Sections";
+        private string _selectedUtilityRoom = "All Utility Rooms";
 
         public ObservableCollection<MeterViewModel> Meters { get; }
+        public ObservableCollection<string> Sections { get; } = new();
+        public ObservableCollection<string> UtilityRooms { get; } = new();
+        public ObservableCollection<DeviceGroupSummary> GroupSummaries { get; } = new();
         public ICollectionView FilteredMeters { get; }
         public string MeterFilter
         {
@@ -34,6 +39,23 @@ namespace IECGUI.ViewModel
                 if (SetProperty(ref _meterFilter, value))
                     FilteredMeters.Refresh();
             }
+        }
+        public string SelectedSection
+        {
+            get => _selectedSection;
+            set
+            {
+                if (SetProperty(ref _selectedSection, value))
+                {
+                    RefreshUtilityRooms();
+                    FilteredMeters.Refresh();
+                }
+            }
+        }
+        public string SelectedUtilityRoom
+        {
+            get => _selectedUtilityRoom;
+            set { if (SetProperty(ref _selectedUtilityRoom, value)) FilteredMeters.Refresh(); }
         }
 
         public MeterViewModel? SelectedMeter
@@ -79,16 +101,28 @@ namespace IECGUI.ViewModel
                 _meterConfigMap.Keys.Select(name => new MeterViewModel
                 {
                     MeterName = name,
+                    Section = NormalizeLocation(_meterConfigMap[name].Section, "General"),
+                    UtilityRoom = NormalizeLocation(_meterConfigMap[name].UtilityRoom, "Main Utility Room"),
                     MeterStatus = "Connecting"
                 }));
+
+            Sections.Add("All Sections");
+            foreach (var section in Meters.Select(x => x.Section).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x))
+                Sections.Add(section);
+            RefreshUtilityRooms();
 
             FilteredMeters = CollectionViewSource.GetDefaultView(Meters);
             FilteredMeters.Filter = item =>
             {
-                if (item is not MeterViewModel meter || string.IsNullOrWhiteSpace(MeterFilter)) return true;
+                if (item is not MeterViewModel meter) return false;
+                if (SelectedSection != "All Sections" && !string.Equals(meter.Section, SelectedSection, StringComparison.OrdinalIgnoreCase)) return false;
+                if (SelectedUtilityRoom != "All Utility Rooms" && !string.Equals(meter.UtilityRoom, SelectedUtilityRoom, StringComparison.OrdinalIgnoreCase)) return false;
+                if (string.IsNullOrWhiteSpace(MeterFilter)) return true;
                 var filter = MeterFilter.Trim();
                 return (meter.MeterName?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                       (meter.MeterStatus?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false);
+                       (meter.MeterStatus?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                       meter.Section.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       meter.UtilityRoom.Contains(filter, StringComparison.OrdinalIgnoreCase);
             };
 
             SelectedMeter = Meters.FirstOrDefault();
@@ -151,7 +185,38 @@ namespace IECGUI.ViewModel
             }
 
             ConnectedMeterCount = connected;
+            Application.Current?.Dispatcher.BeginInvoke(new Action(RefreshGroupSummaries));
         }
+
+        private void RefreshUtilityRooms()
+        {
+            UtilityRooms.Clear();
+            UtilityRooms.Add("All Utility Rooms");
+            var rooms = Meters.Where(x => SelectedSection == "All Sections" ||
+                    string.Equals(x.Section, SelectedSection, StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.UtilityRoom).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(x => x);
+            foreach (var room in rooms) UtilityRooms.Add(room);
+            if (!UtilityRooms.Contains(SelectedUtilityRoom)) SelectedUtilityRoom = "All Utility Rooms";
+        }
+
+        private void RefreshGroupSummaries()
+        {
+            GroupSummaries.Clear();
+            foreach (var group in Meters.GroupBy(x => new { x.Section, x.UtilityRoom }).OrderBy(x => x.Key.Section).ThenBy(x => x.Key.UtilityRoom))
+            {
+                var total = group.Count();
+                var online = group.Count(x => string.Equals(x.MeterStatus, "Online", StringComparison.OrdinalIgnoreCase));
+                GroupSummaries.Add(new DeviceGroupSummary
+                {
+                    GroupName = $"{group.Key.Section} / {group.Key.UtilityRoom}",
+                    MeterSummary = $"{online} of {total} online",
+                    OnlinePercent = total == 0 ? 0 : online * 100d / total
+                });
+            }
+        }
+
+        private static string NormalizeLocation(string? value, string fallback) =>
+            string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
 
         private static void ApplyReading(MeterViewModel meter, MetersConfig config, MeterReading reading)
         {
@@ -207,5 +272,12 @@ namespace IECGUI.ViewModel
         }
 
         public void Dispose() => _liveDataTimer.Dispose();
+    }
+
+    public class DeviceGroupSummary
+    {
+        public string GroupName { get; set; } = string.Empty;
+        public string MeterSummary { get; set; } = string.Empty;
+        public double OnlinePercent { get; set; }
     }
 }

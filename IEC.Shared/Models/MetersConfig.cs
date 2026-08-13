@@ -13,6 +13,9 @@ namespace IEC.Shared.Models
 
         public string MeterName { get; set; }
 
+        public string Section { get; set; } = "General";
+        public string UtilityRoom { get; set; } = "Main Utility Room";
+
         // Existing configuration files do not contain this property, so the
         // default keeps all previously configured meters enabled.
         public bool IsEnabled { get; set; } = true;
