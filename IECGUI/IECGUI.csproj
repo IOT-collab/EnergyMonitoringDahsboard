@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+
+	  <ApplicationIcon>Images\VertexLogo.ico</ApplicationIcon> 
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +36,7 @@
     <Resource Include="Fonts\digital-7.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\VertexLogo.ico" />
   </ItemGroup>
 
 </Project>
