@@ -1,0 +1,77 @@
+<UserControl x:Class="IECGUI.View.LicenseActivationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="1920"
+             Height="1080">
+    <Grid Background="#071522">
+        <Border Width="720"
+                Padding="44"
+                CornerRadius="14"
+                Background="#E6102638"
+                BorderBrush="#448AD6EF"
+                BorderThickness="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel>
+                <TextBlock Text="VEMT LICENSE ACTIVATION"
+                           Foreground="White"
+                           FontSize="32"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Trial or product license required"
+                           Foreground="#9ADCF0"
+                           FontSize="17"
+                           Margin="0,10,0,30"
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Installation ID"
+                           Foreground="#B7E9F4"
+                           FontSize="15"/>
+                <TextBox Text="{Binding InstallationId}"
+                         IsReadOnly="True"
+                         Margin="0,6,0,20"
+                         Padding="12"
+                         FontSize="16"
+                         Foreground="White"
+                         Background="#33101F32"
+                         BorderBrush="#557ECBE5"/>
+
+                <TextBlock Text="Product key"
+                           Foreground="#B7E9F4"
+                           FontSize="15"/>
+                <TextBox Text="{Binding ProductKey, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="0,6,0,18"
+                         Padding="12"
+                         FontSize="16"
+                         Foreground="White"
+                         Background="#33101F32"
+                         BorderBrush="#557ECBE5"/>
+
+                <TextBlock Text="{Binding StatusMessage}"
+                           Foreground="#FFD36A"
+                           TextWrapping="Wrap"
+                           MinHeight="42"
+                           Margin="0,0,0,18"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0"
+                            Content="ACTIVATE"
+                            Command="{Binding ActivateCommand}"
+                            Height="52"
+                            Margin="0,0,8,0"
+                            Style="{StaticResource GlassButton.Cyan}"/>
+                    <Button Grid.Column="1"
+                            Content="EXIT"
+                            Command="{Binding ExitCommand}"
+                            Height="52"
+                            Margin="8,0,0,0"
+                            Style="{StaticResource GlassButton.Ghost}"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -39,6 +39,9 @@ namespace IEC.Shared
         public static readonly string ReportFormatFile =
             Path.Combine(Configuration, "ReportFormats.json");
 
+        public static readonly string LicenseStateFile =
+            Path.Combine(Configuration, "LicenseState.json");
+
         static AppPaths()
         {
             Directory.CreateDirectory(Configuration);

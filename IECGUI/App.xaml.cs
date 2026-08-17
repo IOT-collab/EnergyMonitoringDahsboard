@@ -44,6 +44,7 @@ namespace IECGUI
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<AlarmMonitoringService>();
             services.AddSingleton<DeviceRuntimeService>();
+            services.AddSingleton<LicenseService>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
             services.AddSingleton<IAuthService, AuthService>();
 
@@ -56,6 +57,7 @@ namespace IECGUI
 
             // ViewModels
             services.AddTransient<MainWindowViewModel>();
+            services.AddTransient<LicenseActivationViewModel>();
             services.AddTransient<LoginViewModel>();
             services.AddTransient<Dashboard1ViewModel>();
             services.AddTransient<EnergyMonitorViewModel>();

@@ -33,13 +33,18 @@ namespace IECGUI.ViewModel
         public ICommand LogoutCommand { get; set; }
 
         private readonly IDialogService _dialogService;
+        private readonly LicenseService _licenseService;
 
-        public MainWindowViewModel(INavigationService navigation , IDialogService dialogService, AlarmMonitoringService alarmService, DeviceRuntimeService deviceRuntime)
+        public MainWindowViewModel(INavigationService navigation,
+            IDialogService dialogService,
+            AlarmMonitoringService alarmService,
+            DeviceRuntimeService deviceRuntime,
+            LicenseService licenseService)
         {
             Navigation = navigation;
             _dialogService = dialogService;
             AlarmService = alarmService;
-            _ = StartRuntimeAsync(deviceRuntime);
+            _licenseService = licenseService;
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
             Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));
@@ -47,7 +52,17 @@ namespace IECGUI.ViewModel
             CloseAppCommand = new RelayCommand(ExecuteCloseApp);
             LogoutCommand = new RelayCommand(ExecuteLogout);
 
-            Navigation.NavigateTo<LoginViewModel>();
+            if (_licenseService.Current.CanRun)
+            {
+                //_dialogService.ShowMessage($"Trail Period Activated. Remaining Days :{_licenseService.Current.Message}","Information");
+                MessageBox.Show($"{_licenseService.Current.Message}","License Info",MessageBoxButton.OK,MessageBoxImage.Warning);
+                _ = StartRuntimeAsync(deviceRuntime);
+                Navigation.NavigateTo<LoginViewModel>();
+            }
+            else
+            {
+                Navigation.NavigateTo<LicenseActivationViewModel>();
+            }
             _liveDataTimer = new SafePoller(TimeSpan.FromMilliseconds(1000), PollAsync, ex => Console.WriteLine(ex.Message));
             _liveDataTimer.Start();
 
