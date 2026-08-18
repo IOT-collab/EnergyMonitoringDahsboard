@@ -45,6 +45,32 @@ public sealed class LicenseService
         get { lock (_sync) return _current; }
     }
 
+    /// <summary>
+    /// Returns display-safe license information for the License Info screen.
+    /// The complete signed product key is deliberately never exposed to the UI.
+    /// </summary>
+    public LicenseInfo GetInfo()
+    {
+        lock (_sync)
+        {
+            var stored = _state.License;
+            var token = stored?.Token;
+            var keyHint = string.IsNullOrWhiteSpace(token)
+                ? null
+                : $"...{token[^Math.Min(12, token.Length)..]}";
+
+            return new LicenseInfo(
+                AppInfo.Product,
+                _state.InstallationId,
+                _state.InstallUtc,
+                _current,
+                stored?.Kind,
+                stored?.IssuedUtc,
+                stored?.ExpiresUtc ?? _current.ExpiresUtc,
+                keyHint);
+        }
+    }
+
     public event Action<LicenseStatus>? StatusChanged;
 
     public LicenseStatus Validate()
@@ -325,6 +351,16 @@ public sealed record LicenseStatus(
     bool CanRun,
     string Message,
     DateTimeOffset? ExpiresUtc);
+
+public sealed record LicenseInfo(
+    string Product,
+    string InstallationId,
+    DateTimeOffset InstalledUtc,
+    LicenseStatus Status,
+    LicenseKind? Kind,
+    DateTimeOffset? IssuedUtc,
+    DateTimeOffset? ExpiresUtc,
+    string? ProductKeyHint);
 
 public sealed class LicensePayload
 {

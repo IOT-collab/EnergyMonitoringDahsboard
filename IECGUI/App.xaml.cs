@@ -45,6 +45,7 @@ namespace IECGUI
             services.AddSingleton<AlarmMonitoringService>();
             services.AddSingleton<DeviceRuntimeService>();
             services.AddSingleton<LicenseService>();
+            services.AddSingleton<LicenseInfoViewModel>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
             services.AddSingleton<IAuthService, AuthService>();
 

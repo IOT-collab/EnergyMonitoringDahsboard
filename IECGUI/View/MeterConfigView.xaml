@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <conv:ProtocolToVisibilityConverter x:Key="IsTcp" TargetProtocol="ModbusTcp"/>
         <conv:ProtocolToVisibilityConverter x:Key="IsRtu" TargetProtocol="ModbusRtu"/>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
        
     </UserControl.Resources>
 
@@ -454,7 +455,8 @@
 
             </TabItem>
 
-            <TabItem Header="SLD Mapping" Height="44" VerticalAlignment="Bottom">
+            <TabItem Header="SLD Mapping" Height="44" VerticalAlignment="Bottom"
+                     Visibility="{Binding CanEditSldMapping, Converter={StaticResource BoolToVisibility}}">
                 <Grid Margin="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="55"/>

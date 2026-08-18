@@ -20,6 +20,7 @@ namespace IECGUI.ViewModel
         private MetersConfig _selectedMeter;
         private readonly IDialogService _dialogService;
         private readonly DeviceRuntimeService _deviceRuntime;
+        private readonly IAuthService _auth;
 
         public MetersConfig SelectedMeter
         {
@@ -51,6 +52,15 @@ namespace IECGUI.ViewModel
         public ICommand ConnectDevicesCommand { get; }
         public ICommand DisconnectDevicesCommand { get; }
         public DeviceRuntimeService DeviceRuntime => _deviceRuntime;
+
+        /// <summary>
+        /// SLD mapping changes the plant control configuration, so it is only
+        /// available to an administrator who is also allowed to see the SLD.
+        /// This is intentionally enforced in the view-model as well as XAML.
+        /// </summary>
+        public bool CanEditSldMapping =>
+            _auth.CurrentUser?.Role == UserRole.Admin &&
+            _auth.CurrentUser.ScreenPermissions?.SldView == true;
 
         // New: Load default registers command
         public ICommand LoadDefaultRegistersCommand { get; }
@@ -113,10 +123,11 @@ namespace IECGUI.ViewModel
         public ObservableCollection<byte> SlaveIds { get; } = new ObservableCollection<byte>(
             Enumerable.Range(1, 255).Select(i => (byte)i));
 
-        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config, IDialogService dialogService, DeviceRuntimeService deviceRuntime)
+        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config, IDialogService dialogService, DeviceRuntimeService deviceRuntime, IAuthService auth)
         {
             _config = config;
             _deviceRuntime = deviceRuntime;
+            _auth = auth;
             SldBreakers = new ObservableCollection<SldBreakerConfig>(_config.Configuration.SldBreakers);
             if (SldBreakers.Count == 0)
             {
@@ -163,6 +174,12 @@ namespace IECGUI.ViewModel
             LoadDefaultRegistersCommand = new RelayCommand(LoadDefaultRegisters);
 
             MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+
+            _auth.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(IAuthService.CurrentUser))
+                    OnPropertyChanged(nameof(CanEditSldMapping));
+            };
         }
 
         private void RefreshComPorts()
@@ -251,6 +268,9 @@ namespace IECGUI.ViewModel
 
         private void SaveSldMapping()
         {
+            if (!CanEditSldMapping)
+                return;
+
             // Never clear DeviceNames during this save. It is the live ItemsSource
             // and doing so causes WPF to write null into every selected MeterName.
             _config.Configuration.SldBreakers = SldBreakers.ToList();

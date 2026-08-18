@@ -20,6 +20,7 @@ namespace IECGUI.ViewModel
         public ICommand ReportViewerCommand { get; }
         public ICommand AlarmViewCommand { get; }
         public ICommand UserConfigCommand { get; }
+        public ICommand LicenseInfoCommand { get; }
         public ObservableCollection<HomeScreenTile> ScreenTiles { get; } = new();
 
         private readonly IDialogService _dialogService;
@@ -55,6 +56,7 @@ namespace IECGUI.ViewModel
             ReportViewerCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
             AlarmViewCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
             UserConfigCommand = new RelayCommand(() => _navigation.NavigateTo<UserSettingsViewModel>());
+            LicenseInfoCommand = new RelayCommand(() => _navigation.NavigateTo<LicenseInfoViewModel>());
             RebuildScreenTiles();
 
             // subscribe to auth changes to update visibility properties
@@ -173,6 +175,7 @@ namespace IECGUI.ViewModel
                 if (CanSeeReports) ScreenTiles.Add(new("Reports", "\uE9D2", ReportViewerCommand));
                 if (CanSeeAlarms) ScreenTiles.Add(new("Alarms", "\uE7BA", AlarmViewCommand, true));
                 if (CanSeeUserSettings) ScreenTiles.Add(new("User Config", "\uE77B", UserConfigCommand));
+                if (CanSeeMainScreens) ScreenTiles.Add(new("License Info", "\uE946", LicenseInfoCommand));
             });
         }
     }
