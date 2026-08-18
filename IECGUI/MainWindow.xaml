@@ -23,6 +23,7 @@
                         Margin="0,18,24,0"
                         Panel.ZIndex="1000">
                 <Button Command="{Binding LogoutCommand}"
+                        Visibility="{Binding SessionControlsVisibility}"
                         ToolTip="Logout"
                         Width="64"
                         Height="64"

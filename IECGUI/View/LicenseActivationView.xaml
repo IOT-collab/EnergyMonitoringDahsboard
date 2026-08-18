@@ -27,7 +27,7 @@
                 <TextBlock Text="Installation ID"
                            Foreground="#B7E9F4"
                            FontSize="15"/>
-                <TextBox Text="{Binding InstallationId}"
+                <TextBox Text="{Binding InstallationId, Mode=OneWay}"
                          IsReadOnly="True"
                          Margin="0,6,0,20"
                          Padding="12"

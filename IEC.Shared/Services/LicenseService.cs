@@ -23,7 +23,7 @@ public sealed class LicenseService
 
     // Replace this with the public key matching the private key kept by the vendor.
     // The private key must never be placed in the application or installer.
-    private const string VendorPublicKeyPem = "";
+    private const string VendorPublicKeyPem = "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAlvU6LlH3aoHEy/ZwPHzp\nfCT2yUv1gZAubOmUXrXAIbNfa0Q2tAkCc1Wv8JL8lp7xQGMOa80L/syYS2TYg8c6\nV4rAMMySXr1OgcSltjtOUhiAR1TcgsR0ePjWTgN+obH2KaSyvyhMBVJTAKmW5k9C\npQmnM0xTSzUwfxvQXJ3mQ4kHJ0dFIg9fOX82DNVf2+tFHlajm8PWVhnLVnYfXL58\n/hHuLqXZKMBxI2R1MZJpxnpjdxkLHvQO28vgCdIIIzZnXZF51KfsCuvF+bAnPxr9\nx0jtemktzRw/B7G1D81znlws0xJBJKsHSrORZ0BEp7RfpOjF5Uc86EeFLtb3R9U9\nsH0BBlTTx2QfTTJGWP4aZ5lTxSqQoQJUBbpwWOw+6QjCsj7Bx9bRJq/zDrH6hA7H\nFw6RlTA7JsZ03AmeFVbjSrS9cT5h1XoBcF4ajVTWQzpU//hS82PqXJbwadw1CXHH\nuU537lRKAZNuynvXQ1hO67ewPCOvgFNQ46HdzgGIiBIDAgMBAAE=\n-----END PUBLIC KEY-----";
 
     private readonly object _sync = new();
     private LicenseState _state;
@@ -45,12 +45,16 @@ public sealed class LicenseService
         get { lock (_sync) return _current; }
     }
 
+    public event Action<LicenseStatus>? StatusChanged;
+
     public LicenseStatus Validate()
     {
         lock (_sync)
         {
             _current = EvaluateAndPersist();
-            return _current;
+            var status = _current;
+            StatusChanged?.Invoke(status);
+            return status;
         }
     }
 
@@ -116,6 +120,7 @@ public sealed class LicenseService
             _state.LastSeenUtc = now;
             SaveState(_state);
             _current = EvaluateAndPersist();
+            StatusChanged?.Invoke(_current);
             return _current.CanRun;
         }
     }
@@ -286,7 +291,7 @@ public sealed class LicenseService
                 ?? throw new InvalidDataException("Empty license payload.");
             return true;
         }
-        catch (Exception ex) when (ex is FormatException or CryptographicException or JsonException or InvalidDataException)
+        catch (Exception ex) when (ex is ArgumentException or FormatException or CryptographicException or JsonException or InvalidDataException)
         {
             error = "Product key could not be verified.";
             return false;

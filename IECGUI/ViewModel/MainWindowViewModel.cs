@@ -31,6 +31,7 @@ namespace IECGUI.ViewModel
 
         public ICommand CloseAppCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
+        public Visibility SessionControlsVisibility { get; private set; }
 
         private readonly IDialogService _dialogService;
         private readonly LicenseService _licenseService;
@@ -45,6 +46,10 @@ namespace IECGUI.ViewModel
             _dialogService = dialogService;
             AlarmService = alarmService;
             _licenseService = licenseService;
+            SessionControlsVisibility = _licenseService.Current.CanRun
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            _licenseService.StatusChanged += OnLicenseStatusChanged;
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
             Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));
@@ -107,10 +112,23 @@ namespace IECGUI.ViewModel
 
         private void ExecuteLogout()
         {
+            // This command is also guarded in code so it cannot be invoked by
+            // automation or stale UI while the license gate is active.
+            if (!_licenseService.Validate().CanRun)
+                return;
+
             if (_dialogService.ShowYesNo("Are you sure you want to logout?", "Confirm Logout") == true)
             {
                 Navigation.NavigateTo<LoginViewModel>();
             }
+        }
+
+        private void OnLicenseStatusChanged(LicenseStatus status)
+        {
+            SessionControlsVisibility = status.CanRun
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            OnPropertyChanged(nameof(SessionControlsVisibility));
         }
     }
 }
