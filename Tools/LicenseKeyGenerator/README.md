@@ -16,4 +16,11 @@ For a one-year key:
 dotnet run --project Tools/LicenseKeyGenerator -- --private-key C:\VEMT-License\VEMT_private.pem --installation-id 1443b4f3913e45fa97ed501a0a10da5f --type Annual
 ```
 
-The command prints one product-key line. Copy that entire line into the activation screen's Product key field.
+To create a license file for the customer, add an output path ending in `.lic`:
+
+```cmd
+dotnet run --project Tools/LicenseKeyGenerator -- --private-key C:\VEMT-License\VEMT_private.pem --installation-id 1443b4f3913e45fa97ed501a0a10da5f --type Lifetime --output C:\VEMT-License\VEMT-license.lic
+```
+
+The customer can now use **Import License** and select this `.lic` file. The file
+contains one signed token line; do not edit it.

@@ -151,6 +151,45 @@ public sealed class LicenseService
         }
     }
 
+    /// <summary>
+    /// Activates a license from a vendor-issued .lic/.txt file. The file is
+    /// expected to contain the same single-line signed token accepted by
+    /// <see cref="TryActivate(string, out string)"/>.
+    /// </summary>
+    public bool TryActivateFromFile(string filePath, out string error)
+    {
+        error = string.Empty;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            {
+                error = "The license file could not be found.";
+                return false;
+            }
+
+            var fileInfo = new FileInfo(filePath);
+            if (fileInfo.Length > 1024 * 1024)
+            {
+                error = "The license file is too large.";
+                return false;
+            }
+
+            // Trim whitespace and an optional UTF-8 BOM added by some editors.
+            var token = File.ReadAllText(filePath).Trim().TrimStart('\uFEFF');
+            return TryActivate(token, out error);
+        }
+        catch (IOException)
+        {
+            error = "The license file could not be read.";
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            error = "Permission was denied while reading the license file.";
+            return false;
+        }
+    }
+
     private LicenseStatus EvaluateAndPersist()
     {
         var now = DateTimeOffset.UtcNow;

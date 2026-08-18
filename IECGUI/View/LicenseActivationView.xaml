@@ -27,14 +27,26 @@
                 <TextBlock Text="Installation ID"
                            Foreground="#B7E9F4"
                            FontSize="15"/>
-                <TextBox Text="{Binding InstallationId, Mode=OneWay}"
-                         IsReadOnly="True"
-                         Margin="0,6,0,20"
-                         Padding="12"
-                         FontSize="16"
-                         Foreground="White"
-                         Background="#33101F32"
-                         BorderBrush="#557ECBE5"/>
+                <Grid Margin="0,6,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0"
+                             Text="{Binding InstallationId, Mode=OneWay}"
+                             IsReadOnly="True"
+                             Padding="12"
+                             FontSize="16"
+                             Foreground="White"
+                             Background="#33101F32"
+                             BorderBrush="#557ECBE5"/>
+                    <Button Grid.Column="1"
+                            Content="COPY ID"
+                            Command="{Binding CopyInstallationIdCommand}"
+                            Height="44"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource GlassButton.Ghost}"/>
+                </Grid>
 
                 <TextBlock Text="Product key"
                            Foreground="#B7E9F4"
@@ -57,18 +69,25 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0"
+                            Content="IMPORT LICENSE"
+                            Command="{Binding ImportLicenseFileCommand}"
+                            Height="52"
+                            Margin="0,0,6,0"
+                            Style="{StaticResource GlassButton.Ghost}"/>
+                    <Button Grid.Column="1"
                             Content="ACTIVATE"
                             Command="{Binding ActivateCommand}"
                             Height="52"
-                            Margin="0,0,8,0"
+                            Margin="6,0"
                             Style="{StaticResource GlassButton.Cyan}"/>
-                    <Button Grid.Column="1"
+                    <Button Grid.Column="2"
                             Content="EXIT"
                             Command="{Binding ExitCommand}"
                             Height="52"
-                            Margin="8,0,0,0"
+                            Margin="6,0,0,0"
                             Style="{StaticResource GlassButton.Ghost}"/>
                 </Grid>
             </StackPanel>

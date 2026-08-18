@@ -1,5 +1,6 @@
 using IEC.Shared.Services;
 using IECGUI.Services;
+using Microsoft.Win32;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ public sealed class LicenseActivationViewModel : BaseViewModel
     private readonly INavigationService _navigation;
     private readonly DeviceRuntimeService _deviceRuntime;
     private readonly AlarmMonitoringService _alarmService;
+    private readonly IDialogService _dialog;
     private string _productKey = string.Empty;
     private string _statusMessage = string.Empty;
     private bool _isBusy;
@@ -20,14 +22,18 @@ public sealed class LicenseActivationViewModel : BaseViewModel
         LicenseService license,
         INavigationService navigation,
         DeviceRuntimeService deviceRuntime,
-        AlarmMonitoringService alarmService)
+        AlarmMonitoringService alarmService,
+        IDialogService dialog)
     {
         _license = license;
         _navigation = navigation;
         _deviceRuntime = deviceRuntime;
         _alarmService = alarmService;
+        _dialog = dialog;
 
-        ActivateCommand = new RelayCommand(async () => await ActivateAsync(), () => !IsBusy);
+        ActivateCommand = new RelayCommand(async () => await ActivateAsync(ProductKey), () => !IsBusy);
+        ImportLicenseFileCommand = new RelayCommand(async () => await ImportLicenseFileAsync(), () => !IsBusy);
+        CopyInstallationIdCommand = new RelayCommand(CopyInstallationId);
         ExitCommand = new RelayCommand(() => Application.Current.Shutdown());
 
         var current = _license.Validate();
@@ -55,9 +61,60 @@ public sealed class LicenseActivationViewModel : BaseViewModel
     }
 
     public ICommand ActivateCommand { get; }
+    public ICommand ImportLicenseFileCommand { get; }
+    public ICommand CopyInstallationIdCommand { get; }
     public ICommand ExitCommand { get; }
 
-    private async Task ActivateAsync()
+    private void CopyInstallationId()
+    {
+        try
+        {
+            Clipboard.SetText(InstallationId);
+            StatusMessage = "Installation ID copied to the clipboard.";
+        }
+        catch (System.Exception ex)
+        {
+            StatusMessage = $"Unable to copy the Installation ID: {ex.Message}";
+        }
+    }
+
+    private async Task ImportLicenseFileAsync()
+    {
+        if (IsBusy) return;
+
+        var dialog = new OpenFileDialog
+        {
+            Title = "Select VEMT license file",
+            Filter = "VEMT license (*.lic)|*.lic|Text license (*.txt)|*.txt|All files (*.*)|*.*",
+            CheckFileExists = true,
+            Multiselect = false
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            if (!_license.TryActivateFromFile(dialog.FileName, out var error))
+            {
+                StatusMessage = error;
+                return;
+            }
+
+            await FinishActivationAsync();
+        }
+        catch (System.Exception ex)
+        {
+            StatusMessage = $"License file could not be activated: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task ActivateAsync(string productKey)
     {
         if (IsBusy) return;
         IsBusy = true;
@@ -70,10 +127,7 @@ public sealed class LicenseActivationViewModel : BaseViewModel
                 return;
             }
 
-            StatusMessage = "License accepted. Connecting to configured devices...";
-            await _deviceRuntime.StartAsync();
-            await _alarmService.StartAsync();
-            _navigation.NavigateTo<LoginViewModel>();
+            await FinishActivationAsync();
         }
         catch (System.Exception ex)
         {
@@ -83,5 +137,16 @@ public sealed class LicenseActivationViewModel : BaseViewModel
         {
             IsBusy = false;
         }
+    }
+
+    private async Task FinishActivationAsync()
+    {
+        _dialog.ShowMessage(
+            "License activation completed successfully.",
+            "Activation Successful");
+        StatusMessage = "License accepted. Connecting to configured devices...";
+        await _deviceRuntime.StartAsync();
+        await _alarmService.StartAsync();
+        _navigation.NavigateTo<LoginViewModel>();
     }
 }

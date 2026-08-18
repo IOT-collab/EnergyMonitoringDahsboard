@@ -46,7 +46,7 @@
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="Time remaining" Foreground="#9ADCF0" FontSize="17"/>
                             <TextBlock Text="{Binding TimeRemaining}" Foreground="#4EC9FF" FontSize="34" FontWeight="Bold" Margin="0,5,0,0"/>
-                            <TextBlock Text="Expiry: {Binding ExpiresOn}" Foreground="#C3EAF5" FontSize="16" Margin="0,8,0,0"/>
+                            <TextBlock Text="{Binding ExpiresOn, StringFormat='Expiry : \{0:yyyy-MM-dd\}'}" Foreground="#C3EAF5" FontSize="16" Margin="0,8,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
