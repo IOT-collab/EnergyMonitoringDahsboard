@@ -24,5 +24,11 @@ namespace IECGUI.View
         {
             InitializeComponent();
         }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is IECGUI.ViewModel.MqttMonitorViewModel viewModel)
+                viewModel.Cleanup();
+        }
     }
 }

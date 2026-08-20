@@ -42,6 +42,9 @@ namespace IEC.Shared
         public static readonly string LicenseStateFile =
             Path.Combine(Configuration, "LicenseState.json");
 
+        public static readonly string MqttConfigurationFile =
+            Path.Combine(Configuration, "MqttConfiguration.json");
+
         static AppPaths()
         {
             Directory.CreateDirectory(Configuration);

@@ -40,6 +40,7 @@ namespace IECGUI
             services.AddSingleton<IecConfigManagerService>();
 
             services.AddSingleton<IMqttClientService, MqttClientService>();
+            services.AddSingleton<MqttConfigurationService>();
             services.AddTransient<MqttMonitorViewModel>();
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<AlarmMonitoringService>();
