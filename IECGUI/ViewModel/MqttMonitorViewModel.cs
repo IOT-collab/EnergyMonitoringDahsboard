@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace IECGUI.ViewModel;
 
@@ -69,7 +70,7 @@ public sealed class MqttMonitorViewModel : BaseViewModel
         set
         {
             if (!SetProperty(ref _messageFilter, value)) return;
-            FilteredMessageHistory.Refresh();
+            ScheduleHistoryRefresh();
         }
     }
 
@@ -276,14 +277,21 @@ public sealed class MqttMonitorViewModel : BaseViewModel
     {
         RunOnUi(() =>
         {
-            AddHistory(new MqttMessageRecord
+            try
             {
-                Direction = "Received",
-                Topic = e.Topic,
-                RawPayload = e.Payload,
-                ReceivedAt = e.ReceivedAt
-            });
-            UpdateLiveReading(e);
+                AddHistory(new MqttMessageRecord
+                {
+                    Direction = "Received",
+                    Topic = e.Topic,
+                    RawPayload = e.Payload,
+                    ReceivedAt = e.ReceivedAt
+                });
+                UpdateLiveReading(e);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Message processing failed: {ex.Message}";
+            }
         });
     }
 
@@ -293,19 +301,23 @@ public sealed class MqttMonitorViewModel : BaseViewModel
         MessageHistory.Add(record);
         while (MessageHistory.Count > 200)
             MessageHistory.RemoveAt(0);
-        FilteredMessageHistory.Refresh();
+        ScheduleHistoryRefresh();
     }
 
     private void UpdateLiveReading(MqttMessageReceivedArgs message)
     {
-        var mappings = FieldMappings
-            .Where(m => m.IsEnabled && (string.IsNullOrWhiteSpace(m.TopicFilter) || TopicMatches(m.TopicFilter, message.Topic)))
-            .ToList();
-        if (mappings.Count == 0) return;
-
         try
         {
             using var document = JsonDocument.Parse(message.Payload);
+            var addedMappings = EnsureFieldMappings(document.RootElement, message.Topic);
+            if (addedMappings > 0)
+                SaveConfiguration();
+
+            var mappings = FieldMappings
+                .Where(m => m.IsEnabled && (string.IsNullOrWhiteSpace(m.TopicFilter) || TopicMatches(m.TopicFilter, message.Topic)))
+                .ToList();
+            if (mappings.Count == 0) return;
+
             var row = new MqttReadingRow { Topic = message.Topic, Timestamp = message.ReceivedAt };
             foreach (var mapping in mappings)
             {
@@ -333,6 +345,60 @@ public sealed class MqttMonitorViewModel : BaseViewModel
         }
     }
 
+    private int EnsureFieldMappings(JsonElement root, string topic)
+    {
+        if (root.ValueKind != JsonValueKind.Object)
+            return 0;
+
+        var added = 0;
+        foreach (var property in root.EnumerateObject())
+        {
+            var exists = FieldMappings.Any(mapping =>
+                string.Equals(mapping.JsonPath, property.Name, StringComparison.OrdinalIgnoreCase) &&
+                (string.IsNullOrWhiteSpace(mapping.TopicFilter) || TopicMatches(mapping.TopicFilter, topic)));
+            if (exists)
+                continue;
+
+            FieldMappings.Add(new MqttFieldMapping
+            {
+                DisplayName = property.Name,
+                JsonPath = property.Name,
+                TopicFilter = topic,
+                IsEnabled = true
+            });
+            added++;
+        }
+
+        return added;
+    }
+
+    private void ScheduleHistoryRefresh()
+    {
+        void Refresh()
+        {
+            try
+            {
+                // Defer the refresh until DataGrid has completed any active edit transaction.
+                FilteredMessageHistory.Refresh();
+            }
+            catch (InvalidOperationException)
+            {
+                // A second refresh will be queued below if WPF is still committing the row.
+                var dispatcher = Application.Current?.Dispatcher;
+                dispatcher?.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                {
+                    try { FilteredMessageHistory.Refresh(); } catch (InvalidOperationException) { }
+                }));
+            }
+        }
+
+        var uiDispatcher = Application.Current?.Dispatcher;
+        if (uiDispatcher == null || uiDispatcher.CheckAccess())
+            uiDispatcher?.BeginInvoke(DispatcherPriority.Background, new Action(Refresh));
+        else
+            uiDispatcher.BeginInvoke(DispatcherPriority.Background, new Action(Refresh));
+    }
+
     private static bool TryGetJsonValue(JsonElement root, string path, out string value)
     {
         value = string.Empty;
@@ -342,10 +408,16 @@ public sealed class MqttMonitorViewModel : BaseViewModel
         foreach (var segment in path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             if (current.ValueKind != JsonValueKind.Object) return false;
-            var property = current.EnumerateObject().FirstOrDefault(p =>
-                string.Equals(p.Name, segment, StringComparison.OrdinalIgnoreCase));
-            if (property.Equals(default(JsonProperty))) return false;
-            current = property.Value;
+            var found = false;
+            foreach (var property in current.EnumerateObject())
+            {
+                if (!string.Equals(property.Name, segment, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                current = property.Value;
+                found = true;
+                break;
+            }
+            if (!found) return false;
         }
 
         value = current.ValueKind == JsonValueKind.String
