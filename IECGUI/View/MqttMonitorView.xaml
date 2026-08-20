@@ -19,27 +19,97 @@
             <Setter Property="Margin" Value="0,2,0,6"/><Setter Property="MinHeight" Value="30"/>
             <Setter Property="Padding" Value="8,4"/>
         </Style>
+        <Style x:Key="LoginPasswordBox" TargetType="PasswordBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#3314263A"/>
+            <Setter Property="BorderBrush" Value="#667ECBE5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,2,0,6"/>
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
     </UserControl.Resources>
     <Grid Margin="18">
         <Grid.RowDefinitions><RowDefinition Height="58"/><RowDefinition Height="*"/></Grid.RowDefinitions>
         <DockPanel Grid.Row="0" LastChildFill="True">
             <Button Content="◄ Back" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Height="42" Width="130" DockPanel.Dock="Left"/>
             <TextBlock Text="{Binding Configuration.DisplayName}" Foreground="White" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="20,0,0,0"/>
-            <Border DockPanel.Dock="Right" CornerRadius="14" Padding="14,6" Background="{Binding IsConnected, Converter={StaticResource BoolToColorConverter}}">
-                <TextBlock Text="{Binding StatusMessage}" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+            <Border DockPanel.Dock="Right" CornerRadius="14" Padding="14,6">
+                <TextBlock Text="{Binding StatusMessage }" Foreground="{Binding IsConnected, Converter={StaticResource BoolToColorConverter}}" FontSize="20"  HorizontalAlignment="Left" Margin="150,0,0,0" VerticalAlignment="Center"/>
             </Border>
         </DockPanel>
 
         <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0">
             <TabControl.Resources>
-                <Style TargetType="TabItem"><Setter Property="Foreground" Value="White"/><Setter Property="FontSize" Value="16"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Padding" Value="20,8"/></Style>
+
+                <!-- SCADA Tab Style -->
+                <Style TargetType="TabItem">
+
+                    <Setter Property="Background" Value="#6614263A"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="#667ECBE5"/>
+                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="Padding" Value="20,8"/>
+
+                    <Setter Property="Template">
+
+                        <Setter.Value>
+
+                            <ControlTemplate TargetType="TabItem">
+
+                                <Border x:Name="Border"
+                      Background="{TemplateBinding Background}"
+                      BorderBrush="{TemplateBinding BorderBrush}"
+                      BorderThickness="{TemplateBinding BorderThickness}"
+                      CornerRadius="5,5,0,0"
+                      Margin="2,2,2,0">
+
+                                    <ContentPresenter
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      ContentSource="Header"
+                      Margin="10,4"/>
+
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border"
+                              Property="Background"
+                              Value="#235C77"/>
+                                    </Trigger>
+
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Border"
+                              Property="Background"
+                              Value="#1A3448"/>
+                                    </Trigger>
+
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border"
+                              Property="Background"
+                              Value="#2B6B85"/>
+                                    </Trigger>
+
+                                </ControlTemplate.Triggers>
+
+                            </ControlTemplate>
+
+                        </Setter.Value>
+
+                    </Setter>
+
+                </Style>
+
             </TabControl.Resources>
             <TabItem Header="Monitor">
                 <Grid Margin="0,12,0,0">
                     <Grid.RowDefinitions><RowDefinition Height="230"/><RowDefinition Height="*"/><RowDefinition Height="150"/></Grid.RowDefinitions>
                     <Border Grid.Row="0" Background="#6614263A" BorderBrush="#667ECBE5" BorderThickness="1" CornerRadius="6" Padding="10">
                         <Grid><Grid.RowDefinitions><RowDefinition Height="34"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-                            <DockPanel><TextBlock Text="LIVE MAPPED PARAMETERS" Foreground="White" FontSize="17" FontWeight="Bold"/><TextBlock Text="Values extracted from configured JSON paths" Foreground="#8CCEDF" FontSize="12" DockPanel.Dock="Right"/></DockPanel>
+                            <DockPanel><TextBlock Text="LIVE MAPPED PARAMETERS" Foreground="White" FontSize="17" FontWeight="Bold"/>
+                                <TextBlock Text="Values extracted from configured JSON paths" Foreground="#8CCEDF" FontSize="15" Margin="50,0,0,0" DockPanel.Dock="Right"/></DockPanel>
                             <DataGrid Grid.Row="1" ItemsSource="{Binding LiveReadings}" AutoGenerateColumns="False" CanUserAddRows="False" Background="Transparent" Foreground="White" RowBackground="#3314263A" AlternatingRowBackground="#44203349" GridLinesVisibility="Horizontal">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Topic" Binding="{Binding Topic}" Width="2*"/>
@@ -82,7 +152,7 @@
                                     <TextBlock Grid.Row="3" Text="Port" Style="{StaticResource MqttLabel}"/><TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Configuration.Port, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MqttTextBox}"/>
                                     <TextBlock Grid.Row="4" Text="Client ID" Style="{StaticResource MqttLabel}"/><TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Configuration.ClientId, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MqttTextBox}"/>
                                     <TextBlock Grid.Row="5" Text="Username" Style="{StaticResource MqttLabel}"/><TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Configuration.Username, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MqttTextBox}"/>
-                                    <TextBlock Grid.Row="6" Text="Password" Style="{StaticResource MqttLabel}"/><PasswordBox Grid.Row="6" Grid.Column="1" Height="30" Margin="0,2,0,6" extensions:PasswordBoxHelper.BindPassword="True" extensions:PasswordBoxHelper.BindablePassword="{Binding Configuration.Password, Mode=TwoWay}"/>
+                                    <TextBlock Grid.Row="6" Text="Password" Style="{StaticResource MqttLabel}"/><PasswordBox Grid.Row="6" Grid.Column="1" Margin="0,2,0,6" extensions:PasswordBoxHelper.BindPassword="True" extensions:PasswordBoxHelper.BindablePassword="{Binding Configuration.Password, Mode=TwoWay}" Style="{StaticResource LoginPasswordBox}"/>
                                     <TextBlock Grid.Row="7" Text="Keep alive (sec)" Style="{StaticResource MqttLabel}"/><TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Configuration.KeepAliveSeconds, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MqttTextBox}"/>
                                     <CheckBox Grid.Row="8" Grid.ColumnSpan="2" Content="Use TLS / SSL" IsChecked="{Binding Configuration.UseTls}" Foreground="White" Margin="0,4"/><CheckBox Grid.Row="9" Grid.ColumnSpan="2" Content="Allow untrusted certificate (development only)" IsChecked="{Binding Configuration.AllowUntrustedCertificates}" Foreground="#FFD36A" Margin="0,4"/>
                                 </Grid>
