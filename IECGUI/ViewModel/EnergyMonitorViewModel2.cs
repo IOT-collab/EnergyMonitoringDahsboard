@@ -18,13 +18,17 @@ namespace IECGUI.ViewModel
     {
         private readonly INavigationService _navigation;
         private readonly DeviceRuntimeService _deviceRuntime;
+        private readonly IMqttClientService _mqttService;
+        private readonly MqttConfigurationService _mqttConfiguration;
         private readonly Dictionary<string, MetersConfig> _meterConfigMap;
+        private readonly HashSet<string> _mqttMeterNames = new(StringComparer.OrdinalIgnoreCase);
         private readonly SafePoller _liveDataTimer;
         private MeterViewModel? _selectedMeter;
         private int _connectedMeterCount;
         private string _meterFilter = string.Empty;
         private string _selectedSection = "All Sections";
         private string _selectedUtilityRoom = "All Utility Rooms";
+        private bool _mqttStarted;
 
         public ObservableCollection<MeterViewModel> Meters { get; }
         public ObservableCollection<string> Sections { get; } = new();
@@ -84,10 +88,14 @@ namespace IECGUI.ViewModel
         public EnergyMonitorViewModel2(
             INavigationService navigation,
             ConfigurationManagerService config,
-            DeviceRuntimeService deviceRuntime)
+            DeviceRuntimeService deviceRuntime,
+            IMqttClientService mqttService,
+            MqttConfigurationService mqttConfiguration)
         {
             _navigation = navigation;
             _deviceRuntime = deviceRuntime;
+            _mqttService = mqttService;
+            _mqttConfiguration = mqttConfiguration;
 
             var configuredMeters = config.Configuration?.Meters?
                 .Where(m => m != null && m.IsEnabled && !string.IsNullOrWhiteSpace(m.MeterName))
@@ -136,24 +144,59 @@ namespace IECGUI.ViewModel
                 PollAsync,
                 ex => Console.WriteLine($"Gauge monitor polling error: {ex.Message}"));
 
+            _mqttService.OnMessageReceived += OnMqttMessageReceived;
             _ = InitializeMetersAsync();
         }
 
         private async Task InitializeMetersAsync()
         {
-            if (_meterConfigMap.Count == 0)
-                return;
-
             try
             {
-                await _deviceRuntime.StartAsync();
+                if (_meterConfigMap.Count > 0)
+                    await _deviceRuntime.StartAsync();
+                await StartMqttAsync();
                 _liveDataTimer.Start();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Gauge meter configuration error: {ex.Message}");
-                foreach (var meter in Meters)
+                foreach (var meter in Meters.Where(m => !_mqttMeterNames.Contains(m.MeterName)))
                     meter.MeterStatus = "Configuration error";
+            }
+        }
+
+        private async Task StartMqttAsync()
+        {
+            var configuration = _mqttConfiguration.Current;
+            var subscriptions = configuration.Subscriptions?
+                .Where(s => s != null && s.IsEnabled && !string.IsNullOrWhiteSpace(s.Topic))
+                .ToList() ?? new List<MqttSubscriptionConfig>();
+            if (subscriptions.Count == 0)
+                return;
+
+            try
+            {
+                await _mqttService.ConnectAsync(
+                    configuration.Host,
+                    configuration.Port,
+                    configuration.Username,
+                    configuration.Password,
+                    configuration.UseTls,
+                    configuration.CertificatePath,
+                    configuration.AllowUntrustedCertificates,
+                    configuration.ClientId,
+                    configuration.KeepAliveSeconds,
+                    configuration.AutoReconnect);
+
+                foreach (var subscription in subscriptions)
+                    await _mqttService.SubscribeAsync(subscription.Topic);
+
+                _mqttStarted = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Gauge MQTT connection error: {ex.Message}");
+                _mqttStarted = false;
             }
         }
 
@@ -164,6 +207,13 @@ namespace IECGUI.ViewModel
 
             foreach (var meter in Meters)
             {
+                if (_mqttMeterNames.Contains(meter.MeterName))
+                {
+                    if (string.Equals(meter.MeterStatus, "Online", StringComparison.OrdinalIgnoreCase))
+                        connected++;
+                    continue;
+                }
+
                 MeterReading? reading = null;
                 if (!string.IsNullOrWhiteSpace(meter.MeterName))
                     readings.TryGetValue(meter.MeterName, out reading);
@@ -186,6 +236,207 @@ namespace IECGUI.ViewModel
 
             ConnectedMeterCount = connected;
             Application.Current?.Dispatcher.BeginInvoke(new Action(RefreshGroupSummaries));
+        }
+
+        private void OnMqttMessageReceived(object? sender, MqttMessageReceivedArgs message)
+        {
+            RunOnUi(() => ProcessMqttMessage(message));
+        }
+
+        private void ProcessMqttMessage(MqttMessageReceivedArgs message)
+        {
+            try
+            {
+                using var document = System.Text.Json.JsonDocument.Parse(message.Payload);
+                if (document.RootElement.ValueKind != System.Text.Json.JsonValueKind.Object)
+                    return;
+
+                var meter = GetOrCreateMqttMeter(message.Topic);
+                var values = ExtractMqttValues(document.RootElement, message.Topic);
+                foreach (var value in values)
+                {
+                    // Keep the configured display name for the parameter list,
+                    // while using the JSON path as the gauge alias. This means
+                    // users can rename a field (for example, "Main Current")
+                    // without losing the automatic Current/Voltage/PF mapping.
+                    ApplyMqttValue(meter, value.DisplayName, value.SourcePath,
+                        value.RawValue, FindMqttUnit(value.SourcePath));
+                }
+
+                meter.MeterStatus = "Online";
+                ConnectedMeterCount = Meters.Count(x => string.Equals(x.MeterStatus, "Online", StringComparison.OrdinalIgnoreCase));
+                RefreshGroupSummaries();
+                FilteredMeters.Refresh();
+            }
+            catch (System.Text.Json.JsonException)
+            {
+                // Non-JSON MQTT messages remain available in the MQTT monitor,
+                // but cannot be represented by the numeric gauges.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Gauge MQTT message error: {ex.Message}");
+            }
+        }
+
+        private MeterViewModel GetOrCreateMqttMeter(string topic)
+        {
+            var existingName = _mqttMeterNames.FirstOrDefault(name =>
+                string.Equals(name, MqttMeterName(topic), StringComparison.OrdinalIgnoreCase));
+            if (existingName != null)
+                return Meters.First(m => string.Equals(m.MeterName, existingName, StringComparison.OrdinalIgnoreCase));
+
+            var meter = new MeterViewModel
+            {
+                MeterName = MqttMeterName(topic),
+                Section = "MQTT",
+                UtilityRoom = string.IsNullOrWhiteSpace(_mqttConfiguration.Current.DisplayName)
+                    ? "MQTT Broker"
+                    : _mqttConfiguration.Current.DisplayName,
+                MeterStatus = "Waiting"
+            };
+            _mqttMeterNames.Add(meter.MeterName);
+            Meters.Add(meter);
+            if (!Sections.Contains(meter.Section)) Sections.Add(meter.Section);
+            RefreshUtilityRooms();
+            OnPropertyChanged(nameof(MeterCount));
+            if (SelectedMeter == null)
+                SelectedMeter = meter;
+            return meter;
+        }
+
+        private string MqttMeterName(string topic)
+        {
+            var displayName = _mqttConfiguration.Current.DisplayName;
+            var suffix = topic.Split('/', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+            if (string.IsNullOrWhiteSpace(suffix)) suffix = "Meter";
+            return string.IsNullOrWhiteSpace(displayName) ? $"MQTT / {suffix}" : $"{displayName} / {suffix}";
+        }
+
+        private List<(string DisplayName, string SourcePath, string RawValue)> ExtractMqttValues(
+            System.Text.Json.JsonElement root, string topic)
+        {
+            var values = new List<(string DisplayName, string SourcePath, string RawValue)>();
+            var mappings = _mqttConfiguration.Current.FieldMappings ?? new List<MqttFieldMapping>();
+            foreach (var mapping in mappings.Where(m => m != null && m.IsEnabled &&
+                         (string.IsNullOrWhiteSpace(m.TopicFilter) || TopicMatches(m.TopicFilter, topic))))
+            {
+                if (TryGetJsonValue(root, mapping.JsonPath, out var value))
+                    values.Add((MappingName(mapping), mapping.JsonPath, value));
+            }
+
+            // If no mappings have been configured yet, use every top-level field.
+            if (values.Count == 0)
+            {
+                foreach (var property in root.EnumerateObject())
+                    values.Add((property.Name, property.Name, property.Value.ToString()));
+            }
+            return values;
+        }
+
+        private static string FindMqttUnit(string key)
+        {
+            var normalized = Normalize(key);
+            if (normalized.Contains("voltage")) return "V";
+            if (normalized.Contains("current")) return "A";
+            if (normalized.Contains("frequency")) return "Hz";
+            if (normalized.Contains("powerfactor") || normalized.Contains("pf")) return "PF";
+            if (normalized.Contains("energykwh")) return "kWh";
+            if (normalized.Contains("power")) return "kW";
+            return string.Empty;
+        }
+
+        private static void ApplyMqttValue(
+            MeterViewModel meter,
+            string displayName,
+            string sourcePath,
+            string rawValue,
+            string unit)
+        {
+            if (!double.TryParse(rawValue, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out var parsed) ||
+                double.IsNaN(parsed) || double.IsInfinity(parsed))
+                return;
+
+            var value = (float)parsed;
+            var parameterName = string.IsNullOrWhiteSpace(displayName) ? sourcePath : displayName;
+            var parameter = meter.Parameters.FirstOrDefault(p =>
+                string.Equals(p.ParameterName, parameterName, StringComparison.OrdinalIgnoreCase));
+            if (parameter == null)
+            {
+                parameter = new MeterParameterViewModel { ParameterName = parameterName, Unit = unit };
+                meter.Parameters.Add(parameter);
+            }
+            parameter.Value = parsed;
+
+            switch (Normalize(sourcePath))
+            {
+                case "frequency": meter.Frequency = value; break;
+                case "currentiaverage":
+                case "currentaverage":
+                case "currentavg":
+                case "currenta": meter.CurrentAvg = value; break;
+                case "voltagevphasenutral":
+                case "voltagelnavg":
+                case "voltageavg": meter.VoltageL_N_Avg = value; break;
+                case "powerptot":
+                case "totalactivepower":
+                case "activepower": meter.TotalActivePower = value; break;
+                case "powerqtot":
+                case "totalreactivepower":
+                case "reactivepower": meter.TotalReactivePower = value; break;
+                case "powerstot":
+                case "totalapparentpower":
+                case "apparentpower": meter.TotalApparentPower = value; break;
+                case "pfpfsystem":
+                case "powerfactor":
+                case "totalpowerfactor": meter.TotalPowerFactor = Math.Clamp(value, 0f, 1f); break;
+            }
+        }
+
+        private static bool TryGetJsonValue(System.Text.Json.JsonElement root, string path, out string value)
+        {
+            value = string.Empty;
+            if (string.IsNullOrWhiteSpace(path)) return false;
+            var current = root;
+            foreach (var segment in path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                if (current.ValueKind != System.Text.Json.JsonValueKind.Object) return false;
+                var found = false;
+                foreach (var property in current.EnumerateObject())
+                {
+                    if (!string.Equals(property.Name, segment, StringComparison.OrdinalIgnoreCase)) continue;
+                    current = property.Value;
+                    found = true;
+                    break;
+                }
+                if (!found) return false;
+            }
+            value = current.ToString();
+            return true;
+        }
+
+        private static bool TopicMatches(string filter, string topic)
+        {
+            var filterParts = filter.Split('/');
+            var topicParts = topic.Split('/');
+            for (var i = 0; i < filterParts.Length; i++)
+            {
+                if (filterParts[i] == "#") return true;
+                if (i >= topicParts.Length) return false;
+                if (filterParts[i] != "+" && !string.Equals(filterParts[i], topicParts[i], StringComparison.OrdinalIgnoreCase)) return false;
+            }
+            return filterParts.Length == topicParts.Length;
+        }
+
+        private static string MappingName(MqttFieldMapping mapping) =>
+            string.IsNullOrWhiteSpace(mapping.DisplayName) ? mapping.JsonPath : mapping.DisplayName;
+
+        private static void RunOnUi(Action action)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess()) action();
+            else dispatcher.BeginInvoke(action);
         }
 
         private void RefreshUtilityRooms()
@@ -271,7 +522,18 @@ namespace IECGUI.ViewModel
             _navigation.NavigateTo<HomePageViewModel>();
         }
 
-        public void Dispose() => _liveDataTimer.Dispose();
+        public void Dispose()
+        {
+            _mqttService.OnMessageReceived -= OnMqttMessageReceived;
+            _liveDataTimer.Dispose();
+
+            // Gauge and MQTT Monitor share the singleton client. Disconnecting
+            // here prevents a closed Gauge page from continuing to receive data;
+            // the MQTT Monitor reconnects when it is opened again.
+            if (_mqttStarted)
+                _ = _mqttService.DisconnectAsync();
+            _mqttStarted = false;
+        }
     }
 
     public class DeviceGroupSummary
