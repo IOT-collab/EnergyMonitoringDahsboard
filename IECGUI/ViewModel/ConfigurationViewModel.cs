@@ -239,11 +239,31 @@ namespace IECGUI.ViewModel
 
         private void DeleteMeter()
         {
-            if (SelectedMeter == null)
+            // WPF clears SelectedMeter as soon as the selected item is removed
+            // from the bound collection. Capture the object/name first; reading
+            // SelectedMeter after Meters.Remove can therefore dereference null.
+            var meterToDelete = SelectedMeter;
+            if (meterToDelete == null)
                 return;
 
-            Meters.Remove(SelectedMeter);
-            DeviceNames.Remove(SelectedMeter.MeterName);
+            var meterName = meterToDelete.MeterName;
+            var selectedIndex = Meters.IndexOf(meterToDelete);
+
+            // Clear the selection before removal so the view never keeps a
+            // reference to an item that no longer exists in ItemsSource.
+            SelectedMeter = null;
+            if (!Meters.Remove(meterToDelete))
+                return;
+
+            if (!string.IsNullOrWhiteSpace(meterName))
+                DeviceNames.Remove(meterName);
+
+            SelectedRegister = null;
+            OnPropertyChanged(nameof(Registers));
+
+            // Keep the editor usable by selecting the nearest remaining meter.
+            if (Meters.Count > 0)
+                SelectedMeter = Meters[Math.Min(selectedIndex, Meters.Count - 1)];
         }
 
         private async void Save()
@@ -299,10 +319,13 @@ namespace IECGUI.ViewModel
 
         private void DeleteRegister()
         {
-            if (SelectedRegister == null)
+            var registerToDelete = SelectedRegister;
+            var meter = SelectedMeter;
+            if (registerToDelete == null || meter == null)
                 return;
 
-            SelectedMeter.Registers.Remove(SelectedRegister);
+            meter.Registers.Remove(registerToDelete);
+            SelectedRegister = null;
         }
 
         // Load default register mapping into the selected meter (or all meters if nothing selected)
