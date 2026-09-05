@@ -89,6 +89,14 @@ namespace IECGUI.ViewModel
             new ObservableCollection<ProtocolsType>(
                 Enum.GetValues(typeof(ProtocolsType)).Cast<ProtocolsType>());
 
+        public ObservableCollection<string> OpcSecurityPolicies { get; } = new()
+        {
+            "None",
+            "Basic256Sha256",
+            "Aes128_Sha256_RsaOaep",
+            "Aes256_Sha256_RsaPss"
+        };
+
         // New: expose enum values for WordOrder so the ComboBox can bind
         public ObservableCollection<RegisterWordOrder> WordOrder { get; } =
             new ObservableCollection<RegisterWordOrder>(
@@ -228,7 +236,12 @@ namespace IECGUI.ViewModel
                     StopBits = 1,
                     IpAddress = "127.0.0.1",
                     TcpPort = 502,
-                    WordOrder = RegisterWordOrder.LowHigh
+                    WordOrder = RegisterWordOrder.LowHigh,
+                    OpcEndpointUrl = "opc.tcp://localhost:4840",
+                    OpcSecurityPolicy = "None",
+                    OpcUseSecurity = false,
+                    OpcServerName = "",
+                    OpcHost = "localhost"
                 }
             };
 

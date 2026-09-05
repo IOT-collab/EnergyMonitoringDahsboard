@@ -10,6 +10,9 @@
     <UserControl.Resources>
         <conv:ProtocolToVisibilityConverter x:Key="IsTcp" TargetProtocol="ModbusTcp"/>
         <conv:ProtocolToVisibilityConverter x:Key="IsRtu" TargetProtocol="ModbusRtu"/>
+        <conv:ProtocolToVisibilityConverter x:Key="IsOpcUa" TargetProtocol="OpcUa"/>
+        <conv:ProtocolToVisibilityConverter x:Key="IsOpcDa" TargetProtocol="OpcDa"/>
+        <conv:ProtocolSetToVisibilityConverter x:Key="IsModbus" Protocols="ModbusRtu,ModbusTcp"/>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
        
     </UserControl.Resources>
@@ -267,18 +270,60 @@
                                              Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E" Width="60" FontSize="18" />
                                 </StackPanel>
 
-                                <TextBlock Margin="0,10,0,0" Text="Slave ID" FontSize="20" Foreground="White"/>
-                                <ComboBox ItemsSource="{Binding DataContext.SlaveIds, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                          SelectedItem="{Binding SelectedMeter.Communication.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"
-                                          Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" Background="#40456B" Foreground="Black" BorderBrush="#6A7AB5"/>
+                                <!-- OPC UA connection settings. UA mappings use a NodeId,
+                                     not a Modbus register number/function code. -->
+                                <StackPanel Margin="0,10,0,0"
+                                            Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsOpcUa}}">
+                                    <TextBlock Text="OPC UA endpoint URL" FontSize="20" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.OpcEndpointUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"
+                                             ToolTip="Example: opc.tcp://server:4840"/>
+                                    <TextBlock Text="Security policy" Margin="0,8,0,0" FontSize="18" Foreground="White"/>
+                                    <ComboBox ItemsSource="{Binding DataContext.OpcSecurityPolicies, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              SelectedItem="{Binding SelectedMeter.Communication.OpcSecurityPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource GlassComboBox}" Margin="0,5,0,0" FontSize="18"/>
+                                    <CheckBox Content="Use secure OPC UA session" IsChecked="{Binding SelectedMeter.Communication.OpcUseSecurity, Mode=TwoWay}"
+                                              Margin="2,8,0,0" FontSize="18" Foreground="White"/>
+                                    <TextBlock Text="Username (optional)" Margin="0,8,0,0" FontSize="18" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.OpcUsername, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"/>
+                                    <TextBlock Text="Password (optional)" Margin="0,8,0,0" FontSize="18" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.OpcPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"/>
+                                    <TextBlock Text="Client certificate path (optional)" Margin="0,8,0,0" FontSize="18" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.OpcCertificatePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"/>
+                                </StackPanel>
+
+                                <!-- OPC DA connection settings. DA is Windows COM/DCOM;
+                                     ServerName is the registered OPC Automation ProgID. -->
+                                <StackPanel Margin="0,10,0,0"
+                                            Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsOpcDa}}">
+                                    <TextBlock Text="OPC DA server ProgID" FontSize="20" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.OpcServerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"
+                                             ToolTip="Example: Vendor.OPC.Server.1"/>
+                                    <TextBlock Text="OPC DA host (blank = local PC)" Margin="0,8,0,0" FontSize="18" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.OpcHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"/>
+                                    <TextBlock Text="OPC DA credentials are supplied by the installed server/COM security configuration."
+                                               TextWrapping="Wrap" Margin="0,8,0,0" FontSize="14" Foreground="#BCEFFF"/>
+                                </StackPanel>
+
+                                <StackPanel Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsModbus}}">
+                                    <TextBlock Margin="0,10,0,0" Text="Slave ID" FontSize="20" Foreground="White"/>
+                                    <ComboBox ItemsSource="{Binding DataContext.SlaveIds, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              SelectedItem="{Binding SelectedMeter.Communication.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"
+                                              Margin="0,10,0,0" FontSize="20" HorizontalContentAlignment="Center" Background="#40456B" Foreground="Black" BorderBrush="#6A7AB5"/>
 
 
-                                <StackPanel Orientation="Horizontal" Margin="4">
-                                    <TextBlock VerticalAlignment="Center" Margin="0,0,24,0">Word order</TextBlock>
+                                    <StackPanel Orientation="Horizontal" Margin="4">
+                                        <TextBlock VerticalAlignment="Center" Margin="0,0,24,0">Word order</TextBlock>
 
-                                    <!-- Per-meter default selection -->
-                                    <ComboBox Width="160" ItemsSource="{Binding DataContext.WordOrder, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                     SelectedItem="{Binding SelectedMeter.Communication.WordOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"/>
+                                        <!-- Per-meter default selection -->
+                                        <ComboBox Width="160" ItemsSource="{Binding DataContext.WordOrder, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         SelectedItem="{Binding SelectedMeter.Communication.WordOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBox}"/>
+                                    </StackPanel>
                                 </StackPanel>
 
                                 <Button Margin="0,10,0,0"  Height="50" Width="250"  Style="{StaticResource GlassButton.Cyan }"  Content="💾 Save Configuration" Command="{Binding SaveCommand}" FontSize="20"/>
@@ -359,6 +404,7 @@
 
                     <DataGrid Grid.Row="1"
                               Margin="0,10,0,0"
+                              Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsModbus}}"
 
                               ItemsSource="{Binding SelectedMeter.Registers}"
 
@@ -407,7 +453,7 @@
                                     Width="250"
                                     Binding="{Binding ParameterName}"/>
 
-                            <DataGridTextColumn Header="Register"
+                            <DataGridTextColumn Header="Modbus register"
                                     Width="120"
                                     Binding="{Binding RegisterAddress}"/>
 
@@ -449,6 +495,69 @@
 
                         </DataGrid.Columns>
 
+                    </DataGrid>
+
+                    <!-- OPC mapping has a different shape: a NodeId (UA) or
+                         ItemId (DA) is the address; Modbus function code and
+                         register number do not apply. -->
+                    <DataGrid Grid.Row="1" Margin="0,10,0,0"
+                              Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsOpcUa}}"
+                              ItemsSource="{Binding SelectedMeter.Registers}"
+                              SelectedItem="{Binding SelectedRegister}"
+                              AutoGenerateColumns="False" CanUserAddRows="False"
+                              HeadersVisibility="Column" RowHeight="32"
+                              Background="#6614263A" Foreground="White"
+                              RowBackground="#4414263A" AlternatingRowBackground="#55203349"
+                              GridLinesVisibility="None" BorderThickness="0" FontSize="16">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#8830536B"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Height" Value="40"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Parameter name" Width="250" Binding="{Binding ParameterName}"/>
+                            <DataGridTextColumn Header="OPC UA NodeId" Width="360" Binding="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTemplateColumn Header="Data type" Width="140"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+                                <ComboBox ItemsSource="{Binding DataContext.DataTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}" SelectedItem="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBoxAlt}"/>
+                            </DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Unit" Width="90" Binding="{Binding Unit}"/>
+                            <DataGridTextColumn Header="Scale" Width="90" Binding="{Binding ScaleFactor}"/>
+                            <DataGridTextColumn Header="Length" Width="80" Binding="{Binding Length}"/>
+                            <DataGridCheckBoxColumn Header="Enabled" Width="80" Binding="{Binding IsEnabled}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid Grid.Row="1" Margin="0,10,0,0"
+                              Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsOpcDa}}"
+                              ItemsSource="{Binding SelectedMeter.Registers}"
+                              SelectedItem="{Binding SelectedRegister}"
+                              AutoGenerateColumns="False" CanUserAddRows="False"
+                              HeadersVisibility="Column" RowHeight="32"
+                              Background="#6614263A" Foreground="White"
+                              RowBackground="#4414263A" AlternatingRowBackground="#55203349"
+                              GridLinesVisibility="None" BorderThickness="0" FontSize="16">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#8830536B"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Height" Value="40"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Parameter name" Width="250" Binding="{Binding ParameterName}"/>
+                            <DataGridTextColumn Header="OPC DA ItemId" Width="360" Binding="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTemplateColumn Header="Data type" Width="140"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+                                <ComboBox ItemsSource="{Binding DataContext.DataTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}" SelectedItem="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBoxAlt}"/>
+                            </DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Unit" Width="90" Binding="{Binding Unit}"/>
+                            <DataGridTextColumn Header="Scale" Width="90" Binding="{Binding ScaleFactor}"/>
+                            <DataGridTextColumn Header="Length" Width="80" Binding="{Binding Length}"/>
+                            <DataGridCheckBoxColumn Header="Enabled" Width="80" Binding="{Binding IsEnabled}"/>
+                        </DataGrid.Columns>
                     </DataGrid>
 
                 </Grid>

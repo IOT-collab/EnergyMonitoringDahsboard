@@ -4,6 +4,8 @@
     {
       "MeterId": 1,
       "MeterName": "DG INCOMMER 1",
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
       "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
@@ -15,12 +17,21 @@
         "SlaveId": 4,
         "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
-        "TcpPort": 502
+        "TcpPort": 502,
+        "OpcEndpointUrl": null,
+        "OpcSecurityPolicy": "None",
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": null,
+        "OpcHost": null
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -31,6 +42,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -41,6 +53,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -51,6 +64,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -61,6 +75,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -71,6 +86,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -81,6 +97,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -91,6 +108,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -101,6 +119,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
@@ -111,6 +130,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
@@ -121,6 +141,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
@@ -131,6 +152,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
@@ -141,6 +163,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
@@ -153,6 +176,8 @@
     {
       "MeterId": 2,
       "MeterName": "DG INCOMMER 2",
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
       "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
@@ -164,12 +189,21 @@
         "SlaveId": 3,
         "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
-        "TcpPort": 502
+        "TcpPort": 502,
+        "OpcEndpointUrl": null,
+        "OpcSecurityPolicy": "None",
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": null,
+        "OpcHost": null
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -180,6 +214,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -190,6 +225,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -200,6 +236,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -210,6 +247,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -220,6 +258,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -230,6 +269,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -240,6 +280,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -250,6 +291,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
@@ -260,6 +302,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
@@ -270,6 +313,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
@@ -280,6 +324,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
@@ -290,6 +335,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
@@ -302,6 +348,8 @@
     {
       "MeterId": 3,
       "MeterName": "DG INCOMMER 3",
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
       "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
@@ -313,12 +361,21 @@
         "SlaveId": 2,
         "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
-        "TcpPort": 502
+        "TcpPort": 502,
+        "OpcEndpointUrl": null,
+        "OpcSecurityPolicy": "None",
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": null,
+        "OpcHost": null
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -329,6 +386,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -339,6 +397,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -349,6 +408,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -359,6 +419,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -369,6 +430,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -379,6 +441,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -389,6 +452,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -399,6 +463,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
@@ -409,6 +474,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
@@ -419,6 +485,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
@@ -429,6 +496,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
@@ -439,6 +507,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
@@ -451,6 +520,8 @@
     {
       "MeterId": 4,
       "MeterName": "DG INCOMMER 4",
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
       "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusRtu",
@@ -462,12 +533,21 @@
         "SlaveId": 1,
         "WordOrder": "HighLow",
         "IpAddress": "127.0.0.1",
-        "TcpPort": 502
+        "TcpPort": 502,
+        "OpcEndpointUrl": null,
+        "OpcSecurityPolicy": "None",
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": null,
+        "OpcHost": null
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -478,6 +558,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -488,6 +569,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -498,6 +580,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -508,6 +591,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -518,6 +602,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -528,6 +613,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -538,6 +624,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -548,6 +635,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
@@ -558,6 +646,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
@@ -568,6 +657,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
@@ -578,6 +668,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
@@ -588,6 +679,7 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
@@ -598,6 +690,7 @@
         {
           "ParameterName": "VoltageA L-L ",
           "RegisterAddress": 3028,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
@@ -608,6 +701,7 @@
         {
           "ParameterName": "VoltageB L-L ",
           "RegisterAddress": 3030,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
@@ -618,6 +712,7 @@
         {
           "ParameterName": "VoltageC L-L ",
           "RegisterAddress": 3032,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
@@ -628,6 +723,7 @@
         {
           "ParameterName": "Voltage L-L Agv",
           "RegisterAddress": 3036,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kV",
@@ -640,7 +736,9 @@
     {
       "MeterId": 5,
       "MeterName": "FX5S",
-      "IsEnabled": true,
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "ModbusTcp",
         "ComPort": "COM1",
@@ -651,12 +749,21 @@
         "SlaveId": 1,
         "WordOrder": "LowHigh",
         "IpAddress": "192.168.3.5",
-        "TcpPort": 502
+        "TcpPort": 502,
+        "OpcEndpointUrl": null,
+        "OpcSecurityPolicy": null,
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": null,
+        "OpcHost": null
       },
       "Registers": [
         {
           "ParameterName": "Voltage A-N",
           "RegisterAddress": 3020,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -667,6 +774,7 @@
         {
           "ParameterName": "Voltage B-N",
           "RegisterAddress": 3022,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -677,6 +785,7 @@
         {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 3024,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -687,6 +796,7 @@
         {
           "ParameterName": "Voltage L-N Avg",
           "RegisterAddress": 3026,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "V",
@@ -697,6 +807,7 @@
         {
           "ParameterName": "Current A",
           "RegisterAddress": 3000,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -707,6 +818,7 @@
         {
           "ParameterName": "Current B",
           "RegisterAddress": 3002,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -717,6 +829,7 @@
         {
           "ParameterName": "Current C",
           "RegisterAddress": 3004,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -727,6 +840,7 @@
         {
           "ParameterName": "Current Avg",
           "RegisterAddress": 3010,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "A",
@@ -737,6 +851,7 @@
         {
           "ParameterName": "Total Active Power",
           "RegisterAddress": 3060,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kW",
@@ -747,6 +862,7 @@
         {
           "ParameterName": "Total Reactive Power",
           "RegisterAddress": 3068,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVAR",
@@ -757,6 +873,7 @@
         {
           "ParameterName": "Total Apparent Power",
           "RegisterAddress": 3076,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "kVA",
@@ -767,6 +884,7 @@
         {
           "ParameterName": "Frequency",
           "RegisterAddress": 3110,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "Hz",
@@ -777,12 +895,53 @@
         {
           "ParameterName": "Power Factor",
           "RegisterAddress": 3084,
+          "Address": null,
           "DataArea": "HoldingRegister",
           "IsEnabled": true,
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
           "DataType": "Float"
+        }
+      ]
+    },
+    {
+      "MeterId": 6,
+      "MeterName": "PyOPC Test",
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
+      "IsEnabled": true,
+      "Communication": {
+        "Protocol": "OpcUa",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 5,
+        "WordOrder": "LowHigh",
+        "IpAddress": "127.0.0.1",
+        "TcpPort": 502,
+        "OpcEndpointUrl": "opc.tcp://localhost:4840/freeopcua/server/",
+        "OpcSecurityPolicy": "None",
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": "",
+        "OpcHost": "localhost"
+      },
+      "Registers": [
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 3020,
+          "Address": "ns=2;i=2",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Double"
         }
       ]
     }
@@ -981,7 +1140,18 @@
         "Username": "Rishabh",
         "Password": "1234",
         "Role": "Operator",
-        "IsEnabled": false
+        "IsEnabled": false,
+        "ScreenPermissions": {
+          "SldView": true,
+          "EnergyMonitor": true,
+          "GaugeView": true,
+          "DeviceConfiguration": false,
+          "RelayMonitor": true,
+          "RemoteView": true,
+          "Reports": true,
+          "Alarms": true,
+          "UserConfiguration": false
+        }
       }
     ],
     "DefaultRole": "Operator"

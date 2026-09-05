@@ -85,5 +85,21 @@ namespace IEC.Shared.Models
 
         public string? IpAddress { get; set; }
         public int TcpPort { get; set; } = 502;
+
+        // OPC UA connection settings. EndpointUrl is normally an opc.tcp://
+        // URL. The fields are intentionally strings so they round-trip cleanly
+        // through the existing ProjectConfig.json format.
+        public string? OpcEndpointUrl { get; set; }
+        public string? OpcSecurityPolicy { get; set; } = "None";
+        public bool OpcUseSecurity { get; set; }
+        public string? OpcUsername { get; set; }
+        public string? OpcPassword { get; set; }
+        public string? OpcCertificatePath { get; set; }
+
+        // OPC DA settings. ServerName is the local/remote OPC Automation
+        // ProgID (for example, Vendor.Server.1); OpcHost may be a remote
+        // computer name or remain blank for the local machine.
+        public string? OpcServerName { get; set; }
+        public string? OpcHost { get; set; }
     }
 }

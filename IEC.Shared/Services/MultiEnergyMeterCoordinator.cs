@@ -11,11 +11,19 @@ namespace IEC.Shared.Services
     {
         private readonly MultiEnergyMeterRtuService _rtuService;
         private readonly MultiEnergyMeterTcpService _tcpService;
+        private readonly IOpcMeterService _opcUaService;
+        private readonly IOpcMeterService _opcDaService;
 
-        public MultiEnergyMeterCoordinator(MultiEnergyMeterRtuService rtuService, MultiEnergyMeterTcpService tcpService)
+        public MultiEnergyMeterCoordinator(
+            MultiEnergyMeterRtuService rtuService,
+            MultiEnergyMeterTcpService tcpService,
+            IOpcMeterService? opcUaService = null,
+            IOpcMeterService? opcDaService = null)
         {
             _rtuService = rtuService ?? throw new ArgumentNullException(nameof(rtuService));
             _tcpService = tcpService ?? throw new ArgumentNullException(nameof(tcpService));
+            _opcUaService = opcUaService ?? new OpcUaDeviceService();
+            _opcDaService = opcDaService ?? new OpcDaDeviceService();
         }
 
         // Accepts mixed meters; split and forward to underlying services
@@ -25,6 +33,8 @@ namespace IEC.Shared.Services
             {
                 await _rtuService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
                 await _tcpService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
+                await _opcUaService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
+                await _opcDaService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
                 return;
             }
 
@@ -32,12 +42,16 @@ namespace IEC.Shared.Services
 
             var rtuMeters = list.Where(m => (m.Communication?.Protocol ?? ProtocolsType.ModbusRtu) == ProtocolsType.ModbusRtu);
             var tcpMeters = list.Where(m => (m.Communication?.Protocol ?? ProtocolsType.ModbusRtu) == ProtocolsType.ModbusTcp);
+            var uaMeters = list.Where(m => m.Communication?.Protocol == ProtocolsType.OpcUa);
+            var daMeters = list.Where(m => m.Communication?.Protocol == ProtocolsType.OpcDa);
 
             // Configuration must complete before the caller starts polling.
             // Previously these tasks were fire-and-forget, so ReadAllAsync could
             // run while the RTU service had just cleared its meter dictionaries.
             await _rtuService.Configure(rtuMeters).ConfigureAwait(false);
             await _tcpService.Configure(tcpMeters).ConfigureAwait(false);
+            await _opcUaService.Configure(uaMeters).ConfigureAwait(false);
+            await _opcDaService.Configure(daMeters).ConfigureAwait(false);
         }
 
         public async Task<Dictionary<string, MeterReading>> ReadAllAsync()
@@ -72,6 +86,28 @@ namespace IEC.Shared.Services
                 Console.WriteLine($"TCP ReadAllAsync error: {ex.Message}");
             }
 
+            try
+            {
+                var ua = await _opcUaService.ReadAllAsync().ConfigureAwait(false);
+                if (ua != null)
+                    foreach (var kv in ua) results[kv.Key] = kv.Value;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"OPC UA ReadAllAsync error: {ex.Message}");
+            }
+
+            try
+            {
+                var da = await _opcDaService.ReadAllAsync().ConfigureAwait(false);
+                if (da != null)
+                    foreach (var kv in da) results[kv.Key] = kv.Value;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"OPC DA ReadAllAsync error: {ex.Message}");
+            }
+
             return results;
         }
 
@@ -86,6 +122,12 @@ namespace IEC.Shared.Services
             if (_tcpService.HasMeter(meterName))
                 return _tcpService.ReadOneAsync(meterName);
 
+            if (_opcUaService.HasMeter(meterName))
+                return _opcUaService.ReadOneAsync(meterName);
+
+            if (_opcDaService.HasMeter(meterName))
+                return _opcDaService.ReadOneAsync(meterName);
+
             throw new InvalidOperationException($"Meter '{meterName}' is not configured in any transport.");
         }
 
@@ -93,12 +135,16 @@ namespace IEC.Shared.Services
         {
             try { await _rtuService.DisconnectAll().ConfigureAwait(false); } catch { }
             try { await _tcpService.DisconnectAll().ConfigureAwait(false); } catch { }
+            try { await _opcUaService.DisconnectAll().ConfigureAwait(false); } catch { }
+            try { await _opcDaService.DisconnectAll().ConfigureAwait(false); } catch { }
         }
 
         public void Dispose()
         {
             try { _rtuService.Dispose(); } catch { }
             try { _tcpService.Dispose(); } catch { }
+            try { _opcUaService.Dispose(); } catch { }
+            try { _opcDaService.Dispose(); } catch { }
         }
 
         // New: presence check, required by IMultiEnergyMeterService
@@ -121,22 +167,29 @@ namespace IEC.Shared.Services
             }
             catch { /* ignore */ }
 
+            try
+            {
+                if (_opcUaService.HasMeter(meterName) || _opcDaService.HasMeter(meterName))
+                    return true;
+            }
+            catch { /* ignore */ }
+
             return false;
         }
 
         public Task WriteCoilAsync(string meterName, ushort address, bool value) =>
             _rtuService.HasMeter(meterName) ? _rtuService.WriteCoilAsync(meterName, address, value) :
             _tcpService.HasMeter(meterName) ? _tcpService.WriteCoilAsync(meterName, address, value) :
-            throw new InvalidOperationException($"Device '{meterName}' is not configured.");
+            throw new InvalidOperationException($"Device '{meterName}' is not configured for a Modbus write.");
 
         public Task WriteRegisterAsync(string meterName, ushort address, ushort value) =>
             _rtuService.HasMeter(meterName) ? _rtuService.WriteRegisterAsync(meterName, address, value) :
             _tcpService.HasMeter(meterName) ? _tcpService.WriteRegisterAsync(meterName, address, value) :
-            throw new InvalidOperationException($"Device '{meterName}' is not configured.");
+            throw new InvalidOperationException($"Device '{meterName}' is not configured for a Modbus write.");
 
         public Task<bool> ReadBooleanAsync(string meterName, ModbusDataArea area, ushort address) =>
             _rtuService.HasMeter(meterName) ? _rtuService.ReadBooleanAsync(meterName, area, address) :
             _tcpService.HasMeter(meterName) ? _tcpService.ReadBooleanAsync(meterName, area, address) :
-            throw new InvalidOperationException($"Device '{meterName}' is not configured.");
+            throw new InvalidOperationException($"Device '{meterName}' is not configured for a Modbus read.");
     }
 }
