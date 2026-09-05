@@ -36,15 +36,15 @@
                     Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
                     DockPanel.Dock="Left" Margin="10,0,0,0" Style="{StaticResource GlassButton.Cyan}"
                     Foreground="White" />
-            <TextBlock Text="IEC 61850 — Protection Relay Monitor"
-                       Foreground="White" FontSize="22"
+            <TextBlock Text="Protection Relay Monitor"
+                       Foreground="White" FontSize="28"
                        FontWeight="Bold" 
-                       VerticalAlignment="Center" Margin="510,0,100,0"/>
+                       VerticalAlignment="Center" Margin="100,0,100,0"/>
             <Button Content="Connect" Command="{Binding ConnectCommand}"
-                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Green}"
+                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"  Margin="300,0,0,0" Style="{StaticResource GlassButton.Green}"
                     Foreground="White" />
             <Button Content="Disconnect" Command="{Binding DisconnectCommand}"
-                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Red}"
+                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  Margin="-300,0,0,0" Style="{StaticResource GlassButton.Red}"
                     Foreground="White" />
 
         </DockPanel>
