@@ -191,7 +191,7 @@
         "IpAddress": "127.0.0.1",
         "TcpPort": 502,
         "OpcEndpointUrl": null,
-        "OpcSecurityPolicy": "None",
+        "OpcSecurityPolicy": null,
         "OpcUseSecurity": false,
         "OpcUsername": null,
         "OpcPassword": null,
@@ -922,8 +922,8 @@
         "WordOrder": "LowHigh",
         "IpAddress": "127.0.0.1",
         "TcpPort": 502,
-        "OpcEndpointUrl": "opc.tcp://localhost:4840/freeopcua/server/",
-        "OpcSecurityPolicy": "None",
+        "OpcEndpointUrl": "opc.tcp://192.168.1.29:4840/freeopcua/server/",
+        "OpcSecurityPolicy": null,
         "OpcUseSecurity": false,
         "OpcUsername": null,
         "OpcPassword": null,
@@ -941,7 +941,139 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Double"
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 3022,
+          "Address": "ns=2;i=3",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 3024,
+          "Address": "ns=2;i=4",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Voltage L-N Avg",
+          "RegisterAddress": 3026,
+          "Address": "ns=2;i=5",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current A",
+          "RegisterAddress": 3000,
+          "Address": "ns=2;i=6",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current B",
+          "RegisterAddress": 3002,
+          "Address": "ns=2;i=7",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current C",
+          "RegisterAddress": 3004,
+          "Address": "ns=2;i=8",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Current Avg",
+          "RegisterAddress": 3010,
+          "Address": "ns=2;i=9",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "A",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Active Power",
+          "RegisterAddress": 3060,
+          "Address": "ns=2;i=10",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kW",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Reactive Power",
+          "RegisterAddress": 3068,
+          "Address": "ns=2;i=11",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kVAR",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Total Apparent Power",
+          "RegisterAddress": 3076,
+          "Address": "ns=2;i=12",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "kVA",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Frequency",
+          "RegisterAddress": 3110,
+          "Address": "ns=2;i=13",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "Hz",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
+        },
+        {
+          "ParameterName": "Power Factor",
+          "RegisterAddress": 3084,
+          "Address": "ns=2;i=14",
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float"
         }
       ]
     }
@@ -1132,6 +1264,36 @@
       "Severity": "Critical",
       "IsEnabled": true,
       "ExpressionText": "FX5S / Voltage L-N Avg \u003E= 180"
+    },
+    {
+      "Id": "7fe498f2775c4e8a8cb65e736cd1f51a",
+      "AlarmName": "High Voltage Detected",
+      "RuleKind": "Numeric",
+      "MeterName": "PyOPC Test",
+      "ParameterName": "Voltage L-N Avg",
+      "BreakerKey": "Incomer1",
+      "Operator": "GreaterThanOrEqual",
+      "SetValue": 270,
+      "ExpectedBoolean": true,
+      "DelaySeconds": 3,
+      "Severity": "Warning",
+      "IsEnabled": true,
+      "ExpressionText": "PyOPC Test / Voltage L-N Avg \u003E= 270"
+    },
+    {
+      "Id": "da390382ae184095b33af1a9b7d817c1",
+      "AlarmName": "Low Power Pactor",
+      "RuleKind": "Numeric",
+      "MeterName": "PyOPC Test",
+      "ParameterName": "Power Factor",
+      "BreakerKey": "Incomer1",
+      "Operator": "LessThan",
+      "SetValue": 0.6,
+      "ExpectedBoolean": true,
+      "DelaySeconds": 3,
+      "Severity": "Critical",
+      "IsEnabled": true,
+      "ExpressionText": "PyOPC Test / Power Factor \u003C 0.6"
     }
   ],
   "UserSettings": {

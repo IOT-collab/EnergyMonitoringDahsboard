@@ -328,8 +328,8 @@
                                     <Border CornerRadius="5" Background="#66071522" BorderBrush="#557ECBE5" BorderThickness="1" Padding="14,0" Height="28" Margin="0,0,8,0">
                                         <TextBlock Text="{Binding ConnectedMeterCount, StringFormat=Online {0}}" Foreground="#62FF9B" FontSize="13" VerticalAlignment="Center"/>
                                     </Border>
-                                    <ComboBox ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}" Width="170" Height="28" Margin="8,0" ToolTip="Plant section"/>
-                                    <ComboBox ItemsSource="{Binding UtilityRooms}" SelectedItem="{Binding SelectedUtilityRoom}" Width="210" Height="28" Margin="0,0,8,0" ToolTip="Utility room / location"/>
+                                    <ComboBox ItemsSource="{Binding Sections}" SelectedItem="{Binding SelectedSection}" Width="170" Height="28" Margin="8,0" ToolTip="Plant section" Style="{StaticResource GlassComboBoxAlt}"/>
+                                    <ComboBox ItemsSource="{Binding UtilityRooms}" SelectedItem="{Binding SelectedUtilityRoom}" Width="210" Height="28" Margin="0,0,8,0" ToolTip="Utility room / location" Style="{StaticResource GlassComboBoxAlt}" />
                                 </StackPanel>
 
                                 <DataGrid Grid.Row="2" Margin="14,10,14,16"
