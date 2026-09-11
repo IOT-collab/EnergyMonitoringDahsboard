@@ -473,7 +473,7 @@ namespace IECGUI.ViewModel
         {
             foreach (var register in config.Registers.Where(r => r.IsEnabled))
             {
-                var readingKey = register.ParameterName ?? register.RegisterAddress.ToString();
+                var readingKey = string.IsNullOrWhiteSpace(register.ParameterName) ? register.RegisterAddress.ToString() : register.ParameterName.Trim();
                 if (!reading.Values.TryGetValue(readingKey, out var rawValue) || rawValue == null)
                     continue;
 

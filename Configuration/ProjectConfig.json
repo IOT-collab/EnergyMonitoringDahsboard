@@ -1269,32 +1269,6 @@
       },
       "Registers": [
         {
-          "ParameterName": "Voltage A-N",
-          "RegisterAddress": 0,
-          "Address": null,
-          "DataArea": "HoldingRegister",
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Int16",
-          "McDevice": "D",
-          "McAccess": "Read"
-        },
-        {
-          "ParameterName": "Voltage B-N",
-          "RegisterAddress": 10,
-          "Address": null,
-          "DataArea": "HoldingRegister",
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Int16",
-          "McDevice": "D",
-          "McAccess": "Read"
-        },
-        {
           "ParameterName": "Voltage C-N",
           "RegisterAddress": 4,
           "Address": null,
@@ -1318,19 +1292,6 @@
           "Length": 2,
           "DataType": "Float",
           "McDevice": "D",
-          "McAccess": "Read"
-        },
-        {
-          "ParameterName": "M0",
-          "RegisterAddress": 0,
-          "Address": null,
-          "DataArea": "HoldingRegister",
-          "IsEnabled": true,
-          "Unit": "V",
-          "ScaleFactor": 1,
-          "Length": 2,
-          "DataType": "Bool",
-          "McDevice": "M",
           "McAccess": "Read"
         }
       ]

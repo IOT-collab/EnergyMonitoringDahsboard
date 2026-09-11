@@ -162,7 +162,9 @@ namespace IECGUI.ViewModel
                         if (!reg.IsEnabled)
                             continue;
 
-                        var key = reg.ParameterName ?? reg.RegisterAddress.ToString();
+                        var key = string.IsNullOrWhiteSpace(reg.ParameterName)
+                            ? reg.RegisterAddress.ToString()
+                            : reg.ParameterName.Trim();
 
                         if (!reading.Values.TryGetValue(key, out var rawValue) || rawValue == null)
                             continue;
@@ -281,7 +283,7 @@ namespace IECGUI.ViewModel
                             var parameterName = string.IsNullOrWhiteSpace(register.ParameterName)
                                 ? $"Register {register.RegisterAddress}"
                                 : register.ParameterName.Trim();
-                            var readingKey = register.ParameterName ?? register.RegisterAddress.ToString();
+                            var readingKey = string.IsNullOrWhiteSpace(register.ParameterName) ? register.RegisterAddress.ToString() : register.ParameterName.Trim();
                             if (meterReading.Values.TryGetValue(readingKey, out var value) && value != null)
                                 values[parameterName] = value;
                         }
