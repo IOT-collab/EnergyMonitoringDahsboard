@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +16,9 @@ namespace IEC.Shared.Models
 
         // OPC DA is the legacy Windows COM/DCOM protocol and uses a server
         // ProgID plus an ItemId for each mapped value.
-        OpcDa
-        
+        OpcDa,
+
+        // Mitsubishi MC protocol over TCP (SLMP / 3E frame).
+        McSlmp
     }
 }

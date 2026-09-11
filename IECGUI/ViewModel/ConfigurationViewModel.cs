@@ -1,4 +1,4 @@
-﻿using IEC.Shared.Models;
+using IEC.Shared.Models;
 using IEC.Shared.Services;
 using IECGUI.Services;
 using System;
@@ -72,6 +72,12 @@ namespace IECGUI.ViewModel
         public ObservableCollection<ModbusDataArea> DataAreas { get; } =
             new ObservableCollection<ModbusDataArea>(
                 Enum.GetValues(typeof(ModbusDataArea)).Cast<ModbusDataArea>());
+
+        public ObservableCollection<McDeviceType> McDevices { get; } = new(
+            Enum.GetValues(typeof(McDeviceType)).Cast<McDeviceType>());
+
+        public ObservableCollection<McAccessMode> McAccessModes { get; } = new(
+            Enum.GetValues(typeof(McAccessMode)).Cast<McAccessMode>());
 
         public ObservableCollection<ModbusDataArea> SldCommandAreas { get; } = new()
         {
@@ -323,7 +329,9 @@ namespace IECGUI.ViewModel
                 Unit = "V",
                 ScaleFactor = 1,
                 Length = 2,
-                IsEnabled = true
+                IsEnabled = true,
+                McDevice = McDeviceType.D,
+                McAccess = McAccessMode.Read
             };
 
             SelectedMeter.Registers.Add(reg);

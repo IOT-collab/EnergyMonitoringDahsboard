@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace IEC.Shared.Models
@@ -101,5 +101,7 @@ namespace IEC.Shared.Models
         // computer name or remain blank for the local machine.
         public string? OpcServerName { get; set; }
         public string? OpcHost { get; set; }
+
+        // Mitsubishi MC/SLMP Ethernet settings reuse IpAddress and TcpPort.
     }
 }

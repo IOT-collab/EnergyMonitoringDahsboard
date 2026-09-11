@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -35,5 +35,8 @@ namespace IEC.Shared.Models
         public RegisterDataType DataType { get; set; } = RegisterDataType.Float;
 
 
+
+        public McDeviceType McDevice { get; set; } = McDeviceType.D;
+        public McAccessMode McAccess { get; set; } = McAccessMode.Read;
     }
 }

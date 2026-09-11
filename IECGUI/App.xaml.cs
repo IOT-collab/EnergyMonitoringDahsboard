@@ -1,4 +1,4 @@
-﻿using IEC.Shared.IECInterface;
+using IEC.Shared.IECInterface;
 using IEC.Shared.IECServices;
 using IEC.Shared.Services;
 using IECGUI.Services;
@@ -29,12 +29,14 @@ namespace IECGUI
             // example composition root / startup registration
             services.AddSingleton<MultiEnergyMeterRtuService>();           // RTU concrete
             services.AddSingleton<MultiEnergyMeterTcpService>();        // TCP concrete
+            services.AddSingleton<McSlmpDeviceService>();              // Mitsubishi MC/SLMP TCP
 
             // Register coordinator as the app-level IMultiEnergyMeterService
             services.AddSingleton<IMultiEnergyMeterService>(sp =>
                 new MultiEnergyMeterCoordinator(
                     sp.GetRequiredService<MultiEnergyMeterRtuService>(),
-                    sp.GetRequiredService<MultiEnergyMeterTcpService>()));
+                    sp.GetRequiredService<MultiEnergyMeterTcpService>(),
+                    mcService: sp.GetRequiredService<McSlmpDeviceService>()));
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ConfigurationManagerService>();
             services.AddSingleton<IecConfigManagerService>();

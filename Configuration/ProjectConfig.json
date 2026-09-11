@@ -37,7 +37,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage B-N",
@@ -48,7 +50,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage C-N",
@@ -59,7 +63,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-N Avg",
@@ -70,7 +76,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current A",
@@ -81,7 +89,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current B",
@@ -92,7 +102,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current C",
@@ -103,7 +115,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current Avg",
@@ -114,7 +128,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Active Power",
@@ -125,7 +141,9 @@
           "Unit": "kW",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Reactive Power",
@@ -136,7 +154,9 @@
           "Unit": "kVAR",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Apparent Power",
@@ -147,7 +167,9 @@
           "Unit": "kVA",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Frequency",
@@ -158,7 +180,9 @@
           "Unit": "Hz",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Power Factor",
@@ -169,7 +193,9 @@
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         }
       ]
     },
@@ -209,7 +235,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage B-N",
@@ -220,7 +248,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage C-N",
@@ -231,7 +261,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-N Avg",
@@ -242,7 +274,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current A",
@@ -253,7 +287,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current B",
@@ -264,7 +300,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current C",
@@ -275,7 +313,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current Avg",
@@ -286,7 +326,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Active Power",
@@ -297,7 +339,9 @@
           "Unit": "kW",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Reactive Power",
@@ -308,7 +352,9 @@
           "Unit": "kVAR",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Apparent Power",
@@ -319,7 +365,9 @@
           "Unit": "kVA",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Frequency",
@@ -330,7 +378,9 @@
           "Unit": "Hz",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Power Factor",
@@ -341,7 +391,9 @@
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         }
       ]
     },
@@ -381,7 +433,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage B-N",
@@ -392,7 +446,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage C-N",
@@ -403,7 +459,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-N Avg",
@@ -414,7 +472,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current A",
@@ -425,7 +485,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current B",
@@ -436,7 +498,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current C",
@@ -447,7 +511,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current Avg",
@@ -458,7 +524,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Active Power",
@@ -469,7 +537,9 @@
           "Unit": "kW",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Reactive Power",
@@ -480,7 +550,9 @@
           "Unit": "kVAR",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Apparent Power",
@@ -491,7 +563,9 @@
           "Unit": "kVA",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Frequency",
@@ -502,7 +576,9 @@
           "Unit": "Hz",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Power Factor",
@@ -513,7 +589,9 @@
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         }
       ]
     },
@@ -553,7 +631,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage B-N",
@@ -564,7 +644,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage C-N",
@@ -575,7 +657,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-N Avg",
@@ -586,7 +670,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current A",
@@ -597,7 +683,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current B",
@@ -608,7 +696,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current C",
@@ -619,7 +709,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current Avg",
@@ -630,7 +722,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Active Power",
@@ -641,7 +735,9 @@
           "Unit": "kW",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Reactive Power",
@@ -652,7 +748,9 @@
           "Unit": "kVAR",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Apparent Power",
@@ -663,7 +761,9 @@
           "Unit": "kVA",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Frequency",
@@ -674,7 +774,9 @@
           "Unit": "Hz",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Power Factor",
@@ -685,7 +787,9 @@
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "VoltageA L-L ",
@@ -696,7 +800,9 @@
           "Unit": "kV",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "VoltageB L-L ",
@@ -707,7 +813,9 @@
           "Unit": "kV",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "VoltageC L-L ",
@@ -718,7 +826,9 @@
           "Unit": "kV",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-L Agv",
@@ -729,7 +839,9 @@
           "Unit": "kV",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         }
       ]
     },
@@ -769,7 +881,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage B-N",
@@ -780,7 +894,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage C-N",
@@ -791,7 +907,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-N Avg",
@@ -802,7 +920,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current A",
@@ -813,7 +933,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current B",
@@ -824,7 +946,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current C",
@@ -835,7 +959,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current Avg",
@@ -846,7 +972,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Active Power",
@@ -857,7 +985,9 @@
           "Unit": "kW",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Reactive Power",
@@ -868,7 +998,9 @@
           "Unit": "kVAR",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Apparent Power",
@@ -879,7 +1011,9 @@
           "Unit": "kVA",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Frequency",
@@ -890,7 +1024,9 @@
           "Unit": "Hz",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Power Factor",
@@ -901,7 +1037,9 @@
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         }
       ]
     },
@@ -910,7 +1048,7 @@
       "MeterName": "PyOPC Test",
       "Section": "General",
       "UtilityRoom": "Main Utility Room",
-      "IsEnabled": true,
+      "IsEnabled": false,
       "Communication": {
         "Protocol": "OpcUa",
         "ComPort": "COM1",
@@ -941,7 +1079,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage B-N",
@@ -952,7 +1092,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage C-N",
@@ -963,7 +1105,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Voltage L-N Avg",
@@ -974,7 +1118,9 @@
           "Unit": "V",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current A",
@@ -985,7 +1131,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current B",
@@ -996,7 +1144,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current C",
@@ -1007,7 +1157,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Current Avg",
@@ -1018,7 +1170,9 @@
           "Unit": "A",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Active Power",
@@ -1029,7 +1183,9 @@
           "Unit": "kW",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Reactive Power",
@@ -1040,7 +1196,9 @@
           "Unit": "kVAR",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Total Apparent Power",
@@ -1051,7 +1209,9 @@
           "Unit": "kVA",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Frequency",
@@ -1062,7 +1222,9 @@
           "Unit": "Hz",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
         },
         {
           "ParameterName": "Power Factor",
@@ -1073,7 +1235,103 @@
           "Unit": "",
           "ScaleFactor": 1,
           "Length": 2,
-          "DataType": "Float"
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
+        }
+      ]
+    },
+    {
+      "MeterId": 7,
+      "MeterName": "FX5S30MT/ESS",
+      "Section": "General",
+      "UtilityRoom": "Main Utility Room",
+      "IsEnabled": true,
+      "Communication": {
+        "Protocol": "McSlmp",
+        "ComPort": "COM1",
+        "BaudRate": 9600,
+        "Parity": "None",
+        "DataBits": 8,
+        "StopBits": 1,
+        "SlaveId": 5,
+        "WordOrder": "LowHigh",
+        "IpAddress": "192.168.3.250",
+        "TcpPort": 4523,
+        "OpcEndpointUrl": "opc.tcp://localhost:4840",
+        "OpcSecurityPolicy": null,
+        "OpcUseSecurity": false,
+        "OpcUsername": null,
+        "OpcPassword": null,
+        "OpcCertificatePath": null,
+        "OpcServerName": "",
+        "OpcHost": "localhost"
+      },
+      "Registers": [
+        {
+          "ParameterName": "Voltage A-N",
+          "RegisterAddress": 0,
+          "Address": null,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Int16",
+          "McDevice": "D",
+          "McAccess": "Read"
+        },
+        {
+          "ParameterName": "Voltage B-N",
+          "RegisterAddress": 10,
+          "Address": null,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Int16",
+          "McDevice": "D",
+          "McAccess": "Read"
+        },
+        {
+          "ParameterName": "Voltage C-N",
+          "RegisterAddress": 4,
+          "Address": null,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
+        },
+        {
+          "ParameterName": "Voltage D-N",
+          "RegisterAddress": 3000,
+          "Address": null,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Float",
+          "McDevice": "D",
+          "McAccess": "Read"
+        },
+        {
+          "ParameterName": "M0",
+          "RegisterAddress": 0,
+          "Address": null,
+          "DataArea": "HoldingRegister",
+          "IsEnabled": true,
+          "Unit": "V",
+          "ScaleFactor": 1,
+          "Length": 2,
+          "DataType": "Bool",
+          "McDevice": "M",
+          "McAccess": "Read"
         }
       ]
     }
