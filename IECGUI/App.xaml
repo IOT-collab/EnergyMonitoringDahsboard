@@ -44,6 +44,9 @@
                         <DataTemplate DataType="{x:Type vm:ScadaDesignerViewModel}">
                 <view:ScadaDesignerView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ScadaRuntimeViewModel}">
+                <view:ScadaRuntimeView/>
+            </DataTemplate>
 <DataTemplate DataType="{x:Type vm:DeviceDiagnosticsViewModel}">
                 <view:DeviceDiagnosticsView/>
             </DataTemplate>
@@ -88,5 +91,6 @@
 
     </Application.Resources>
 </Application>
+
 
 

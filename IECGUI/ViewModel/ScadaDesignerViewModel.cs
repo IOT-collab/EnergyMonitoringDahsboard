@@ -21,11 +21,18 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private ScadaPageConfig _selectedPage;
     private ScadaWidgetViewModel _selectedWidget;
     private string _status = "Create a mimic page by adding objects to the canvas.";
+    private string _colorTarget = "Foreground";
 
     public ObservableCollection<ScadaPageConfig> Pages { get; } = new();
     public ObservableCollection<ScadaWidgetViewModel> Widgets { get; } = new();
     public ObservableCollection<string> AvailableDevices { get; } = new();
     public ObservableCollection<string> AvailableParameters { get; } = new();
+    public ObservableCollection<string> ColorTargets { get; } = new() { "Foreground", "Background", "ON foreground", "ON background", "OFF foreground", "OFF background" };
+    public string ColorTarget
+    {
+        get => _colorTarget;
+        set => SetProperty(ref _colorTarget, value);
+    }
 
     public ScadaPageConfig SelectedPage
     {
@@ -68,6 +75,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ICommand DeleteWidgetCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand BackCommand { get; }
+    public ICommand OpenRuntimeCommand { get; }
+    public ICommand ApplyColorCommand { get; }
 
     public ScadaDesignerViewModel(
         ConfigurationManagerService configuration,
@@ -101,6 +110,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         DeleteWidgetCommand = new RelayCommand(DeleteSelectedWidget);
         SaveCommand = new RelayCommand(Save);
         BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+        OpenRuntimeCommand = new RelayCommand(() => _navigation.NavigateTo<ScadaRuntimeViewModel>());
+        ApplyColorCommand = new RelayCommand<string>(ApplyColor);
 
         foreach (var page in _layouts.LoadPages())
             Pages.Add(page);
@@ -213,6 +224,12 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         }
     }
 
+    private void ApplyColor(string color)
+    {
+        if (SelectedWidget == null || string.IsNullOrWhiteSpace(color)) return;
+        SelectedWidget.ApplyColor(ColorTarget, color);
+    }
+
     private void OnSnapshotUpdated() => RunOnUi(RefreshLiveValues);
 
     private void RefreshLiveValues()
@@ -273,6 +290,11 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string Unit { get => Model.Unit; set { if (Model.Unit == value) return; Model.Unit = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
     public string Foreground { get => Model.Foreground; set { if (Model.Foreground == value) return; Model.Foreground = value; OnPropertyChanged(); } }
     public string Background { get => Model.Background; set { if (Model.Background == value) return; Model.Background = value; OnPropertyChanged(); } }
+    public bool DynamicStateColors { get => Model.DynamicStateColors; set { if (Model.DynamicStateColors == value) return; Model.DynamicStateColors = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); OnPropertyChanged(nameof(EffectiveBackground)); } }
+    public string OnForeground { get => Model.OnForeground; set { if (Model.OnForeground == value) return; Model.OnForeground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); } }
+    public string OnBackground { get => Model.OnBackground; set { if (Model.OnBackground == value) return; Model.OnBackground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveBackground)); } }
+    public string OffForeground { get => Model.OffForeground; set { if (Model.OffForeground == value) return; Model.OffForeground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); } }
+    public string OffBackground { get => Model.OffBackground; set { if (Model.OffBackground == value) return; Model.OffBackground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveBackground)); } }
     public bool IsVisible { get => Model.IsVisible; set { if (Model.IsVisible == value) return; Model.IsVisible = value; OnPropertyChanged(); } }
     public bool IsEnabled { get => Model.IsEnabled; set { if (Model.IsEnabled == value) return; Model.IsEnabled = value; OnPropertyChanged(); } }
     public double Minimum { get => Model.Minimum; set { if (Math.Abs(Model.Minimum - value) < 0.01) return; Model.Minimum = value; OnPropertyChanged(); } }
@@ -287,19 +309,37 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
             OnPropertyChanged(nameof(DisplayValue));
             OnPropertyChanged(nameof(IsOn));
             OnPropertyChanged(nameof(LedBrush));
+            OnPropertyChanged(nameof(EffectiveForeground));
+            OnPropertyChanged(nameof(EffectiveBackground));
         }
     }
 
+    public string EffectiveForeground => DynamicStateColors ? (IsOn ? OnForeground : OffForeground) : Foreground;
+    public string EffectiveBackground => DynamicStateColors ? (IsOn ? OnBackground : OffBackground) : Background;
     public string DisplayValue => Type == ScadaWidgetType.Value
         ? string.IsNullOrWhiteSpace(Unit) || LiveValue == "--" ? LiveValue : $"{LiveValue} {Unit}"
         : Caption;
-    public bool IsTextVisible => Type is ScadaWidgetType.Label or ScadaWidgetType.Value or ScadaWidgetType.Button;
+    public bool IsTextVisible => Type is ScadaWidgetType.Label or ScadaWidgetType.Value;
+    public bool IsButtonVisible => Type == ScadaWidgetType.Button;
     public bool IsLedVisible => Type == ScadaWidgetType.Led;
     public bool IsRectangleVisible => Type == ScadaWidgetType.Rectangle;
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
     public bool IsOn => LiveValue.Equals("ON", StringComparison.OrdinalIgnoreCase) || LiveValue.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(LiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
-    public string LedBrush => IsOn ? "#39E68A" : "#566D80";
+    public string LedBrush => DynamicStateColors ? EffectiveBackground : (IsOn ? "#39E68A" : "#566D80");
+
+    public void ApplyColor(string target, string color)
+    {
+        switch (target)
+        {
+            case "Foreground": Foreground = color; break;
+            case "Background": Background = color; break;
+            case "ON foreground": OnForeground = color; break;
+            case "ON background": OnBackground = color; break;
+            case "OFF foreground": OffForeground = color; break;
+            case "OFF background": OffBackground = color; break;
+        }
+    }
 
     public void MoveTo(double x, double y)
     {
@@ -311,10 +351,15 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     {
         OnPropertyChanged(nameof(DisplayValue));
         OnPropertyChanged(nameof(IsTextVisible));
+        OnPropertyChanged(nameof(IsButtonVisible));
         OnPropertyChanged(nameof(IsLedVisible));
         OnPropertyChanged(nameof(IsRectangleVisible));
         OnPropertyChanged(nameof(IsCircleVisible));
         OnPropertyChanged(nameof(IsLineVisible));
     }
 }
+
+
+
+
 

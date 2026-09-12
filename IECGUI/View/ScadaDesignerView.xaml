@@ -38,6 +38,7 @@
                     <Button Content="NEW PAGE" Command="{Binding NewPageCommand}" Style="{StaticResource GlassButton.Cyan}" Width="110" Height="34" Margin="10,0,0,0"/>
                     <Button Content="DELETE PAGE" Command="{Binding DeletePageCommand}" Style="{StaticResource GlassButton.Red}" Width="120" Height="34" Margin="8,0,0,0"/>
                     <Button Content="SAVE LAYOUT" Command="{Binding SaveCommand}" Style="{StaticResource GlassButton.Green}" Width="130" Height="34" Margin="8,0,0,0"/>
+                    <Button Content="OPEN RUNTIME" Command="{Binding OpenRuntimeCommand}" Style="{StaticResource GlassButton.Cyan}" Width="130" Height="34" Margin="8,0,0,0"/>
                 </StackPanel>
                 <TextBlock DockPanel.Dock="Right" Text="{Binding Status}" Foreground="#BCEFFF" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="680"/>
             </DockPanel>
@@ -84,18 +85,19 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Width="{Binding Width}" Height="{Binding Height}"
-                                            Background="{Binding Background}" BorderBrush="#5DA9C6" BorderThickness="1" CornerRadius="7"
+                                            Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7"
                                             Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}"
                                             PreviewMouseLeftButtonDown="WidgetMouseDown" PreviewMouseMove="WidgetMouseMove" PreviewMouseLeftButtonUp="WidgetMouseUp">
                                         <Border.RenderTransform>
                                             <RotateTransform Angle="{Binding Rotation}" CenterX="{Binding Width, FallbackValue=100, TargetNullValue=100}" CenterY="{Binding Height, FallbackValue=30, TargetNullValue=30}"/>
                                         </Border.RenderTransform>
                                         <Grid IsEnabled="{Binding IsEnabled}">
-                                            <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding Foreground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding Foreground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Rectangle Fill="Transparent" Stroke="{Binding Foreground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Ellipse Fill="Transparent" Stroke="{Binding Foreground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding Foreground}" StrokeThickness="3" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Button Content="{Binding Caption}" IsHitTestVisible="False" Style="{StaticResource GlassButton.Cyan}" Width="{Binding Width}" Height="{Binding Height}" Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="3" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -135,6 +137,21 @@
                         <TextBox Text="{Binding SelectedWidget.Rotation, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <TextBlock Text="Foreground color (#RRGGBB)" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Foreground, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
+                        <TextBlock Text="Dynamic ON/OFF colors" Foreground="#9EDFF2" Margin="0,6,0,0"/>
+                        <CheckBox Content="Use state colors" IsChecked="{Binding SelectedWidget.DynamicStateColors}" Foreground="White" Margin="0,3,0,6"/>
+                        <ComboBox ItemsSource="{Binding ColorTargets}" SelectedItem="{Binding ColorTarget}" Height="30" Margin="0,0,0,6"/>
+                        <WrapPanel>
+                            <Button Content="  " Width="30" Height="24" Background="#39E68A" Command="{Binding ApplyColorCommand}" CommandParameter="#39E68A" Margin="0,0,4,4"/>
+                            <Button Content="  " Width="30" Height="24" Background="#E74C3C" Command="{Binding ApplyColorCommand}" CommandParameter="#E74C3C" Margin="0,0,4,4"/>
+                            <Button Content="  " Width="30" Height="24" Background="#FFC107" Command="{Binding ApplyColorCommand}" CommandParameter="#FFC107" Margin="0,0,4,4"/>
+                            <Button Content="  " Width="30" Height="24" Background="#4EC9FF" Command="{Binding ApplyColorCommand}" CommandParameter="#4EC9FF" Margin="0,0,4,4"/>
+                            <Button Content="  " Width="30" Height="24" Background="#FFFFFF" Command="{Binding ApplyColorCommand}" CommandParameter="#FFFFFF" Margin="0,0,4,4"/>
+                            <Button Content="  " Width="30" Height="24" Background="#19364A" Command="{Binding ApplyColorCommand}" CommandParameter="#19364A" Margin="0,0,4,4"/>
+                        </WrapPanel>
+                        <TextBlock Text="ON background" Foreground="#9EDFF2"/>
+                        <TextBox Text="{Binding SelectedWidget.OnBackground, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,8"/>
+                        <TextBlock Text="OFF background" Foreground="#9EDFF2"/>
+                        <TextBox Text="{Binding SelectedWidget.OffBackground, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,8"/>
                         <TextBlock Text="Background color (#RRGGBB)" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Background, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <CheckBox Content="Visible" IsChecked="{Binding SelectedWidget.IsVisible}" Foreground="White" Margin="0,4"/>
@@ -152,5 +169,6 @@
         </Border>
     </Grid>
 </UserControl>
+
 
 

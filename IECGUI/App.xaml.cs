@@ -48,6 +48,7 @@ namespace IECGUI
             services.AddSingleton<AlarmMonitoringService>();
             services.AddSingleton<DeviceRuntimeService>();
             services.AddSingleton<ScadaLayoutService>();
+            services.AddSingleton<ScadaWriteService>();
             services.AddSingleton<LicenseService>();
             services.AddSingleton<LicenseInfoViewModel>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
@@ -69,6 +70,7 @@ namespace IECGUI
             services.AddTransient<EnergyMonitorViewModel2>();
             services.AddTransient<DeviceDiagnosticsViewModel>();
             services.AddSingleton<ScadaDesignerViewModel>();
+            services.AddSingleton<ScadaRuntimeViewModel>();
             services.AddTransient<AlarmViewModel>();
             services.AddSingleton<ConfigurationViewModel>();
             services.AddSingleton<HomePageViewModel>();
@@ -87,4 +89,5 @@ namespace IECGUI
     }
 
 }
+
 

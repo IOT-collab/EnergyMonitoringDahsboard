@@ -37,9 +37,15 @@ public sealed class ScadaWidgetConfig
     public string Unit { get; set; } = string.Empty;
     public string Foreground { get; set; } = "#E6F8FF";
     public string Background { get; set; } = "#19364A";
+    public bool DynamicStateColors { get; set; }
+    public string OnForeground { get; set; } = "#FFFFFF";
+    public string OnBackground { get; set; } = "#18A957";
+    public string OffForeground { get; set; } = "#D7E7EE";
+    public string OffBackground { get; set; } = "#5A2A35";
     public bool IsVisible { get; set; } = true;
     public bool IsEnabled { get; set; } = true;
     public bool IsMomentary { get; set; }
     public double Minimum { get; set; }
     public double Maximum { get; set; } = 100;
 }
+
