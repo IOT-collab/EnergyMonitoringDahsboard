@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,5 +22,9 @@ namespace IEC.Shared.Models
         // New: persisted user settings
         public UserSettings UserSettings { get; set; } = new UserSettings();
 
+        // User-designed SCADA mimic pages. Kept in the same project JSON so layouts travel with the project.
+        public List<ScadaPageConfig> ScadaPages { get; set; } = new List<ScadaPageConfig>();
+
     }
 }
+

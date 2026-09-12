@@ -1,4 +1,4 @@
-﻿using IEC.Shared.IECInterface;
+using IEC.Shared.IECInterface;
 using IEC.Shared.IECServices;
 using IEC.Shared.Services;
 using IECGUI.Services;
@@ -47,6 +47,7 @@ namespace IECGUI
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<AlarmMonitoringService>();
             services.AddSingleton<DeviceRuntimeService>();
+            services.AddSingleton<ScadaLayoutService>();
             services.AddSingleton<LicenseService>();
             services.AddSingleton<LicenseInfoViewModel>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
@@ -67,6 +68,7 @@ namespace IECGUI
             services.AddTransient<EnergyMonitorViewModel>();
             services.AddTransient<EnergyMonitorViewModel2>();
             services.AddTransient<DeviceDiagnosticsViewModel>();
+            services.AddSingleton<ScadaDesignerViewModel>();
             services.AddTransient<AlarmViewModel>();
             services.AddSingleton<ConfigurationViewModel>();
             services.AddSingleton<HomePageViewModel>();
@@ -85,3 +87,4 @@ namespace IECGUI
     }
 
 }
+

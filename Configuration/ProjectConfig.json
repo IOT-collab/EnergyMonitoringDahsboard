@@ -1627,5 +1627,74 @@
       }
     ],
     "DefaultRole": "Operator"
-  }
+  },
+  "ScadaPages": [
+    {
+      "PageName": "Page 3",
+      "CanvasWidth": 1500,
+      "CanvasHeight": 800,
+      "Widgets": [
+        {
+          "Id": "8ce7a793f0004763b5e1382307533e07",
+          "Type": "Label",
+          "Caption": "Currnet Avg",
+          "X": 21,
+          "Y": 20,
+          "Width": 210,
+          "Height": 80,
+          "Rotation": 0,
+          "DeviceName": "FX5S",
+          "ParameterName": "Current C",
+          "Unit": "V",
+          "Foreground": "#E6F8FF",
+          "Background": "#3D33FF",
+          "IsVisible": true,
+          "IsEnabled": true,
+          "IsMomentary": false,
+          "Minimum": 0,
+          "Maximum": 100
+        },
+        {
+          "Id": "d4cd734411d14c42a11775827f1ea00a",
+          "Type": "Circle",
+          "Caption": "Bk1",
+          "X": 311,
+          "Y": 185,
+          "Width": 40,
+          "Height": 40,
+          "Rotation": 0,
+          "DeviceName": "FX5S",
+          "ParameterName": "Breaker1",
+          "Unit": "",
+          "Foreground": "#E6F8FF",
+          "Background": "#19364A",
+          "IsVisible": true,
+          "IsEnabled": true,
+          "IsMomentary": false,
+          "Minimum": 0,
+          "Maximum": 100
+        },
+        {
+          "Id": "799774fa6d8f487e9c25210cfee2d36c",
+          "Type": "Button",
+          "Caption": "ON",
+          "X": 173,
+          "Y": 183,
+          "Width": 100,
+          "Height": 50,
+          "Rotation": 0,
+          "DeviceName": "FX5S",
+          "ParameterName": "Breaker1",
+          "Unit": "",
+          "Foreground": "#E6F8FF",
+          "Background": "#19364A",
+          "IsVisible": true,
+          "IsEnabled": true,
+          "IsMomentary": false,
+          "Minimum": 0,
+          "Maximum": 100
+        }
+      ]
+    }
+  ]
 }

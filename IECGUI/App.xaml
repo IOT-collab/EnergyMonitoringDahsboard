@@ -1,4 +1,4 @@
-﻿<Application x:Class="IECGUI.App"
+<Application x:Class="IECGUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:IECGUI.ViewModel"
@@ -41,7 +41,10 @@
             <DataTemplate DataType="{x:Type vm:EnergyMonitorViewModel2}">
                 <view:EnergyMonitor2/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:DeviceDiagnosticsViewModel}">
+                        <DataTemplate DataType="{x:Type vm:ScadaDesignerViewModel}">
+                <view:ScadaDesignerView/>
+            </DataTemplate>
+<DataTemplate DataType="{x:Type vm:DeviceDiagnosticsViewModel}">
                 <view:DeviceDiagnosticsView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:AlarmViewModel}">
@@ -85,3 +88,5 @@
 
     </Application.Resources>
 </Application>
+
+

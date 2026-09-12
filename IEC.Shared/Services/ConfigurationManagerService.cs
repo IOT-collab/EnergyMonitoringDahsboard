@@ -1,4 +1,4 @@
-﻿using IEC.Shared.Models;
+using IEC.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,6 +51,8 @@ namespace IEC.Shared.Services
                 Configuration.SldBreakers = new List<SldBreakerConfig>();
             if (Configuration.AlarmRules == null)
                 Configuration.AlarmRules = new List<AlarmRuleConfig>();
+            if (Configuration.ScadaPages == null)
+                Configuration.ScadaPages = new List<ScadaPageConfig>();
 
             // Ensure UserSettings object exists after load (so UI/ViewModel can bind safely)
             if (Configuration.UserSettings == null)
@@ -182,3 +184,4 @@ namespace IEC.Shared.Services
         }
     }
 }
+

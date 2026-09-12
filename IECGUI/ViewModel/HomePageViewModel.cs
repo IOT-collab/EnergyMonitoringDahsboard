@@ -1,4 +1,4 @@
-﻿using IEC.Shared.Services;
+using IEC.Shared.Services;
 using IECGUI.Services;
 using System;
 using System.Globalization;
@@ -22,6 +22,7 @@ namespace IECGUI.ViewModel
         public ICommand UserConfigCommand { get; }
         public ICommand LicenseInfoCommand { get; }
         public ICommand DeviceDiagnosticsCommand { get; }
+        public ICommand ScadaDesignerCommand { get; }
         public ObservableCollection<HomeScreenTile> ScreenTiles { get; } = new();
 
         private readonly IDialogService _dialogService;
@@ -53,6 +54,7 @@ namespace IECGUI.ViewModel
             GaugeViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel2>());
             ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ConfigurationViewModel>());
             DeviceDiagnosticsCommand = new RelayCommand(() => _navigation.NavigateTo<DeviceDiagnosticsViewModel>());
+            ScadaDesignerCommand = new RelayCommand(() => _navigation.NavigateTo<ScadaDesignerViewModel>());
             ProtRelayMonitorViewCommand = new RelayCommand(() => _navigation.NavigateTo<Iec61850MonitorViewModel>());
             MqttViewCommad = new RelayCommand(() => _navigation.NavigateTo<MqttMonitorViewModel>());
             ReportViewerCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
@@ -173,6 +175,7 @@ namespace IECGUI.ViewModel
                 if (CanSeeGauge) ScreenTiles.Add(new("Gauge View", "\uE9D9", GaugeViewCommand));
                 if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Config", "\uE713", ConfigViewCommand));
                 if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Diagnostics", "\uE7F5", DeviceDiagnosticsCommand));
+                if (CanSeeDeviceConfig) ScreenTiles.Add(new("Custom Building View", "\uE8A1", ScadaDesignerCommand));
                 if (CanSeeRelay) ScreenTiles.Add(new("Relay Monitor", "\uE7F4", ProtRelayMonitorViewCommand));
                 if (CanSeeRemote) ScreenTiles.Add(new("Remote View", "\uE774", MqttViewCommad));
                 if (CanSeeReports) ScreenTiles.Add(new("Reports", "\uE9D2", ReportViewerCommand));
@@ -193,3 +196,4 @@ namespace IECGUI.ViewModel
         public bool IsDanger { get; }
     }
 }
+
