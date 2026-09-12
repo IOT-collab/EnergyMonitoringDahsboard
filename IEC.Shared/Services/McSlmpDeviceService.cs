@@ -53,6 +53,8 @@ public sealed class McSlmpDeviceService : IDisposable
         if (!_meters.TryGetValue(meterName ?? string.Empty, out var meter))
             throw new InvalidOperationException($"MC/SLMP meter '{meterName}' is not configured.");
         var mapping = meter.Registers?.FirstOrDefault(x => string.Equals(x.ParameterName, parameterName, StringComparison.OrdinalIgnoreCase));
+        if (mapping == null && int.TryParse(parameterName, NumberStyles.Integer, CultureInfo.InvariantCulture, out var numericAddress))
+            mapping = meter.Registers?.FirstOrDefault(x => x.RegisterAddress == numericAddress);
         if (mapping == null) throw new InvalidOperationException($"MC/SLMP mapping '{parameterName}' was not found.");
         if (mapping.McAccess == McAccessMode.Read) throw new InvalidOperationException($"Mapping '{parameterName}' is configured as read-only.");
 
@@ -278,20 +280,75 @@ public sealed class McSlmpDeviceService : IDisposable
 
     private static short[] Encode(RegisterConfig map, object value)
     {
-        var words = new short[Math.Max(1, map.Length)];
+        var length = map.DataType switch
+        {
+            RegisterDataType.Float or RegisterDataType.Int32 or RegisterDataType.UInt32 => Math.Max(2, map.Length),
+            RegisterDataType.Double or RegisterDataType.Int64 or RegisterDataType.UInt64 => Math.Max(4, map.Length),
+            _ => Math.Max(1, map.Length)
+        };
+        var words = new short[length];
+
+        static void SetWord(short[] target, int index, ulong raw)
+        {
+            if (index < target.Length)
+                target[index] = unchecked((short)(raw & 0xFFFF));
+        }
+
         switch (map.DataType)
         {
             case RegisterDataType.Float:
-                var f = Convert.ToSingle(value, CultureInfo.InvariantCulture) / (map.ScaleFactor == 0 ? 1 : map.ScaleFactor);
-                var bits = BitConverter.SingleToInt32Bits(f); words[0] = (short)(bits & 0xFFFF); if (words.Length > 1) words[1] = (short)(bits >> 16); break;
+                var floatValue = Convert.ToSingle(value, CultureInfo.InvariantCulture) /
+                    (map.ScaleFactor == 0 ? 1 : map.ScaleFactor);
+                var floatBits = unchecked((uint)BitConverter.SingleToInt32Bits(floatValue));
+                SetWord(words, 0, floatBits);
+                SetWord(words, 1, floatBits >> 16);
+                break;
+            case RegisterDataType.Double:
+                var doubleBits = unchecked((ulong)BitConverter.DoubleToInt64Bits(
+                    Convert.ToDouble(value, CultureInfo.InvariantCulture)));
+                for (var i = 0; i < 4; i++) SetWord(words, i, doubleBits >> (16 * i));
+                break;
             case RegisterDataType.Int32:
+                var signed32 = unchecked((uint)Convert.ToInt32(value, CultureInfo.InvariantCulture));
+                SetWord(words, 0, signed32);
+                SetWord(words, 1, signed32 >> 16);
+                break;
             case RegisterDataType.UInt32:
-                var integer = Convert.ToInt32(value, CultureInfo.InvariantCulture); words[0] = (short)(integer & 0xFFFF); if (words.Length > 1) words[1] = (short)(integer >> 16); break;
-            default: words[0] = Convert.ToInt16(value, CultureInfo.InvariantCulture); break;
+                var unsigned32 = Convert.ToUInt32(value, CultureInfo.InvariantCulture);
+                SetWord(words, 0, unsigned32);
+                SetWord(words, 1, unsigned32 >> 16);
+                break;
+            case RegisterDataType.Int64:
+                var signed64 = unchecked((ulong)Convert.ToInt64(value, CultureInfo.InvariantCulture));
+                for (var i = 0; i < 4; i++) SetWord(words, i, signed64 >> (16 * i));
+                break;
+            case RegisterDataType.UInt64:
+                var unsigned64 = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
+                for (var i = 0; i < 4; i++) SetWord(words, i, unsigned64 >> (16 * i));
+                break;
+            case RegisterDataType.UInt16:
+            case RegisterDataType.Byte:
+                SetWord(words, 0, Convert.ToUInt16(value, CultureInfo.InvariantCulture));
+                break;
+            case RegisterDataType.SByte:
+                SetWord(words, 0, unchecked((ushort)Convert.ToSByte(value, CultureInfo.InvariantCulture)));
+                break;
+            case RegisterDataType.AsciiString:
+                var bytes = Encoding.ASCII.GetBytes(Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty);
+                for (var i = 0; i < bytes.Length && i / 2 < words.Length; i += 2)
+                {
+                    uint raw = bytes[i];
+                    if (i + 1 < bytes.Length) raw |= (uint)bytes[i + 1] << 8;
+                    SetWord(words, i / 2, raw);
+                }
+                break;
+            default:
+                SetWord(words, 0, unchecked((ulong)Convert.ToInt16(value, CultureInfo.InvariantCulture)));
+                break;
         }
+
         return words;
     }
-
     private static bool ToBool(object value) => value is bool b ? b : Convert.ToDouble(value, CultureInfo.InvariantCulture) != 0;
 
     private static byte[] BuildRead(int address, byte code, int points, bool bitUnit)

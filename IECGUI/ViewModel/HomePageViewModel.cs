@@ -21,6 +21,7 @@ namespace IECGUI.ViewModel
         public ICommand AlarmViewCommand { get; }
         public ICommand UserConfigCommand { get; }
         public ICommand LicenseInfoCommand { get; }
+        public ICommand DeviceDiagnosticsCommand { get; }
         public ObservableCollection<HomeScreenTile> ScreenTiles { get; } = new();
 
         private readonly IDialogService _dialogService;
@@ -51,6 +52,7 @@ namespace IECGUI.ViewModel
             EnergyViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>());
             GaugeViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel2>());
             ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ConfigurationViewModel>());
+            DeviceDiagnosticsCommand = new RelayCommand(() => _navigation.NavigateTo<DeviceDiagnosticsViewModel>());
             ProtRelayMonitorViewCommand = new RelayCommand(() => _navigation.NavigateTo<Iec61850MonitorViewModel>());
             MqttViewCommad = new RelayCommand(() => _navigation.NavigateTo<MqttMonitorViewModel>());
             ReportViewerCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
@@ -170,6 +172,7 @@ namespace IECGUI.ViewModel
                 if (CanSeeEnergy) ScreenTiles.Add(new("Energy Monitor", "\uE945", EnergyViewCommand));
                 if (CanSeeGauge) ScreenTiles.Add(new("Gauge View", "\uE9D9", GaugeViewCommand));
                 if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Config", "\uE713", ConfigViewCommand));
+                if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Diagnostics", "\uE7F5", DeviceDiagnosticsCommand));
                 if (CanSeeRelay) ScreenTiles.Add(new("Relay Monitor", "\uE7F4", ProtRelayMonitorViewCommand));
                 if (CanSeeRemote) ScreenTiles.Add(new("Remote View", "\uE774", MqttViewCommad));
                 if (CanSeeReports) ScreenTiles.Add(new("Reports", "\uE9D2", ReportViewerCommand));

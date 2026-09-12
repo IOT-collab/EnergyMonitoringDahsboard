@@ -1,4 +1,4 @@
-using IEC.Shared.IECInterface;
+﻿using IEC.Shared.IECInterface;
 using IEC.Shared.IECServices;
 using IEC.Shared.Services;
 using IECGUI.Services;
@@ -65,7 +65,8 @@ namespace IECGUI
             services.AddTransient<LoginViewModel>();
             services.AddTransient<Dashboard1ViewModel>();
             services.AddTransient<EnergyMonitorViewModel>();
-            services.AddTransient<EnergyMonitorViewModel2>();            
+            services.AddTransient<EnergyMonitorViewModel2>();
+            services.AddTransient<DeviceDiagnosticsViewModel>();
             services.AddTransient<AlarmViewModel>();
             services.AddSingleton<ConfigurationViewModel>();
             services.AddSingleton<HomePageViewModel>();
