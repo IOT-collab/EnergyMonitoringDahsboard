@@ -31,6 +31,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ObservableCollection<string> AvailableParameters { get; } = new();
     public ObservableCollection<string> ColorTargets { get; } = new() { "Foreground", "Background", "ON foreground", "ON background", "OFF foreground", "OFF background" };
     public ObservableCollection<string> ConditionOperators { get; } = new() { "Always", "==", "!=", ">", "<", ">=", "<=", "ON", "OFF" };
+    public ObservableCollection<string> FontWeights { get; } = new() { "Light", "Normal", "SemiLight", "SemiBold", "Bold", "ExtraBold", "Black" };
 
     public string ColorTarget { get => _colorTarget; set => SetProperty(ref _colorTarget, value); }
     public bool HasMultiSelection => SelectedWidgets.Count > 1;
@@ -424,6 +425,8 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public double Height { get => Model.Height; set { var v = Math.Max(1, value); if (Math.Abs(Model.Height - v) < 0.01) return; Model.Height = v; OnPropertyChanged(); } }
     public double Rotation { get => Model.Rotation; set { if (Math.Abs(Model.Rotation - value) < 0.01) return; Model.Rotation = value; OnPropertyChanged(); } }
     public double LineThickness { get => Model.LineThickness; set { var v = Math.Max(1, value); if (Math.Abs(Model.LineThickness - v) < 0.01) return; Model.LineThickness = v; OnPropertyChanged(); } }
+    public double FontSize { get => Model.FontSize; set { var v = Math.Max(1, value); if (Math.Abs(Model.FontSize - v) < 0.01) return; Model.FontSize = v; OnPropertyChanged(); } }
+    public string FontWeight { get => Model.FontWeight; set { if (Model.FontWeight == value) return; Model.FontWeight = value; OnPropertyChanged(); } }
     public string? GroupId { get => Model.GroupId; set { if (Model.GroupId == value) return; Model.GroupId = value; OnPropertyChanged(); } }
     public bool IsSelected { get => _isSelected; set => SetProperty(ref _isSelected, value); }
     public bool ConditionEnabled { get => Model.ConditionEnabled; set { if (Model.ConditionEnabled == value) return; Model.ConditionEnabled = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
@@ -452,6 +455,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string EffectiveCaption => Type == ScadaWidgetType.Button ? (IsOn ? OnCaption : OffCaption) : Caption;
     public string DisplayValue => Type == ScadaWidgetType.Value ? string.IsNullOrWhiteSpace(Unit) || LiveValue == "--" ? LiveValue : $"{LiveValue} {Unit}" : EffectiveCaption;
     public bool IsTextVisible => Type is ScadaWidgetType.Label or ScadaWidgetType.Value;
+    public bool HasFontAppearance => Type is ScadaWidgetType.Label or ScadaWidgetType.Value or ScadaWidgetType.Button;
     public bool IsButtonVisible => Type == ScadaWidgetType.Button;
     public bool IsLedVisible => Type == ScadaWidgetType.Led;
     public bool IsRectangleVisible => Type == ScadaWidgetType.Rectangle;
@@ -492,6 +496,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     {
         OnPropertyChanged(nameof(DisplayValue));
         OnPropertyChanged(nameof(IsTextVisible));
+        OnPropertyChanged(nameof(HasFontAppearance));
         OnPropertyChanged(nameof(IsButtonVisible));
         OnPropertyChanged(nameof(IsLedVisible));
         OnPropertyChanged(nameof(IsRectangleVisible));

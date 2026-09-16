@@ -55,16 +55,18 @@
                 <Button Content="NEW PAGE" Command="{Binding NewPageCommand}" Style="{StaticResource GlassButton.Cyan}" Width="105" Height="34" Margin="10,0,0,0"/>
                 <Button Content="DELETE PAGE" Command="{Binding DeletePageCommand}" Style="{StaticResource GlassButton.Red}" Width="115" Height="34" Margin="8,0,0,0"/>
                 <Button Content="SAVE LAYOUT" Command="{Binding SaveCommand}" Style="{StaticResource GlassButton.Green}" Width="125" Height="34" Margin="8,0,0,0"/>
-                <Button Content="OPEN RUNTIME" Command="{Binding OpenRuntimeCommand}" Style="{StaticResource GlassButton.Cyan}" Width="125" Height="34" Margin="8,0,0,0"/><Button Content="COPY" Command="{Binding CopyCommand}" Style="{StaticResource MiniToolButton}" Width="52"/><Button Content="PASTE" Command="{Binding PasteCommand}" Style="{StaticResource MiniToolButton}" Width="52"/>
+                <Button Content="OPEN RUNTIME" Command="{Binding OpenRuntimeCommand}" Style="{StaticResource GlassButton.Cyan}" Width="125" Height="34" Margin="8,0,0,0"/>
+                <!--<Button Content="COPY" Command="{Binding CopyCommand}" Style="{StaticResource MiniToolButton}" FontSize="8" Width="52"/>
+                <Button Content="PASTE" Command="{Binding PasteCommand}" Style="{StaticResource MiniToolButton}" FontSize="8" Width="52"/>-->
                 <Separator Width="1" Height="28" Margin="12,0"/>
-                <TextBlock Text="LAYER" Foreground="#BCEFFF" VerticalAlignment="Center" Margin="0,0,4,0"/>
-                <Button Content="GROUP" Command="{Binding GroupCommand}" Style="{StaticResource MiniToolButton}" Width="58"/>
-                <Button Content="UNGROUP" Command="{Binding UngroupCommand}" Style="{StaticResource MiniToolButton}" Width="72"/>
+                <TextBlock Text="LAYER" Foreground="#BCEFFF" VerticalAlignment="Center" FontSize="10" Margin="0,0,4,0"/>
+                <Button Content="GROUP" Command="{Binding GroupCommand}" Style="{StaticResource MiniToolButton}" FontSize="10" Width="58"/>
+                <Button Content="UNGROUP" Command="{Binding UngroupCommand}" Style="{StaticResource MiniToolButton}" FontSize="10" Width="72"/>
                 <Button Content="▲" ToolTip="Bring forward" Command="{Binding BringForwardCommand}" Style="{StaticResource MiniToolButton}"/>
                 <Button Content="▼" ToolTip="Send backward" Command="{Binding SendBackwardCommand}" Style="{StaticResource MiniToolButton}"/>
                 <Button Content="⇈" ToolTip="Bring to front" Command="{Binding BringToFrontCommand}" Style="{StaticResource MiniToolButton}"/>
                 <Button Content="⇊" ToolTip="Send to back" Command="{Binding SendToBackCommand}" Style="{StaticResource MiniToolButton}"/>
-                <TextBlock Text="Ctrl-click selects multiple objects" Foreground="#9EDFF2" FontSize="11" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                
                 <TextBlock Text="{Binding Status}" Foreground="#BCEFFF" FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="520" Margin="18,0,0,0"/>
             </WrapPanel>
         </Border>
@@ -107,11 +109,30 @@
                             </ItemsControl.ItemContainerStyle>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Width="{Binding Width}" Height="{Binding Height}" Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}" MouseLeftButtonDown="WidgetMouseDown" MouseMove="WidgetMouseMove" MouseLeftButtonUp="WidgetMouseUp" Cursor="Hand">
+                                    <Border Width="{Binding Width}" Height="{Binding Height}" CornerRadius="7" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}" MouseLeftButtonDown="WidgetMouseDown" MouseMove="WidgetMouseMove" MouseLeftButtonUp="WidgetMouseUp" Cursor="Hand">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{Binding EffectiveBackground}"/>
+                                                <Setter Property="BorderBrush" Value="{Binding EffectiveForeground}"/>
+                                                <Setter Property="BorderThickness" Value="1"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Circle">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="0"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="Line">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
                                         <Border.RenderTransform><RotateTransform Angle="{Binding Rotation}" CenterX="{Binding Width, FallbackValue=100, TargetNullValue=100}" CenterY="{Binding Height, FallbackValue=30, TargetNullValue=30}"/></Border.RenderTransform>
                                         <Grid IsEnabled="{Binding IsEnabled}">
-                                            <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Button Content="{Binding EffectiveCaption}" IsHitTestVisible="False" Background="{Binding EffectiveBackground}" Foreground="{Binding EffectiveForeground}" Style="{StaticResource GlassButton.Cyan}" Width="{Binding Width}" Height="{Binding Height}" Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="{Binding FontSize}" FontWeight="{Binding FontWeight}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Button Content="{Binding EffectiveCaption}" IsHitTestVisible="False" Background="{Binding EffectiveBackground}" Foreground="{Binding EffectiveForeground}" FontSize="{Binding FontSize}" FontWeight="{Binding FontWeight}" Style="{StaticResource GlassButton.Cyan}" Width="{Binding Width}" Height="{Binding Height}" Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
@@ -150,7 +171,11 @@
                         <TextBox Text="{Binding SelectedWidget.ParameterName, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <TextBlock Text="Unit" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Unit, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
-                        <TextBlock Text="Position (X, Y)" Foreground="#9EDFF2"/>
+                                                <TextBlock Text="Font size" Foreground="#9EDFF2" Visibility="{Binding SelectedWidget.HasFontAppearance, Converter={StaticResource BoolToVisibility}}"/>
+                        <TextBox Text="{Binding SelectedWidget.FontSize, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,8" Visibility="{Binding SelectedWidget.HasFontAppearance, Converter={StaticResource BoolToVisibility}}"/>
+                        <TextBlock Text="Font weight" Foreground="#9EDFF2" Visibility="{Binding SelectedWidget.HasFontAppearance, Converter={StaticResource BoolToVisibility}}"/>
+                        <ComboBox ItemsSource="{Binding FontWeights}" SelectedItem="{Binding SelectedWidget.FontWeight, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10" Visibility="{Binding SelectedWidget.HasFontAppearance, Converter={StaticResource BoolToVisibility}}"/>
+<TextBlock Text="Position (X, Y)" Foreground="#9EDFF2"/>
                         <Grid Margin="0,3,0,2"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><TextBox Grid.Column="0" Text="{Binding SelectedWidget.X, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,4,0"/><TextBox Grid.Column="1" Text="{Binding SelectedWidget.Y, UpdateSourceTrigger=PropertyChanged}" Margin="4,0,0,0"/></Grid>
                         <WrapPanel Margin="0,0,0,8"><Button Content="X−" Tag="x-" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}"/><Button Content="X+" Tag="x+" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}"/><Button Content="Y−" Tag="y-" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}"/><Button Content="Y+" Tag="y+" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}"/></WrapPanel>
                         <TextBlock Text="Size (Width, Height)" Foreground="#9EDFF2"/>
@@ -168,7 +193,7 @@
                         <CheckBox Content="Use state colors" IsChecked="{Binding SelectedWidget.DynamicStateColors}" Foreground="White" Margin="0,3,0,6"/>
                         <ComboBox ItemsSource="{Binding ColorTargets}" SelectedItem="{Binding ColorTarget}" Height="30" Margin="0,0,0,6"/>
                         <WrapPanel>
-                            <Button Content="  " Width="30" Height="24" Background="#39E68A" Command="{Binding ApplyColorCommand}" CommandParameter="#39E68A" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#E74C3C" Command="{Binding ApplyColorCommand}" CommandParameter="#E74C3C" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#FFC107" Command="{Binding ApplyColorCommand}" CommandParameter="#FFC107" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#4EC9FF" Command="{Binding ApplyColorCommand}" CommandParameter="#4EC9FF" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#FFFFFF" Command="{Binding ApplyColorCommand}" CommandParameter="#FFFFFF" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#19364A" Command="{Binding ApplyColorCommand}" CommandParameter="#19364A" Margin="0,0,4,4"/>
+                            <Button Content="  " Width="30" Height="24" Background="#39E68A" Command="{Binding ApplyColorCommand}" CommandParameter="#39E68A" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#E74C3C" Command="{Binding ApplyColorCommand}" CommandParameter="#E74C3C" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#FFC107" Command="{Binding ApplyColorCommand}" CommandParameter="#FFC107" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#4EC9FF" Command="{Binding ApplyColorCommand}" CommandParameter="#4EC9FF" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#FFFFFF" Command="{Binding ApplyColorCommand}" CommandParameter="#FFFFFF" Margin="0,0,4,4"/><Button Content="  " Width="30" Height="24" Background="#19364A" Command="{Binding ApplyColorCommand}" CommandParameter="#19364A" Margin="0,0,4,4"/><Button Content="  " ToolTip="Purple" Width="30" Height="24" Background="#4F44F5" Command="{Binding ApplyColorCommand}" CommandParameter="#4F44F5" Margin="0,0,4,4"/>
                         </WrapPanel>
                         <TextBlock Text="ON background" Foreground="#9EDFF2"/><TextBox Text="{Binding SelectedWidget.OnBackground, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,8"/>
                         <TextBlock Text="OFF background" Foreground="#9EDFF2"/><TextBox Text="{Binding SelectedWidget.OffBackground, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,8"/>
