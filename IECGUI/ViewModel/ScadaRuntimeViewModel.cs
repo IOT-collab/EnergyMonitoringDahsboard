@@ -61,10 +61,20 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
         WriteCommand = new RelayCommand<ScadaWidgetViewModel>(async widget => await WriteAsync(widget));
         BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
 
-        foreach (var page in _layouts.LoadPages()) Pages.Add(page);
-        SelectedPage = Pages.FirstOrDefault();
+        _layouts.LayoutSaved += ReloadLayout;
         _runtime.SnapshotUpdated += OnSnapshotUpdated;
+        ReloadLayout();
         RefreshLiveValues();
+    }
+
+    public void ReloadLayout()
+    {
+        var currentName = SelectedPage?.PageName;
+        Pages.Clear();
+        foreach (var page in _layouts.LoadPages()) Pages.Add(page);
+        var next = Pages.FirstOrDefault(x => string.Equals(x.PageName, currentName, StringComparison.OrdinalIgnoreCase)) ?? Pages.FirstOrDefault();
+        _selectedPage = null;
+        SelectedPage = next;
     }
 
     private async Task WriteAsync(ScadaWidgetViewModel widget)

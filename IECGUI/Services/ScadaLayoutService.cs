@@ -9,6 +9,8 @@ public sealed class ScadaLayoutService
 {
     private readonly ConfigurationManagerService _configuration;
 
+    public event System.Action? LayoutSaved;
+
     public ScadaLayoutService(ConfigurationManagerService configuration)
     {
         _configuration = configuration;
@@ -32,6 +34,8 @@ public sealed class ScadaLayoutService
     public bool SavePages(IEnumerable<ScadaPageConfig> pages)
     {
         _configuration.Configuration.ScadaPages = pages?.ToList() ?? new List<ScadaPageConfig>();
-        return _configuration.Save();
+        var saved = _configuration.Save();
+        if (saved) LayoutSaved?.Invoke();
+        return saved;
     }
 }

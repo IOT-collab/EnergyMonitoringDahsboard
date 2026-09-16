@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace IEC.Shared.Models;
 
@@ -14,17 +15,30 @@ public enum ScadaWidgetType
     Circle
 }
 
-public sealed class ScadaPageConfig
+public sealed class ScadaPageConfig : INotifyPropertyChanged
 {
-    public string PageName { get; set; } = "Main Plant";
+    private string _pageName = "Main Plant";
+    public string PageName
+    {
+        get => _pageName;
+        set
+        {
+            if (_pageName == value) return;
+            _pageName = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PageName)));
+        }
+    }
+
     public double CanvasWidth { get; set; } = 1500;
     public double CanvasHeight { get; set; } = 800;
     public List<ScadaWidgetConfig> Widgets { get; set; } = new();
+    public event PropertyChangedEventHandler? PropertyChanged;
 }
 
 public sealed class ScadaWidgetConfig
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string? GroupId { get; set; }
     public ScadaWidgetType Type { get; set; } = ScadaWidgetType.Label;
     public string Caption { get; set; } = "New object";
     public double X { get; set; } = 80;
@@ -48,4 +62,3 @@ public sealed class ScadaWidgetConfig
     public double Minimum { get; set; }
     public double Maximum { get; set; } = 100;
 }
-
