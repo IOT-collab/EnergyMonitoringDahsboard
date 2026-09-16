@@ -15,10 +15,44 @@ public partial class ScadaDesignerView : UserControl
     private Point _dragOffset;
     private Point _lastDragPoint;
     private bool _resizing;
+    private Button? _paletteButton;
+    private Point _paletteStartPoint;
+    private bool _paletteDragging;
     private bool _suppressPaletteClick;
 
-    public ScadaDesignerView() => InitializeComponent();
+    public ScadaDesignerView()
+    {
+        InitializeComponent();
+        Focusable = true;
+    }
+
+    private void DesignerLoaded(object sender, RoutedEventArgs e)
+    {
+        Focus();
+    }
     private ScadaDesignerViewModel? ViewModel => DataContext as ScadaDesignerViewModel;
+
+    private void DesignerPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.OriginalSource is TextBox) return;
+        if (e.Key == Key.Delete)
+        {
+            ViewModel?.DeleteSelected();
+            e.Handled = true;
+            return;
+        }
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.C)
+        {
+            ViewModel?.CopySelected();
+            e.Handled = true;
+            return;
+        }
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.V)
+        {
+            ViewModel?.PasteSelected();
+            e.Handled = true;
+        }
+    }
 
     private void WidgetMouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -28,6 +62,7 @@ public partial class ScadaDesignerView : UserControl
         var point = e.GetPosition(DesignCanvas);
         _dragOffset = new Point(point.X - widget.X, point.Y - widget.Y);
         _lastDragPoint = point;
+        Focus();
         element.CaptureMouse();
         e.Handled = true;
     }
@@ -54,26 +89,56 @@ public partial class ScadaDesignerView : UserControl
 
     private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
     {
+        Focus();
         if (e.OriginalSource == DesignCanvas) ViewModel?.ClearSelection();
     }
 
-    private void PaletteClick(object sender, RoutedEventArgs e)
+    // A click adds one object; a drag starts only after the pointer crosses the system drag threshold.
+    // Click and drag are deliberately separate so a completed drag cannot also add a click object.
+    private void PaletteMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (_suppressPaletteClick) { _suppressPaletteClick = false; return; }
-        if (sender is Button button && button.Tag is string tag && Enum.TryParse<ScadaWidgetType>(tag, true, out var type))
-            ViewModel?.AddWidget(type);
+        if (sender is not Button button || button.Tag is not string) return;
+        _paletteButton = button;
+        _paletteStartPoint = e.GetPosition(button);
+        _paletteDragging = false;
+        _suppressPaletteClick = false;
+        button.CaptureMouse();
+        // Leave the preview event unhandled so Button can raise Click for a normal press.
     }
 
     private void PaletteMouseMove(object sender, MouseEventArgs e)
     {
-        if (e.LeftButton != MouseButtonState.Pressed || sender is not Button button || button.Tag is not string tag) return;
+        if (_paletteDragging || sender != _paletteButton || e.LeftButton != MouseButtonState.Pressed || _paletteButton?.Tag is not string tag) return;
+        var current = e.GetPosition(_paletteButton);
+        var delta = current - _paletteStartPoint;
+        if (Math.Abs(delta.X) < SystemParameters.MinimumHorizontalDragDistance && Math.Abs(delta.Y) < SystemParameters.MinimumVerticalDragDistance) return;
         if (!Enum.TryParse<ScadaWidgetType>(tag, true, out var type)) return;
+
+        // Set this before DoDragDrop. WPF may raise Click after a drag completes; that click must be ignored.
+        _paletteDragging = true;
         _suppressPaletteClick = true;
-        DragDrop.DoDragDrop(button, type.ToString(), DragDropEffects.Copy);
-        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Input, new Action(() => _suppressPaletteClick = false));
+        DragDrop.DoDragDrop(_paletteButton, type.ToString(), DragDropEffects.Copy);
         e.Handled = true;
     }
 
+    private void PaletteMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not Button button || button != _paletteButton) return;
+        button.ReleaseMouseCapture();
+        _paletteButton = null;
+        _paletteDragging = false;
+    }
+
+    private void PaletteClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button || button.Tag is not string tag || !Enum.TryParse<ScadaWidgetType>(tag, true, out var type)) return;
+        if (_suppressPaletteClick)
+        {
+            _suppressPaletteClick = false;
+            return;
+        }
+        ViewModel?.AddWidget(type);
+    }
     private void CanvasDragOver(object sender, DragEventArgs e)
     {
         e.Effects = e.Data.GetDataPresent(DataFormats.StringFormat) ? DragDropEffects.Copy : DragDropEffects.None;

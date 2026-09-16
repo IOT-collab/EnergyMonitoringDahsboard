@@ -46,7 +46,7 @@
                         </ItemsControl.ItemContainerStyle>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Width="{Binding Width}" Height="{Binding Height}" Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}">
+                                <Border Width="{Binding Width}" Height="{Binding Height}" Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7" Visibility="{Binding EffectiveVisibility, Converter={StaticResource BoolToVisibility}}">
                                     <Border.RenderTransform><RotateTransform Angle="{Binding Rotation}" CenterX="{Binding Width, FallbackValue=100, TargetNullValue=100}" CenterY="{Binding Height, FallbackValue=30, TargetNullValue=30}"/></Border.RenderTransform>
                                     <Grid IsEnabled="{Binding IsEnabled}">
                                         <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>

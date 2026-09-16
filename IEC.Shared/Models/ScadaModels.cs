@@ -60,6 +60,11 @@ public sealed class ScadaWidgetConfig
     public string OffBackground { get; set; } = "#5A2A35";
     public bool IsVisible { get; set; } = true;
     public bool IsEnabled { get; set; } = true;
+    public bool ConditionEnabled { get; set; }
+    public string? ConditionDeviceName { get; set; }
+    public string? ConditionParameterName { get; set; }
+    public string ConditionOperator { get; set; } = "Always";
+    public string ConditionValue { get; set; } = string.Empty;
     public bool IsMomentary { get; set; }
     public double Minimum { get; set; }
     public double Maximum { get; set; } = 100;

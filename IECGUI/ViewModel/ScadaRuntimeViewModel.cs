@@ -103,6 +103,7 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
         var snapshot = _runtime.GetSnapshot();
         foreach (var widget in Widgets)
         {
+            widget.ConditionLiveValue = ResolveConditionValue(widget, snapshot);
             if (string.IsNullOrWhiteSpace(widget.DeviceName) || string.IsNullOrWhiteSpace(widget.ParameterName) ||
                 !snapshot.TryGetValue(widget.DeviceName, out var reading) || reading?.Values == null)
             {
@@ -114,6 +115,14 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
                 string.Equals(x.Key, widget.ParameterName, StringComparison.OrdinalIgnoreCase));
             widget.LiveValue = match.Value == null ? "--" : FormatValue(match.Value);
         }
+    }
+
+    private static string ResolveConditionValue(ScadaWidgetViewModel widget, System.Collections.Generic.IReadOnlyDictionary<string, MeterReading> snapshot)
+    {
+        if (!widget.ConditionEnabled || string.IsNullOrWhiteSpace(widget.ConditionDeviceName) || string.IsNullOrWhiteSpace(widget.ConditionParameterName)) return "--";
+        if (!snapshot.TryGetValue(widget.ConditionDeviceName, out var reading) || reading?.Values == null) return "--";
+        var match = reading.Values.FirstOrDefault(x => string.Equals(x.Key, widget.ConditionParameterName, StringComparison.OrdinalIgnoreCase));
+        return match.Value == null ? "--" : FormatValue(match.Value);
     }
 
     private static string FormatValue(object value)

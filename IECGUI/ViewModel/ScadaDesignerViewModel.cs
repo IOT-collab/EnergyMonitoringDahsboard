@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Text.Json;
 
 namespace IECGUI.ViewModel;
 
@@ -21,6 +22,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private ScadaWidgetViewModel? _selectedWidget;
     private string _status = "Create a mimic page by adding objects to the canvas.";
     private string _colorTarget = "Foreground";
+    private ScadaWidgetConfig? _clipboardWidget;
 
     public ObservableCollection<ScadaPageConfig> Pages { get; } = new();
     public ObservableCollection<ScadaWidgetViewModel> Widgets { get; } = new();
@@ -28,6 +30,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ObservableCollection<string> AvailableDevices { get; } = new();
     public ObservableCollection<string> AvailableParameters { get; } = new();
     public ObservableCollection<string> ColorTargets { get; } = new() { "Foreground", "Background", "ON foreground", "ON background", "OFF foreground", "OFF background" };
+    public ObservableCollection<string> ConditionOperators { get; } = new() { "Always", "==", "!=", ">", "<", ">=", "<=", "ON", "OFF" };
 
     public string ColorTarget { get => _colorTarget; set => SetProperty(ref _colorTarget, value); }
     public bool HasMultiSelection => SelectedWidgets.Count > 1;
@@ -76,6 +79,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ICommand BackCommand { get; }
     public ICommand OpenRuntimeCommand { get; }
     public ICommand ApplyColorCommand { get; }
+    public ICommand CopyCommand { get; }
+    public ICommand PasteCommand { get; }
 
     public ScadaDesignerViewModel(
         ConfigurationManagerService configuration,
@@ -115,6 +120,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
         OpenRuntimeCommand = new RelayCommand(() => _navigation.NavigateTo<ScadaRuntimeViewModel>());
         ApplyColorCommand = new RelayCommand<string>(ApplyColor);
+        CopyCommand = new RelayCommand(CopySelected);
+        PasteCommand = new RelayCommand(PasteSelected);
 
         foreach (var page in _layouts.LoadPages()) Pages.Add(page);
         SelectedPage = Pages.FirstOrDefault();
@@ -209,6 +216,30 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     {
         SelectWidget(null, false);
     }
+
+    public void CopySelected()
+    {
+        var source = SelectedWidget;
+        if (source == null) return;
+        _clipboardWidget = JsonSerializer.Deserialize<ScadaWidgetConfig>(JsonSerializer.Serialize(source.Model));
+        Status = "Object copied. Use PASTE or Ctrl+V to insert a copy.";
+    }
+
+    public void PasteSelected()
+    {
+        if (_clipboardWidget == null || SelectedPage == null) return;
+        var copy = JsonSerializer.Deserialize<ScadaWidgetConfig>(JsonSerializer.Serialize(_clipboardWidget));
+        if (copy == null) return;
+        copy.Id = Guid.NewGuid().ToString("N");
+        copy.X += 20; copy.Y += 20;
+        SelectedPage.Widgets.Add(copy);
+        var item = new ScadaWidgetViewModel(copy);
+        Widgets.Add(item);
+        SelectWidget(item, false);
+        Status = "Object pasted. Press SAVE to persist the copy.";
+    }
+
+    public void DeleteSelected() => DeleteSelectedWidget();
 
     private void DeleteSelectedWidget()
     {
@@ -323,11 +354,20 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         var snapshot = _runtime.GetSnapshot();
         foreach (var widget in Widgets)
         {
+            widget.ConditionLiveValue = ResolveConditionValue(widget, snapshot);
             if (string.IsNullOrWhiteSpace(widget.DeviceName) || string.IsNullOrWhiteSpace(widget.ParameterName) || !snapshot.TryGetValue(widget.DeviceName, out var reading) || reading?.Values == null)
             { widget.LiveValue = "--"; continue; }
             var match = reading.Values.FirstOrDefault(x => string.Equals(x.Key, widget.ParameterName, StringComparison.OrdinalIgnoreCase));
             widget.LiveValue = match.Value == null ? "--" : FormatValue(match.Value);
         }
+    }
+
+    private static string ResolveConditionValue(ScadaWidgetViewModel widget, System.Collections.Generic.IReadOnlyDictionary<string, MeterReading> snapshot)
+    {
+        if (!widget.ConditionEnabled || string.IsNullOrWhiteSpace(widget.ConditionDeviceName) || string.IsNullOrWhiteSpace(widget.ConditionParameterName)) return "--";
+        if (!snapshot.TryGetValue(widget.ConditionDeviceName, out var reading) || reading?.Values == null) return "--";
+        var match = reading.Values.FirstOrDefault(x => string.Equals(x.Key, widget.ConditionParameterName, StringComparison.OrdinalIgnoreCase));
+        return match.Value == null ? "--" : FormatValue(match.Value);
     }
 
     private static string FormatValue(object value)
@@ -349,6 +389,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public ScadaWidgetConfig Model { get; }
     private string _liveValue = "--";
     private bool _isSelected;
+    private string _conditionLiveValue = "--";
     public ScadaWidgetViewModel(ScadaWidgetConfig model) => Model = model;
     public string Id => Model.Id;
     public ScadaWidgetType Type { get => Model.Type; set { if (Model.Type == value) return; Model.Type = value; OnPropertyChanged(); RaiseVisualProperties(); } }
@@ -362,6 +403,12 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public double Rotation { get => Model.Rotation; set { if (Math.Abs(Model.Rotation - value) < 0.01) return; Model.Rotation = value; OnPropertyChanged(); } }
     public string? GroupId { get => Model.GroupId; set { if (Model.GroupId == value) return; Model.GroupId = value; OnPropertyChanged(); } }
     public bool IsSelected { get => _isSelected; set => SetProperty(ref _isSelected, value); }
+    public bool ConditionEnabled { get => Model.ConditionEnabled; set { if (Model.ConditionEnabled == value) return; Model.ConditionEnabled = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
+    public string ConditionDeviceName { get => Model.ConditionDeviceName ?? string.Empty; set { if (Model.ConditionDeviceName == value) return; Model.ConditionDeviceName = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
+    public string ConditionParameterName { get => Model.ConditionParameterName ?? string.Empty; set { if (Model.ConditionParameterName == value) return; Model.ConditionParameterName = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
+    public string ConditionOperator { get => Model.ConditionOperator; set { if (Model.ConditionOperator == value) return; Model.ConditionOperator = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
+    public string ConditionValue { get => Model.ConditionValue; set { if (Model.ConditionValue == value) return; Model.ConditionValue = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
+    public string ConditionLiveValue { get => _conditionLiveValue; set { if (SetProperty(ref _conditionLiveValue, value)) OnPropertyChanged(nameof(EffectiveVisibility)); } }
     public string DeviceName { get => Model.DeviceName ?? string.Empty; set { if (Model.DeviceName == value) return; Model.DeviceName = value; OnPropertyChanged(); } }
     public string ParameterName { get => Model.ParameterName ?? string.Empty; set { if (Model.ParameterName == value) return; Model.ParameterName = value; OnPropertyChanged(); } }
     public string Unit { get => Model.Unit; set { if (Model.Unit == value) return; Model.Unit = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
@@ -372,7 +419,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string OnBackground { get => Model.OnBackground; set { if (Model.OnBackground == value) return; Model.OnBackground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveBackground)); } }
     public string OffForeground { get => Model.OffForeground; set { if (Model.OffForeground == value) return; Model.OffForeground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); } }
     public string OffBackground { get => Model.OffBackground; set { if (Model.OffBackground == value) return; Model.OffBackground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveBackground)); } }
-    public bool IsVisible { get => Model.IsVisible; set { if (Model.IsVisible == value) return; Model.IsVisible = value; OnPropertyChanged(); } }
+    public bool IsVisible { get => Model.IsVisible; set { if (Model.IsVisible == value) return; Model.IsVisible = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
     public bool IsEnabled { get => Model.IsEnabled; set { if (Model.IsEnabled == value) return; Model.IsEnabled = value; OnPropertyChanged(); } }
     public double Minimum { get => Model.Minimum; set { if (Math.Abs(Model.Minimum - value) < 0.01) return; Model.Minimum = value; OnPropertyChanged(); } }
     public double Maximum { get => Model.Maximum; set { if (Math.Abs(Model.Maximum - value) < 0.01) return; Model.Maximum = value; OnPropertyChanged(); } }
@@ -388,7 +435,23 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
     public bool IsOn => LiveValue.Equals("ON", StringComparison.OrdinalIgnoreCase) || LiveValue.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(LiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
+    public bool EffectiveVisibility => IsVisible && ConditionMatches();
     public string LedBrush => DynamicStateColors ? EffectiveBackground : (IsOn ? "#39E68A" : "#566D80");
+    private bool ConditionMatches()
+    {
+        if (!ConditionEnabled || string.IsNullOrWhiteSpace(ConditionOperator) || ConditionOperator == "Always") return true;
+        if (ConditionLiveValue == "--") return false;
+        if (ConditionOperator == "ON") return IsOnValue(ConditionLiveValue);
+        if (ConditionOperator == "OFF") return !IsOnValue(ConditionLiveValue);
+        if (ConditionOperator is "==" or "!=")
+        {
+            var equal = string.Equals(ConditionLiveValue, ConditionValue, StringComparison.OrdinalIgnoreCase) || (double.TryParse(ConditionLiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var left) && double.TryParse(ConditionValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var right) && Math.Abs(left - right) < double.Epsilon);
+            return ConditionOperator == "==" ? equal : !equal;
+        }
+        if (!double.TryParse(ConditionLiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var numeric) || !double.TryParse(ConditionValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var target)) return false;
+        return ConditionOperator switch { ">" => numeric > target, "<" => numeric < target, ">=" => numeric >= target, "<=" => numeric <= target, _ => true };
+    }
+    private static bool IsOnValue(string value) => value.Equals("ON", StringComparison.OrdinalIgnoreCase) || value.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
     public void ApplyColor(string target, string color)
     {
         switch (target)
