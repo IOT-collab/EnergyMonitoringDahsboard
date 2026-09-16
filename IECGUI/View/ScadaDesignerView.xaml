@@ -168,7 +168,7 @@
                         <TextBlock Text="Device data source" Foreground="#9EDFF2"/>
                         <ComboBox ItemsSource="{Binding AvailableDevices}" SelectedItem="{Binding SelectedWidget.DeviceName, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <TextBlock Text="Parameter / tag name" Foreground="#9EDFF2"/>
-                        <TextBox Text="{Binding SelectedWidget.ParameterName, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
+                        <ComboBox ItemsSource="{Binding AvailableParameters}" SelectedItem="{Binding SelectedWidget.ParameterName, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" Text="{Binding SelectedWidget.ParameterName, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10" ToolTip="Select a configured parameter/tag, or type a custom name"/>
                         <TextBlock Text="Unit" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Unit, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                                                 <TextBlock Text="Font size" Foreground="#9EDFF2" Visibility="{Binding SelectedWidget.HasFontAppearance, Converter={StaticResource BoolToVisibility}}"/>

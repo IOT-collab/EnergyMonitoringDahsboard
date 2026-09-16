@@ -50,7 +50,10 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         get => _selectedWidget;
         set
         {
+            if (ReferenceEquals(_selectedWidget, value)) return;
+            if (_selectedWidget != null) _selectedWidget.DeviceNameChanged -= OnSelectedWidgetDeviceNameChanged;
             if (!SetProperty(ref _selectedWidget, value)) return;
+            if (_selectedWidget != null) _selectedWidget.DeviceNameChanged += OnSelectedWidgetDeviceNameChanged;
             RefreshParameters();
         }
     }
@@ -365,6 +368,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         }
     }
 
+    private void OnSelectedWidgetDeviceNameChanged(object? sender, EventArgs e) => RefreshParameters();
+
     private void ApplyColor(string color)
     {
         if (SelectedWidget == null || string.IsNullOrWhiteSpace(color)) return;
@@ -414,6 +419,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     private bool _isSelected;
     private string _conditionLiveValue = "--";
     public ScadaWidgetViewModel(ScadaWidgetConfig model) => Model = model;
+    public event EventHandler? DeviceNameChanged;
     public string Id => Model.Id;
     public ScadaWidgetType Type { get => Model.Type; set { if (Model.Type == value) return; Model.Type = value; OnPropertyChanged(); RaiseVisualProperties(); } }
     public string Caption { get => Model.Caption; set { if (Model.Caption == value) return; Model.Caption = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); OnPropertyChanged(nameof(EffectiveCaption)); } }
@@ -435,7 +441,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string ConditionOperator { get => Model.ConditionOperator; set { if (Model.ConditionOperator == value) return; Model.ConditionOperator = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
     public string ConditionValue { get => Model.ConditionValue; set { if (Model.ConditionValue == value) return; Model.ConditionValue = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
     public string ConditionLiveValue { get => _conditionLiveValue; set { if (SetProperty(ref _conditionLiveValue, value)) OnPropertyChanged(nameof(EffectiveVisibility)); } }
-    public string DeviceName { get => Model.DeviceName ?? string.Empty; set { if (Model.DeviceName == value) return; Model.DeviceName = value; OnPropertyChanged(); } }
+    public string DeviceName { get => Model.DeviceName ?? string.Empty; set { if (Model.DeviceName == value) return; Model.DeviceName = value; OnPropertyChanged(); DeviceNameChanged?.Invoke(this, EventArgs.Empty); } }
     public string ParameterName { get => Model.ParameterName ?? string.Empty; set { if (Model.ParameterName == value) return; Model.ParameterName = value; OnPropertyChanged(); } }
     public string Unit { get => Model.Unit; set { if (Model.Unit == value) return; Model.Unit = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
     public string Foreground { get => Model.Foreground; set { if (Model.Foreground == value) return; Model.Foreground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); } }
