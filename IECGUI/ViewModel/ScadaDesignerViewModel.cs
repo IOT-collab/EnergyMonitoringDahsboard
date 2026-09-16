@@ -217,6 +217,26 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         SelectWidget(null, false);
     }
 
+    public void SelectWidgetsInRect(Rect selection, bool additive)
+    {
+        if (!additive)
+        {
+            foreach (var selected in SelectedWidgets) selected.IsSelected = false;
+            SelectedWidgets.Clear();
+        }
+
+        foreach (var widget in Widgets)
+        {
+            var bounds = new Rect(widget.X, widget.Y, widget.Width, widget.Height);
+            if (!selection.IntersectsWith(bounds) || SelectedWidgets.Contains(widget)) continue;
+            SelectedWidgets.Add(widget);
+            widget.IsSelected = true;
+        }
+
+        SelectedWidget = SelectedWidgets.LastOrDefault();
+        OnPropertyChanged(nameof(HasMultiSelection));
+        Status = SelectedWidgets.Count == 0 ? "No objects in the selection area." : $"Selected {SelectedWidgets.Count} object(s).";
+    }
     public void CopySelected()
     {
         var source = SelectedWidget;
@@ -319,6 +339,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
             case "h+": SelectedWidget.Height += sizeStep; break;
             case "r-": SelectedWidget.Rotation -= rotationStep; break;
             case "r+": SelectedWidget.Rotation += rotationStep; break;
+            case "t-": SelectedWidget.LineThickness -= sizeStep; break;
+            case "t+": SelectedWidget.LineThickness += sizeStep; break;
         }
     }
 
@@ -401,6 +423,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public double Width { get => Model.Width; set { var v = Math.Max(1, value); if (Math.Abs(Model.Width - v) < 0.01) return; Model.Width = v; OnPropertyChanged(); } }
     public double Height { get => Model.Height; set { var v = Math.Max(1, value); if (Math.Abs(Model.Height - v) < 0.01) return; Model.Height = v; OnPropertyChanged(); } }
     public double Rotation { get => Model.Rotation; set { if (Math.Abs(Model.Rotation - value) < 0.01) return; Model.Rotation = value; OnPropertyChanged(); } }
+    public double LineThickness { get => Model.LineThickness; set { var v = Math.Max(1, value); if (Math.Abs(Model.LineThickness - v) < 0.01) return; Model.LineThickness = v; OnPropertyChanged(); } }
     public string? GroupId { get => Model.GroupId; set { if (Model.GroupId == value) return; Model.GroupId = value; OnPropertyChanged(); } }
     public bool IsSelected { get => _isSelected; set => SetProperty(ref _isSelected, value); }
     public bool ConditionEnabled { get => Model.ConditionEnabled; set { if (Model.ConditionEnabled == value) return; Model.ConditionEnabled = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }

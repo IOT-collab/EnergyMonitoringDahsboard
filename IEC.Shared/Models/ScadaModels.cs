@@ -48,6 +48,7 @@ public sealed class ScadaWidgetConfig
     public double Width { get; set; } = 220;
     public double Height { get; set; } = 60;
     public double Rotation { get; set; }
+    public double LineThickness { get; set; } = 3;
     public string? DeviceName { get; set; }
     public string? ParameterName { get; set; }
     public string Unit { get; set; } = string.Empty;

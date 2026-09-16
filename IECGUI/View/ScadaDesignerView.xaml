@@ -8,6 +8,7 @@
             <Setter Property="Height" Value="36"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
         </Style>
         <Style x:Key="MiniToolButton" TargetType="Button" BasedOn="{StaticResource GlassButton.Cyan}">
             <Setter Property="Width" Value="28"/>
@@ -95,7 +96,7 @@
 
             <Border Grid.Column="1" Background="#0A1A28" BorderBrush="#315B73" BorderThickness="1" CornerRadius="7" Margin="12,0" Padding="10">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                    <Canvas x:Name="DesignCanvas" Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" Background="#0C2131" AllowDrop="True" DragOver="CanvasDragOver" Drop="CanvasDrop" MouseLeftButtonDown="CanvasMouseDown">
+                    <Canvas x:Name="DesignCanvas" Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" Background="#0C2131" AllowDrop="True" DragOver="CanvasDragOver" Drop="CanvasDrop" MouseLeftButtonDown="CanvasMouseDown" MouseMove="CanvasMouseMove" MouseLeftButtonUp="CanvasMouseUp">
                         <ItemsControl ItemsSource="{Binding Widgets}" Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}">
                             <ItemsControl.ItemsPanel><ItemsPanelTemplate><Canvas/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
                             <ItemsControl.ItemContainerStyle>
@@ -106,7 +107,7 @@
                             </ItemsControl.ItemContainerStyle>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Width="{Binding Width}" Height="{Binding Height}" Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}" MouseLeftButtonDown="WidgetMouseDown" MouseMove="WidgetMouseMove" MouseLeftButtonUp="WidgetMouseUp">
+                                    <Border Width="{Binding Width}" Height="{Binding Height}" Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibility}}" MouseLeftButtonDown="WidgetMouseDown" MouseMove="WidgetMouseMove" MouseLeftButtonUp="WidgetMouseUp" Cursor="Hand">
                                         <Border.RenderTransform><RotateTransform Angle="{Binding Rotation}" CenterX="{Binding Width, FallbackValue=100, TargetNullValue=100}" CenterY="{Binding Height, FallbackValue=30, TargetNullValue=30}"/></Border.RenderTransform>
                                         <Grid IsEnabled="{Binding IsEnabled}">
                                             <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
@@ -114,7 +115,7 @@
                                             <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="3" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="{Binding LineThickness}" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Thumb Style="{StaticResource ResizeThumb}" Tag="NW" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibility}}" PreviewMouseLeftButtonDown="ResizeHandleMouseDown" DragDelta="ResizeHandleDragDelta" DragCompleted="ResizeHandleDragCompleted"/>
                                             <Thumb Style="{StaticResource ResizeThumb}" Tag="N" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibility}}" PreviewMouseLeftButtonDown="ResizeHandleMouseDown" DragDelta="ResizeHandleDragDelta" DragCompleted="ResizeHandleDragCompleted"/>
                                             <Thumb Style="{StaticResource ResizeThumb}" Tag="NE" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibility}}" PreviewMouseLeftButtonDown="ResizeHandleMouseDown" DragDelta="ResizeHandleDragDelta" DragCompleted="ResizeHandleDragCompleted"/>
@@ -128,6 +129,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        <Rectangle x:Name="SelectionMarquee" Fill="#334EC9FF" Stroke="#4EC9FF" StrokeDashArray="4,2" Visibility="Collapsed" IsHitTestVisible="False"/>
                     </Canvas>
                 </ScrollViewer>
             </Border>
@@ -157,6 +159,9 @@
                         <TextBlock Text="Rotation" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Rotation, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,2"/>
                         <WrapPanel Margin="0,0,0,10"><Button Content="Rotate −" Tag="r-" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}" Width="70"/><Button Content="Rotate +" Tag="r+" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}" Width="70"/></WrapPanel>
+                                <TextBlock Text="Line thickness" Foreground="#9EDFF2" Visibility="{Binding SelectedWidget.IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
+                        <TextBox Text="{Binding SelectedWidget.LineThickness, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,2" Visibility="{Binding SelectedWidget.IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
+                        <WrapPanel Margin="0,0,0,10" Visibility="{Binding SelectedWidget.IsLineVisible, Converter={StaticResource BoolToVisibility}}"><Button Content="T−" Tag="t-" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}"/><Button Content="T+" Tag="t+" Command="{Binding AdjustCommand}" Style="{StaticResource MiniToolButton}"/></WrapPanel>
                         <TextBlock Text="Foreground color (#RRGGBB)" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Foreground, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <TextBlock Text="Dynamic ON/OFF colors" Foreground="#9EDFF2" Margin="0,6,0,0"/>

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace IECGUI.View;
 
@@ -19,6 +20,9 @@ public partial class ScadaDesignerView : UserControl
     private Point _paletteStartPoint;
     private bool _paletteDragging;
     private bool _suppressPaletteClick;
+    private bool _isSelecting;
+    private bool _selectionAdditive;
+    private Point _selectionStart;
 
     public ScadaDesignerView()
     {
@@ -89,10 +93,50 @@ public partial class ScadaDesignerView : UserControl
 
     private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (e.OriginalSource != DesignCanvas) return;
         Focus();
-        if (e.OriginalSource == DesignCanvas) ViewModel?.ClearSelection();
+        _isSelecting = true;
+        _selectionAdditive = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+        _selectionStart = e.GetPosition(DesignCanvas);
+        if (!_selectionAdditive) ViewModel?.ClearSelection();
+        UpdateSelectionMarquee(_selectionStart);
+        DesignCanvas.CaptureMouse();
+        e.Handled = true;
     }
-
+    private void CanvasMouseMove(object sender, MouseEventArgs e)
+    {
+        if (!_isSelecting || e.LeftButton != MouseButtonState.Pressed) return;
+        UpdateSelectionMarquee(e.GetPosition(DesignCanvas));
+        e.Handled = true;
+    }
+    private void CanvasMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (!_isSelecting) return;
+        var current = e.GetPosition(DesignCanvas);
+        UpdateSelectionMarquee(current);
+        DesignCanvas.ReleaseMouseCapture();
+        _isSelecting = false;
+        SelectionMarquee.Visibility = Visibility.Collapsed;
+        var x = Math.Min(_selectionStart.X, current.X);
+        var y = Math.Min(_selectionStart.Y, current.Y);
+        var width = Math.Abs(current.X - _selectionStart.X);
+        var height = Math.Abs(current.Y - _selectionStart.Y);
+        if (width >= 4 && height >= 4)
+            ViewModel?.SelectWidgetsInRect(new Rect(x, y, width, height), _selectionAdditive);
+        else if (!_selectionAdditive)
+            ViewModel?.ClearSelection();
+        e.Handled = true;
+    }
+    private void UpdateSelectionMarquee(Point current)
+    {
+        var x = Math.Min(_selectionStart.X, current.X);
+        var y = Math.Min(_selectionStart.Y, current.Y);
+        Canvas.SetLeft(SelectionMarquee, x);
+        Canvas.SetTop(SelectionMarquee, y);
+        SelectionMarquee.Width = Math.Max(1, Math.Abs(current.X - _selectionStart.X));
+        SelectionMarquee.Height = Math.Max(1, Math.Abs(current.Y - _selectionStart.Y));
+        SelectionMarquee.Visibility = Visibility.Visible;
+    }
     // A click adds one object; a drag starts only after the pointer crosses the system drag threshold.
     // Click and drag are deliberately separate so a completed drag cannot also add a click object.
     private void PaletteMouseDown(object sender, MouseButtonEventArgs e)

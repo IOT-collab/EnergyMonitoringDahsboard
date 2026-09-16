@@ -54,7 +54,7 @@
                                         <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
                                         <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                         <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                        <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="3" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                        <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="{Binding LineThickness}" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
