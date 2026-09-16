@@ -173,6 +173,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
                 ScadaWidgetType.Circle => string.Empty,
                 _ => "Label"
             },
+            OnCaption = type == ScadaWidgetType.Button ? "ON" : string.Empty,
+            OffCaption = type == ScadaWidgetType.Button ? "OFF" : string.Empty,
             X = Math.Max(0, location?.X ?? (80 + (index % 5) * 250)),
             Y = Math.Max(0, location?.Y ?? (70 + (index / 5) * 105)),
             Width = type == ScadaWidgetType.Line ? 220 : 210,
@@ -350,7 +352,9 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public ScadaWidgetViewModel(ScadaWidgetConfig model) => Model = model;
     public string Id => Model.Id;
     public ScadaWidgetType Type { get => Model.Type; set { if (Model.Type == value) return; Model.Type = value; OnPropertyChanged(); RaiseVisualProperties(); } }
-    public string Caption { get => Model.Caption; set { if (Model.Caption == value) return; Model.Caption = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
+    public string Caption { get => Model.Caption; set { if (Model.Caption == value) return; Model.Caption = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); OnPropertyChanged(nameof(EffectiveCaption)); } }
+    public string OnCaption { get => Model.OnCaption; set { if (Model.OnCaption == value) return; Model.OnCaption = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveCaption)); } }
+    public string OffCaption { get => Model.OffCaption; set { if (Model.OffCaption == value) return; Model.OffCaption = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveCaption)); } }
     public double X { get => Model.X; set { if (Math.Abs(Model.X - value) < 0.01) return; Model.X = Math.Max(0, value); OnPropertyChanged(); } }
     public double Y { get => Model.Y; set { if (Math.Abs(Model.Y - value) < 0.01) return; Model.Y = Math.Max(0, value); OnPropertyChanged(); } }
     public double Width { get => Model.Width; set { var v = Math.Max(1, value); if (Math.Abs(Model.Width - v) < 0.01) return; Model.Width = v; OnPropertyChanged(); } }
@@ -372,10 +376,11 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsEnabled { get => Model.IsEnabled; set { if (Model.IsEnabled == value) return; Model.IsEnabled = value; OnPropertyChanged(); } }
     public double Minimum { get => Model.Minimum; set { if (Math.Abs(Model.Minimum - value) < 0.01) return; Model.Minimum = value; OnPropertyChanged(); } }
     public double Maximum { get => Model.Maximum; set { if (Math.Abs(Model.Maximum - value) < 0.01) return; Model.Maximum = value; OnPropertyChanged(); } }
-    public string LiveValue { get => _liveValue; set { if (!SetProperty(ref _liveValue, value)) return; OnPropertyChanged(nameof(DisplayValue)); OnPropertyChanged(nameof(IsOn)); OnPropertyChanged(nameof(LedBrush)); OnPropertyChanged(nameof(EffectiveForeground)); OnPropertyChanged(nameof(EffectiveBackground)); } }
+    public string LiveValue { get => _liveValue; set { if (!SetProperty(ref _liveValue, value)) return; OnPropertyChanged(nameof(DisplayValue)); OnPropertyChanged(nameof(EffectiveCaption)); OnPropertyChanged(nameof(IsOn)); OnPropertyChanged(nameof(LedBrush)); OnPropertyChanged(nameof(EffectiveForeground)); OnPropertyChanged(nameof(EffectiveBackground)); } }
     public string EffectiveForeground => DynamicStateColors ? (IsOn ? OnForeground : OffForeground) : Foreground;
     public string EffectiveBackground => DynamicStateColors ? (IsOn ? OnBackground : OffBackground) : Background;
-    public string DisplayValue => Type == ScadaWidgetType.Value ? string.IsNullOrWhiteSpace(Unit) || LiveValue == "--" ? LiveValue : $"{LiveValue} {Unit}" : Caption;
+    public string EffectiveCaption => Type == ScadaWidgetType.Button ? (IsOn ? OnCaption : OffCaption) : Caption;
+    public string DisplayValue => Type == ScadaWidgetType.Value ? string.IsNullOrWhiteSpace(Unit) || LiveValue == "--" ? LiveValue : $"{LiveValue} {Unit}" : EffectiveCaption;
     public bool IsTextVisible => Type is ScadaWidgetType.Label or ScadaWidgetType.Value;
     public bool IsButtonVisible => Type == ScadaWidgetType.Button;
     public bool IsLedVisible => Type == ScadaWidgetType.Led;

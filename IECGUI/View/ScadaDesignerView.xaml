@@ -79,13 +79,13 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Text="OBJECTS" Foreground="White" FontSize="17" FontWeight="Bold" Margin="0,0,0,12"/>
-                        <Button Tag="Label" Content="LABEL" Command="{Binding AddLabelCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Value" Content="LIVE VALUE" Command="{Binding AddValueCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Led" Content="LED / STATUS" Command="{Binding AddLedCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Button" Content="WRITE BUTTON" Command="{Binding AddButtonCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Line" Content="LINE" Command="{Binding AddLineCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Rectangle" Content="RECTANGLE" Command="{Binding AddRectangleCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Circle" Content="CIRCLE" Command="{Binding AddCircleCommand}" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Label" Content="LABEL" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Value" Content="LIVE VALUE" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Led" Content="LED / STATUS" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Button" Content="WRITE BUTTON" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Line" Content="LINE" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Rectangle" Content="RECTANGLE" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Circle" Content="CIRCLE" Click="PaletteClick" PreviewMouseMove="PaletteMouseMove" Style="{StaticResource ToolButton}"/>
                         <Separator Margin="0,4,0,10"/>
                         <Button Content="DELETE OBJECT" Command="{Binding DeleteWidgetCommand}" Style="{StaticResource GlassButton.Red}" Height="36" FontSize="14"/>
                         <TextBlock Text="Click to add, or drag an object onto the canvas. Select multiple objects with Ctrl-click." Foreground="#9EDFF2" TextWrapping="Wrap" FontSize="12" Margin="0,18,0,0"/>
@@ -110,7 +110,7 @@
                                         <Border.RenderTransform><RotateTransform Angle="{Binding Rotation}" CenterX="{Binding Width, FallbackValue=100, TargetNullValue=100}" CenterY="{Binding Height, FallbackValue=30, TargetNullValue=30}"/></Border.RenderTransform>
                                         <Grid IsEnabled="{Binding IsEnabled}">
                                             <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Button Content="{Binding Caption}" IsHitTestVisible="False" Background="{Binding EffectiveBackground}" Foreground="{Binding EffectiveForeground}" Style="{StaticResource GlassButton.Cyan}" Width="{Binding Width}" Height="{Binding Height}" Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Button Content="{Binding EffectiveCaption}" IsHitTestVisible="False" Background="{Binding EffectiveBackground}" Foreground="{Binding EffectiveForeground}" Style="{StaticResource GlassButton.Cyan}" Width="{Binding Width}" Height="{Binding Height}" Visibility="{Binding IsButtonVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
@@ -140,6 +140,8 @@
                         <TextBlock Text="{Binding SelectedWidget.Type}" Foreground="White" FontSize="15" Margin="0,3,0,10"/>
                         <TextBlock Text="Caption" Foreground="#9EDFF2"/>
                         <TextBox Text="{Binding SelectedWidget.Caption, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
+                        <TextBlock Text="ON command text" Foreground="#9EDFF2"/><TextBox Text="{Binding SelectedWidget.OnCaption, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,8"/>
+                        <TextBlock Text="OFF command text" Foreground="#9EDFF2"/><TextBox Text="{Binding SelectedWidget.OffCaption, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <TextBlock Text="Device data source" Foreground="#9EDFF2"/>
                         <ComboBox ItemsSource="{Binding AvailableDevices}" SelectedItem="{Binding SelectedWidget.DeviceName, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,10"/>
                         <TextBlock Text="Parameter / tag name" Foreground="#9EDFF2"/>

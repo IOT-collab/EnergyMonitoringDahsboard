@@ -41,6 +41,8 @@ public sealed class ScadaWidgetConfig
     public string? GroupId { get; set; }
     public ScadaWidgetType Type { get; set; } = ScadaWidgetType.Label;
     public string Caption { get; set; } = "New object";
+    public string OnCaption { get; set; } = "ON";
+    public string OffCaption { get; set; } = "OFF";
     public double X { get; set; } = 80;
     public double Y { get; set; } = 80;
     public double Width { get; set; } = 220;

@@ -15,6 +15,7 @@ public partial class ScadaDesignerView : UserControl
     private Point _dragOffset;
     private Point _lastDragPoint;
     private bool _resizing;
+    private bool _suppressPaletteClick;
 
     public ScadaDesignerView() => InitializeComponent();
     private ScadaDesignerViewModel? ViewModel => DataContext as ScadaDesignerViewModel;
@@ -56,11 +57,20 @@ public partial class ScadaDesignerView : UserControl
         if (e.OriginalSource == DesignCanvas) ViewModel?.ClearSelection();
     }
 
+    private void PaletteClick(object sender, RoutedEventArgs e)
+    {
+        if (_suppressPaletteClick) { _suppressPaletteClick = false; return; }
+        if (sender is Button button && button.Tag is string tag && Enum.TryParse<ScadaWidgetType>(tag, true, out var type))
+            ViewModel?.AddWidget(type);
+    }
+
     private void PaletteMouseMove(object sender, MouseEventArgs e)
     {
         if (e.LeftButton != MouseButtonState.Pressed || sender is not Button button || button.Tag is not string tag) return;
         if (!Enum.TryParse<ScadaWidgetType>(tag, true, out var type)) return;
+        _suppressPaletteClick = true;
         DragDrop.DoDragDrop(button, type.ToString(), DragDropEffects.Copy);
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Input, new Action(() => _suppressPaletteClick = false));
         e.Handled = true;
     }
 
@@ -93,18 +103,18 @@ public partial class ScadaDesignerView : UserControl
         var dy = e.VerticalChange;
         if (edge.Contains('W'))
         {
-            var width = Math.Max(12, widget.Width - dx);
+            var width = Math.Max(1, widget.Width - dx);
             widget.X += widget.Width - width;
             widget.Width = width;
         }
-        else if (edge.Contains('E')) widget.Width = Math.Max(12, widget.Width + dx);
+        else if (edge.Contains('E')) widget.Width = Math.Max(1, widget.Width + dx);
         if (edge.Contains('N'))
         {
-            var height = Math.Max(4, widget.Height - dy);
+            var height = Math.Max(1, widget.Height - dy);
             widget.Y += widget.Height - height;
             widget.Height = height;
         }
-        else if (edge.Contains('S')) widget.Height = Math.Max(4, widget.Height + dy);
+        else if (edge.Contains('S')) widget.Height = Math.Max(1, widget.Height + dy);
         e.Handled = true;
     }
 
