@@ -25,6 +25,9 @@ namespace IEC.Shared.Models
         // User-designed SCADA mimic pages. Kept in the same project JSON so layouts travel with the project.
         public List<ScadaPageConfig> ScadaPages { get; set; } = new List<ScadaPageConfig>();
 
+        // User-added and favourite IEC SLD symbols. Optional for backwards compatibility.
+        public List<ScadaSymbolLibraryItem> ScadaSymbolLibrary { get; set; } = new List<ScadaSymbolLibraryItem>();
+
     }
 }
 

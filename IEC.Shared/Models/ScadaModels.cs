@@ -12,7 +12,8 @@ public enum ScadaWidgetType
     Button,
     Line,
     Rectangle,
-    Circle
+    Circle,
+    Image
 }
 
 public sealed class ScadaPageConfig : INotifyPropertyChanged
@@ -51,6 +52,7 @@ public sealed class ScadaWidgetConfig
     public double LineThickness { get; set; } = 3;
     public double FontSize { get; set; } = 20;
     public string FontWeight { get; set; } = "SemiBold";
+    public string? ImagePath { get; set; }
     public string? DeviceName { get; set; }
     public string? ParameterName { get; set; }
     public string Unit { get; set; } = string.Empty;
@@ -71,4 +73,26 @@ public sealed class ScadaWidgetConfig
     public bool IsMomentary { get; set; }
     public double Minimum { get; set; }
     public double Maximum { get; set; } = 100;
+}
+
+public sealed class ScadaSymbolLibraryItem : INotifyPropertyChanged
+{
+    private bool _isFavorite;
+
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string Name { get; set; } = "IEC symbol";
+    public string VoltageLevel { get; set; } = "MV";
+    public string Kind { get; set; } = "Incomer";
+    public string? FilePath { get; set; }
+    public bool IsFavorite
+    {
+        get => _isFavorite;
+        set
+        {
+            if (_isFavorite == value) return;
+            _isFavorite = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsFavorite)));
+        }
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
 }

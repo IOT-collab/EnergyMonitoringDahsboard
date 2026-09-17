@@ -23,6 +23,9 @@ public partial class ScadaDesignerView : UserControl
     private bool _isSelecting;
     private bool _selectionAdditive;
     private Point _selectionStart;
+    private ScadaSymbolLibraryItem? _symbolDragItem;
+    private Point _symbolStartPoint;
+    private bool _symbolDragging;
 
     public ScadaDesignerView()
     {
@@ -183,6 +186,50 @@ public partial class ScadaDesignerView : UserControl
         }
         ViewModel?.AddWidget(type);
     }
+    private void SymbolMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var item = FindVisualParent<ListBoxItem>(e.OriginalSource as DependencyObject)?.DataContext as ScadaSymbolLibraryItem;
+        if (item == null) return;
+        _symbolDragItem = item;
+        _symbolStartPoint = e.GetPosition(SymbolList);
+        _symbolDragging = false;
+    }
+
+    private void SymbolMouseMove(object sender, MouseEventArgs e)
+    {
+        if (_symbolDragItem == null || _symbolDragging || e.LeftButton != MouseButtonState.Pressed) return;
+        var current = e.GetPosition(SymbolList);
+        var delta = current - _symbolStartPoint;
+        if (Math.Abs(delta.X) < SystemParameters.MinimumHorizontalDragDistance && Math.Abs(delta.Y) < SystemParameters.MinimumVerticalDragDistance) return;
+        _symbolDragging = true;
+        DragDrop.DoDragDrop(SymbolList, $"symbol:{_symbolDragItem.Id}", DragDropEffects.Copy);
+    }
+
+    private void SymbolMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _symbolDragItem = null;
+        _symbolDragging = false;
+    }
+
+    private void BrowseSymbolClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp;*.gif|All files|*.*",
+            Multiselect = false
+        };
+        if (dialog.ShowDialog() == true) ViewModel?.AddCustomSymbol(dialog.FileName);
+    }
+
+    private static T? FindVisualParent<T>(DependencyObject? child) where T : DependencyObject
+    {
+        while (child != null)
+        {
+            if (child is T match) return match;
+            child = System.Windows.Media.VisualTreeHelper.GetParent(child);
+        }
+        return null;
+    }
     private void CanvasDragOver(object sender, DragEventArgs e)
     {
         e.Effects = e.Data.GetDataPresent(DataFormats.StringFormat) ? DragDropEffects.Copy : DragDropEffects.None;
@@ -193,7 +240,9 @@ public partial class ScadaDesignerView : UserControl
     {
         if (!e.Data.GetDataPresent(DataFormats.StringFormat) || ViewModel == null) return;
         var tag = e.Data.GetData(DataFormats.StringFormat) as string;
-        if (Enum.TryParse<ScadaWidgetType>(tag, true, out var type)) ViewModel.AddWidgetAt(type, e.GetPosition(DesignCanvas));
+        var point = e.GetPosition(DesignCanvas);
+        if (tag?.StartsWith("symbol:", StringComparison.OrdinalIgnoreCase) == true) ViewModel.AddSymbolAt(tag.Substring("symbol:".Length), point);
+        else if (Enum.TryParse<ScadaWidgetType>(tag, true, out var type)) ViewModel.AddWidgetAt(type, point);
         e.Handled = true;
     }
 

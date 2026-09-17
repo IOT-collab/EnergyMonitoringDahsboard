@@ -46,7 +46,19 @@
                         </ItemsControl.ItemContainerStyle>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Width="{Binding Width}" Height="{Binding Height}" Background="{Binding EffectiveBackground}" BorderBrush="{Binding EffectiveForeground}" BorderThickness="1" CornerRadius="7" Visibility="{Binding EffectiveVisibility, Converter={StaticResource BoolToVisibility}}">
+                                <Border Width="{Binding Width}" Height="{Binding Height}" CornerRadius="7" Visibility="{Binding EffectiveVisibility, Converter={StaticResource BoolToVisibility}}">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="{Binding EffectiveBackground}"/>
+                                            <Setter Property="BorderBrush" Value="{Binding EffectiveForeground}"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="Circle"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Line"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="Image"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
                                     <Border.RenderTransform><RotateTransform Angle="{Binding Rotation}" CenterX="{Binding Width, FallbackValue=100, TargetNullValue=100}" CenterY="{Binding Height, FallbackValue=30, TargetNullValue=30}"/></Border.RenderTransform>
                                     <Grid IsEnabled="{Binding IsEnabled}">
                                         <TextBlock Text="{Binding DisplayValue}" Foreground="{Binding EffectiveForeground}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding IsTextVisible, Converter={StaticResource BoolToVisibility}}"/>
@@ -54,6 +66,7 @@
                                         <Ellipse Width="{Binding Height}" Height="{Binding Height}" Fill="{Binding LedBrush}" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsLedVisible, Converter={StaticResource BoolToVisibility}}"/>
                                         <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                         <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                        <Image Source="{Binding ImagePath}" Stretch="Fill" Visibility="{Binding IsImageVisible, Converter={StaticResource BoolToVisibility}}"/>
                                         <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="{Binding LineThickness}" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
                                     </Grid>
                                 </Border>
