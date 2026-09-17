@@ -13,6 +13,7 @@ public enum ScadaWidgetType
     Line,
     Rectangle,
     Circle,
+    Breaker,
     Image
 }
 
@@ -53,6 +54,8 @@ public sealed class ScadaWidgetConfig
     public double FontSize { get; set; } = 20;
     public string FontWeight { get; set; } = "SemiBold";
     public string? ImagePath { get; set; }
+    // Optional IEC SLD variant: Incomer, BusCoupler, or Outgoing.
+    public string SymbolKind { get; set; } = string.Empty;
     public string? DeviceName { get; set; }
     public string? ParameterName { get; set; }
     public string Unit { get; set; } = string.Empty;
@@ -75,6 +78,15 @@ public sealed class ScadaWidgetConfig
     public double Maximum { get; set; } = 100;
 }
 
+public sealed class IndustrialSldDefinition
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string Name { get; set; } = "Substation SLD";
+    public string VoltageLevel { get; set; } = "MV";
+    public List<string> IncomerNames { get; set; } = new();
+    public List<string> BusCouplerNames { get; set; } = new();
+    public List<string> OutgoingNames { get; set; } = new();
+}
 public sealed class ScadaSymbolLibraryItem : INotifyPropertyChanged
 {
     private bool _isFavorite;

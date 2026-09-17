@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "84f9ebaf64ba4b0eb7dd32e4601158bb",
+    "Name": "MV Substation SLD",
+    "VoltageLevel": "MV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4"
+    ]
+  }
+]

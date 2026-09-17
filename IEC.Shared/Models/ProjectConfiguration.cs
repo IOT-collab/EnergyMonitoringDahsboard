@@ -28,6 +28,9 @@ namespace IEC.Shared.Models
         // User-added and favourite IEC SLD symbols. Optional for backwards compatibility.
         public List<ScadaSymbolLibraryItem> ScadaSymbolLibrary { get; set; } = new List<ScadaSymbolLibraryItem>();
 
+        // Named SLD definitions are kept separately from the generated editable pages.
+        public List<IndustrialSldDefinition> IndustrialSldDefinitions { get; set; } = new List<IndustrialSldDefinition>();
+
     }
 }
 

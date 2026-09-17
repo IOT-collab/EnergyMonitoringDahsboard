@@ -15,6 +15,8 @@ namespace IEC.Shared.Services
 
         public ProjectConfiguration Configuration { get; private set; }
 
+        public string ConfigurationFilePath => _configFile;
+
         public ConfigurationManagerService()
         {
             _configFile = GetConfigFilePath();
@@ -53,6 +55,10 @@ namespace IEC.Shared.Services
                 Configuration.AlarmRules = new List<AlarmRuleConfig>();
             if (Configuration.ScadaPages == null)
                 Configuration.ScadaPages = new List<ScadaPageConfig>();
+            if (Configuration.ScadaSymbolLibrary == null)
+                Configuration.ScadaSymbolLibrary = new List<ScadaSymbolLibraryItem>();
+            if (Configuration.IndustrialSldDefinitions == null)
+                Configuration.IndustrialSldDefinitions = new List<IndustrialSldDefinition>();
 
             // Ensure UserSettings object exists after load (so UI/ViewModel can bind safely)
             if (Configuration.UserSettings == null)

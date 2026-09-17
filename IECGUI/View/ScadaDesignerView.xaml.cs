@@ -211,6 +211,11 @@ public partial class ScadaDesignerView : UserControl
         _symbolDragging = false;
     }
 
+    private void DefineSldClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new IndustrialSldDefinitionDialog { Owner = Window.GetWindow(this) };
+        if (dialog.ShowDialog() == true && dialog.Definition != null) ViewModel?.CreateSldFromDefinition(dialog.Definition);
+    }
     private void BrowseSymbolClick(object sender, RoutedEventArgs e)
     {
         var dialog = new Microsoft.Win32.OpenFileDialog

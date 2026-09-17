@@ -14,6 +14,7 @@
 
                 <ResourceDictionary  Source="Resources/Icons.xaml"/>
                 <ResourceDictionary  Source="Resources/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="Resources/IecSldSymbols.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
 

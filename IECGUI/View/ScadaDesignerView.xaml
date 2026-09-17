@@ -62,7 +62,7 @@
                 <TextBox Width="34" Height="30" Text="{Binding SldIncomerCount, UpdateSourceTrigger=PropertyChanged}" ToolTip="Incomers" Margin="4,0,2,0"/>
                 <TextBox Width="34" Height="30" Text="{Binding SldBusCouplerCount, UpdateSourceTrigger=PropertyChanged}" ToolTip="Bus couplers" Margin="2,0,2,0"/>
                 <TextBox Width="34" Height="30" Text="{Binding SldOutgoingCount, UpdateSourceTrigger=PropertyChanged}" ToolTip="Outgoing feeders" Margin="2,0,2,0"/>
-                <Button Content="NEW SLD" Command="{Binding CreateSldCommand}" Style="{StaticResource GlassButton.Green}" Width="78" Height="34" Margin="4,0,0,0" ToolTip="Create an editable LV/MV/HV starter diagram"/>
+                <Button Content="NEW SLD" Command="{Binding CreateSldCommand}" Style="{StaticResource GlassButton.Green}" Width="78" Height="34" Margin="4,0,0,0" ToolTip="Create an editable LV/MV/HV starter diagram"/><Button Content="DEFINE…" Click="DefineSldClick" Style="{StaticResource GlassButton.Cyan}" Width="78" Height="34" Margin="4,0,0,0" ToolTip="Define named incomers, bus couplers and outgoing feeders"/>
                 <!--<Button Content="COPY" Command="{Binding CopyCommand}" Style="{StaticResource MiniToolButton}" FontSize="8" Width="52"/>
                 <Button Content="PASTE" Command="{Binding PasteCommand}" Style="{StaticResource MiniToolButton}" FontSize="8" Width="52"/>-->
                 <Separator Width="1" Height="28" Margin="12,0"/>
@@ -95,7 +95,7 @@
                         <Button Tag="Button" Content="WRITE BUTTON" Click="PaletteClick" PreviewMouseLeftButtonDown="PaletteMouseDown" PreviewMouseMove="PaletteMouseMove" PreviewMouseLeftButtonUp="PaletteMouseUp" Style="{StaticResource ToolButton}"/>
                         <Button Tag="Line" Content="LINE" Click="PaletteClick" PreviewMouseLeftButtonDown="PaletteMouseDown" PreviewMouseMove="PaletteMouseMove" PreviewMouseLeftButtonUp="PaletteMouseUp" Style="{StaticResource ToolButton}"/>
                         <Button Tag="Rectangle" Content="RECTANGLE" Click="PaletteClick" PreviewMouseLeftButtonDown="PaletteMouseDown" PreviewMouseMove="PaletteMouseMove" PreviewMouseLeftButtonUp="PaletteMouseUp" Style="{StaticResource ToolButton}"/>
-                        <Button Tag="Circle" Content="CIRCLE" Click="PaletteClick" PreviewMouseLeftButtonDown="PaletteMouseDown" PreviewMouseMove="PaletteMouseMove" PreviewMouseLeftButtonUp="PaletteMouseUp" Style="{StaticResource ToolButton}"/>
+                        <Button Tag="Circle" Content="CIRCLE" Click="PaletteClick" PreviewMouseLeftButtonDown="PaletteMouseDown" PreviewMouseMove="PaletteMouseMove" PreviewMouseLeftButtonUp="PaletteMouseUp" Style="{StaticResource ToolButton}"/><Button Tag="Breaker" Content="BREAKER" Click="PaletteClick" PreviewMouseLeftButtonDown="PaletteMouseDown" PreviewMouseMove="PaletteMouseMove" PreviewMouseLeftButtonUp="PaletteMouseUp" Style="{StaticResource ToolButton}"/>
                         <Separator Margin="0,4,0,10"/>
                         <TextBlock Text="IEC SLD SYMBOL LIBRARY" Foreground="White" FontSize="14" FontWeight="Bold" Margin="0,0,0,8"/>
                         <ListBox x:Name="SymbolList" ItemsSource="{Binding SymbolLibrary}" SelectedItem="{Binding SelectedSymbol}" Height="150" Margin="0,0,0,8" PreviewMouseLeftButtonDown="SymbolMouseDown" PreviewMouseMove="SymbolMouseMove" PreviewMouseLeftButtonUp="SymbolMouseUp">
@@ -103,7 +103,7 @@
                         </ListBox>
                         <Button Content="ADD SELECTED SYMBOL" Command="{Binding AddSymbolCommand}" CommandParameter="{Binding SelectedSymbol}" Style="{StaticResource ToolButton}" FontSize="12"/>
                         <Button Content="TOGGLE FAVOURITE" Command="{Binding ToggleFavoriteSymbolCommand}" CommandParameter="{Binding SelectedSymbol}" Style="{StaticResource ToolButton}" FontSize="12"/>
-                        <Button Content="BROWSE IMAGE…" Click="BrowseSymbolClick" Style="{StaticResource ToolButton}" FontSize="12"/>
+                        <Button Content="BROWSE IMAGE…" Click="BrowseSymbolClick" Style="{StaticResource ToolButton}" FontSize="12"/><Button Content="DELETE BROWSED IMAGE" Command="{Binding DeleteSymbolCommand}" Style="{StaticResource GlassButton.Red}" FontSize="12" Height="36" Margin="0,0,0,8"/>
                         <Button Content="DELETE OBJECT" Command="{Binding DeleteWidgetCommand}" Style="{StaticResource GlassButton.Red}" Height="36" FontSize="14"/>
                         <TextBlock Text="Click to add, or drag an object onto the canvas. Select multiple objects with Ctrl-click." Foreground="#9EDFF2" TextWrapping="Wrap" FontSize="12" Margin="0,18,0,0"/>
                     </StackPanel>
@@ -135,7 +135,7 @@
                                                         <Setter Property="BorderBrush" Value="Transparent"/>
                                                         <Setter Property="BorderThickness" Value="0"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Type}" Value="Line">
+                                                    <DataTrigger Binding="{Binding Type}" Value="Breaker"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></DataTrigger><DataTrigger Binding="{Binding Type}" Value="Line">
                                                         <Setter Property="Background" Value="Transparent"/>
                                                         <Setter Property="BorderBrush" Value="Transparent"/>
                                                         <Setter Property="BorderThickness" Value="0"/>
@@ -151,7 +151,7 @@
                                             <Rectangle Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" RadiusX="6" RadiusY="6" Visibility="{Binding IsRectangleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Ellipse Fill="Transparent" Stroke="{Binding EffectiveForeground}" StrokeThickness="2" Visibility="{Binding IsCircleVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Image Source="{Binding ImagePath}" Stretch="Fill" Visibility="{Binding IsImageVisible, Converter={StaticResource BoolToVisibility}}"/>
-                                            <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="{Binding LineThickness}" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/>
+                                            <Line X1="0" Y1="{Binding Height}" X2="{Binding Width}" Y2="0" Stroke="{Binding EffectiveForeground}" StrokeThickness="{Binding LineThickness}" Visibility="{Binding IsLineVisible, Converter={StaticResource BoolToVisibility}}"/><ContentControl Content="{Binding}" ContentTemplate="{StaticResource IecBreakerSymbolTemplate}" Visibility="{Binding IsBreakerVisible, Converter={StaticResource BoolToVisibility}}"/>
                                             <Thumb Style="{StaticResource ResizeThumb}" Tag="NW" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibility}}" PreviewMouseLeftButtonDown="ResizeHandleMouseDown" DragDelta="ResizeHandleDragDelta" DragCompleted="ResizeHandleDragCompleted"/>
                                             <Thumb Style="{StaticResource ResizeThumb}" Tag="N" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibility}}" PreviewMouseLeftButtonDown="ResizeHandleMouseDown" DragDelta="ResizeHandleDragDelta" DragCompleted="ResizeHandleDragCompleted"/>
                                             <Thumb Style="{StaticResource ResizeThumb}" Tag="NE" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibility}}" PreviewMouseLeftButtonDown="ResizeHandleMouseDown" DragDelta="ResizeHandleDragDelta" DragCompleted="ResizeHandleDragCompleted"/>

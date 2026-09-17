@@ -1,0 +1,40 @@
+<Window x:Class="IECGUI.View.IndustrialSldDefinitionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Industrial SLD Definition" Width="820" Height="620" WindowStartupLocation="CenterOwner" ResizeMode="CanResize" Background="#06111C" Foreground="White">
+    <Grid Margin="22">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <TextBlock Text="INDUSTRIAL SLD DESIGN SETUP" FontSize="24" FontWeight="Bold" Foreground="#FFD27A"/>
+        <TextBlock Grid.Row="1" Text="Define the named incomers, bus couplers and outgoing feeders. The generated diagram remains fully editable." Foreground="#9EDFF2" TextWrapping="Wrap" Margin="0,8,0,18"/>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="150"/><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <TextBlock Text="Design name" Foreground="#BCEFFF" VerticalAlignment="Center"/>
+            <TextBox x:Name="NameBox" Grid.Column="1" Margin="0,0,18,10" Text="MV Substation SLD"/>
+            <TextBlock Grid.Column="2" Text="Voltage level" Foreground="#BCEFFF" VerticalAlignment="Center"/>
+            <ComboBox x:Name="VoltageBox" Grid.Column="3" Margin="0,0,0,10"><ComboBoxItem Content="LV"/><ComboBoxItem Content="MV" IsSelected="True"/><ComboBoxItem Content="HV"/></ComboBox>
+            <TextBlock Grid.Row="1" Text="Incomers" Foreground="#BCEFFF" VerticalAlignment="Center"/>
+            <TextBox x:Name="IncomerCountBox" Grid.Row="1" Grid.Column="1" Margin="0,0,18,10" Text="2" ToolTip="Number of incomers"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="Bus couplers" Foreground="#BCEFFF" VerticalAlignment="Center"/>
+            <TextBox x:Name="CouplerCountBox" Grid.Row="1" Grid.Column="3" Margin="0,0,0,10" Text="1" ToolTip="Number of bus couplers"/>
+            <TextBlock Grid.Row="2" Text="Outgoing feeders" Foreground="#BCEFFF" VerticalAlignment="Center"/>
+            <TextBox x:Name="OutgoingCountBox" Grid.Row="2" Grid.Column="1" Margin="0,0,18,10" Text="4" ToolTip="Number of outgoing feeders"/>
+            <GroupBox Grid.Row="3" Grid.ColumnSpan="4" Header="Names (one per line; blank lines receive automatic names)" Foreground="#BCEFFF" Padding="10">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock Text="Incomers" Foreground="White" FontWeight="Bold" Margin="0,0,8,6"/>
+                    <TextBlock Grid.Column="1" Text="Bus couplers" Foreground="White" FontWeight="Bold" Margin="0,0,8,6"/>
+                    <TextBlock Grid.Column="2" Text="Outgoing feeders" Foreground="White" FontWeight="Bold" Margin="0,0,0,6"/>
+                    <TextBox x:Name="IncomerNamesBox" Grid.Row="1" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="INCOMER-1&#x0a;INCOMER-2" Margin="0,0,8,0"/>
+                    <TextBox x:Name="CouplerNamesBox" Grid.Row="1" Grid.Column="1" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="BUS COUPLER-1" Margin="0,0,8,0"/>
+                    <TextBox x:Name="OutgoingNamesBox" Grid.Row="1" Grid.Column="2" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="OUTGOING-1&#x0a;OUTGOING-2&#x0a;OUTGOING-3&#x0a;OUTGOING-4"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Content="CANCEL" Click="CancelClick" Width="110" Height="38" Margin="0,0,10,0" Style="{StaticResource GlassButton.Red}"/>
+            <Button Content="CREATE SLD" Click="CreateClick" Width="140" Height="38" Style="{StaticResource GlassButton.Green}"/>
+        </StackPanel>
+    </Grid>
+</Window>

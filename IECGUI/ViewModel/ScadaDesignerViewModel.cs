@@ -28,6 +28,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private int _sldIncomerCount = 2;
     private int _sldBusCouplerCount = 1;
     private int _sldOutgoingCount = 4;
+    private readonly IndustrialSldDefinitionStore _sldDefinitionStore;
+    private readonly List<IndustrialSldDefinition> _sldDefinitions = new();
 
     public ObservableCollection<ScadaPageConfig> Pages { get; } = new();
     public ObservableCollection<ScadaWidgetViewModel> Widgets { get; } = new();
@@ -39,6 +41,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ObservableCollection<string> FontWeights { get; } = new() { "Light", "Normal", "SemiLight", "SemiBold", "Bold", "ExtraBold", "Black" };
     public ObservableCollection<ScadaSymbolLibraryItem> SymbolLibrary { get; } = new();
     public ObservableCollection<string> SldVoltageLevels { get; } = new() { "LV", "MV", "HV" };
+    public IReadOnlyList<IndustrialSldDefinition> SldDefinitions => _sldDefinitions;
     public ScadaSymbolLibraryItem? SelectedSymbol { get => _selectedSymbol; set => SetProperty(ref _selectedSymbol, value); }
     public string SelectedSldVoltageLevel { get => _selectedSldVoltageLevel; set { if (SetProperty(ref _selectedSldVoltageLevel, value)) OnPropertyChanged(nameof(SldLogicSummary)); } }
     public int SldIncomerCount { get => _sldIncomerCount; set { var v = Math.Clamp(value, 1, 8); if (SetProperty(ref _sldIncomerCount, v)) OnPropertyChanged(nameof(SldLogicSummary)); } }
@@ -101,6 +104,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ICommand CreateSldCommand { get; }
     public ICommand AddSymbolCommand { get; }
     public ICommand ToggleFavoriteSymbolCommand { get; }
+    public ICommand DeleteSymbolCommand { get; }
 
     public ScadaDesignerViewModel(
         ConfigurationManagerService configuration,
@@ -113,6 +117,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         _runtime = runtime;
         _layouts = layouts;
         _navigation = navigation;
+        _sldDefinitionStore = new IndustrialSldDefinitionStore(configuration);
+        _sldDefinitions.AddRange(_sldDefinitionStore.Load());
 
         foreach (var meter in (_configuration.Configuration.Meters ?? new())
             .Where(x => x != null && !string.IsNullOrWhiteSpace(x.MeterName))
@@ -145,6 +151,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         CreateSldCommand = new RelayCommand(CreateSldTemplate);
         AddSymbolCommand = new RelayCommand<ScadaSymbolLibraryItem>(item => AddSymbolAt(item?.Id, null));
         ToggleFavoriteSymbolCommand = new RelayCommand<ScadaSymbolLibraryItem>(ToggleFavoriteSymbol);
+        DeleteSymbolCommand = new RelayCommand(DeleteSelectedSymbol);
 
         LoadSymbolLibrary();
 
@@ -211,15 +218,37 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         SelectedSymbol ??= SymbolLibrary.FirstOrDefault();
     }
 
-    public void CreateSldTemplate()
+public void CreateSldTemplate()
     {
-        var page = IndustrialSldTemplateService.CreateTemplate(SelectedSldVoltageLevel, SldIncomerCount, SldBusCouplerCount, SldOutgoingCount, AvailableDevices.FirstOrDefault());
-        Pages.Add(page);
-        SelectedPage = page;
-        Save();
-        Status = $"Created editable {SelectedSldVoltageLevel} SLD: {SldLogicSummary}. Assign tags and refine the drawing as needed.";
+        var definition = new IndustrialSldDefinition
+        {
+            Name = $"{SelectedSldVoltageLevel} Substation SLD",
+            VoltageLevel = SelectedSldVoltageLevel,
+            IncomerNames = Enumerable.Range(1, SldIncomerCount).Select(i => $"INCOMER-{i}").ToList(),
+            BusCouplerNames = Enumerable.Range(1, SldBusCouplerCount).Select(i => $"BUS COUPLER-{i}").ToList(),
+            OutgoingNames = Enumerable.Range(1, SldOutgoingCount).Select(i => $"OUTGOING-{i}").ToList()
+        };
+        CreateSldFromDefinition(definition);
     }
 
+    public void CreateSldFromDefinition(IndustrialSldDefinition definition)
+    {
+        if (definition == null) return;
+        definition.IncomerNames ??= new List<string>();
+        definition.BusCouplerNames ??= new List<string>();
+        definition.OutgoingNames ??= new List<string>();
+        var page = IndustrialSldTemplateService.CreateTemplate(definition.VoltageLevel, definition.IncomerNames.Count, definition.BusCouplerNames.Count, definition.OutgoingNames.Count,
+            AvailableDevices.FirstOrDefault(), definition.IncomerNames, definition.BusCouplerNames, definition.OutgoingNames);
+        page.PageName = string.IsNullOrWhiteSpace(definition.Name) ? page.PageName : definition.Name.Trim();
+        Pages.Add(page);
+        SelectedPage = page;
+        var existing = _sldDefinitions.FindIndex(x => string.Equals(x.Id, definition.Id, StringComparison.OrdinalIgnoreCase));
+        if (existing >= 0) _sldDefinitions[existing] = definition; else _sldDefinitions.Add(definition);
+        _configuration.Configuration.IndustrialSldDefinitions = _sldDefinitions.ToList();
+        _sldDefinitionStore.Save(_sldDefinitions);
+        Save();
+        Status = $"Created editable {page.PageName}: {IndustrialSldTemplateService.LogicSummary(definition.IncomerNames.Count, definition.BusCouplerNames.Count)}.";
+    }
     public void AddCustomSymbol(string filePath)
     {
         if (string.IsNullOrWhiteSpace(filePath)) return;
@@ -243,16 +272,17 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         if (symbol == null || SelectedPage == null) return;
         var kind = symbol.Kind?.Trim() ?? string.Empty;
         var isImage = string.Equals(kind, "Image", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(symbol.FilePath);
-        var type = isImage ? ScadaWidgetType.Image : ScadaWidgetType.Rectangle;
+        var type = isImage ? ScadaWidgetType.Image : string.Equals(kind, "Incomer", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "BusCoupler", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Outgoing", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Breaker", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Breaker : ScadaWidgetType.Rectangle;
         var config = new ScadaWidgetConfig
         {
             Type = type,
             Caption = symbol.Name,
             ImagePath = isImage ? symbol.FilePath : null,
+            SymbolKind = kind,
             X = Math.Max(0, location?.X ?? 120),
             Y = Math.Max(0, location?.Y ?? 120),
-            Width = isImage ? 180 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 260 : 130,
-            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 10 : 54,
+            Width = isImage ? 180 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 260 : type == ScadaWidgetType.Breaker ? 76 : 130,
+            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 10 : type == ScadaWidgetType.Breaker ? 94 : 54,
             DeviceName = AvailableDevices.FirstOrDefault(),
             Foreground = "#E6F8FF",
             Background = "#19364A"
@@ -271,6 +301,19 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         Status = item.IsFavorite ? $"Added '{item.Name}' to favourites." : $"Removed '{item.Name}' from favourites.";
     }
 
+    private void DeleteSelectedSymbol()
+    {
+        var item = SelectedSymbol;
+        if (item == null || !string.Equals(item.Kind, "Image", StringComparison.OrdinalIgnoreCase))
+        {
+            Status = "Select a browsed image in the symbol library to delete it.";
+            return;
+        }
+        SymbolLibrary.Remove(item);
+        SelectedSymbol = SymbolLibrary.FirstOrDefault();
+        SaveSymbolLibrary();
+        Status = $"Removed '{item.Name}' from the symbol library. The source image file was not deleted.";
+    }
     private void SaveSymbolLibrary()
     {
         _configuration.Configuration.ScadaSymbolLibrary = SymbolLibrary.ToList();
@@ -285,6 +328,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         var config = new ScadaWidgetConfig
         {
             Type = type,
+            SymbolKind = type == ScadaWidgetType.Breaker ? "Breaker" : string.Empty,
             Caption = type switch
             {
                 ScadaWidgetType.Value => "Live value",
@@ -293,6 +337,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
                 ScadaWidgetType.Line => string.Empty,
                 ScadaWidgetType.Rectangle => string.Empty,
                 ScadaWidgetType.Circle => string.Empty,
+                ScadaWidgetType.Breaker => "BREAKER",
                 _ => "Label"
             },
             OnCaption = type == ScadaWidgetType.Button ? "ON" : string.Empty,
@@ -556,6 +601,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string DeviceName { get => Model.DeviceName ?? string.Empty; set { if (Model.DeviceName == value) return; Model.DeviceName = value; OnPropertyChanged(); DeviceNameChanged?.Invoke(this, EventArgs.Empty); } }
     public string ParameterName { get => Model.ParameterName ?? string.Empty; set { if (Model.ParameterName == value) return; Model.ParameterName = value; OnPropertyChanged(); } }
     public string ImagePath { get => Model.ImagePath ?? string.Empty; set { if (Model.ImagePath == value) return; Model.ImagePath = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsImageVisible)); } }
+    public string SymbolKind { get => Model.SymbolKind ?? string.Empty; set { if (Model.SymbolKind == value) return; Model.SymbolKind = value; OnPropertyChanged(); } }
     public string Unit { get => Model.Unit; set { if (Model.Unit == value) return; Model.Unit = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
     public string Foreground { get => Model.Foreground; set { if (Model.Foreground == value) return; Model.Foreground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); } }
     public string Background { get => Model.Background; set { if (Model.Background == value) return; Model.Background = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveBackground)); } }
@@ -580,6 +626,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsRectangleVisible => Type == ScadaWidgetType.Rectangle;
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
+    public bool IsBreakerVisible => Type == ScadaWidgetType.Breaker;
     public bool IsImageVisible => Type == ScadaWidgetType.Image && !string.IsNullOrWhiteSpace(ImagePath);
     public bool IsOn => LiveValue.Equals("ON", StringComparison.OrdinalIgnoreCase) || LiveValue.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(LiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
     public bool EffectiveVisibility => IsVisible && ConditionMatches();
@@ -622,6 +669,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
         OnPropertyChanged(nameof(IsRectangleVisible));
         OnPropertyChanged(nameof(IsCircleVisible));
         OnPropertyChanged(nameof(IsLineVisible));
+        OnPropertyChanged(nameof(IsBreakerVisible));
         OnPropertyChanged(nameof(IsImageVisible));
     }
 }

@@ -4,11 +4,10 @@ using System.Collections.Generic;
 
 namespace IECGUI.Services;
 
-/// <summary>Creates an editable first-pass LV/MV/HV substation SLD and evaluates incomer/coupler interlocking.</summary>
+/// <summary>Creates editable LV/MV/HV substation SLDs and evaluates incomer/coupler interlocking.</summary>
 public static class IndustrialSldTemplateService
 {
-    public static int MaximumClosedBreakers(int incomers, int busCouplers)
-        => Math.Max(0, busCouplers) + 1;
+    public static int MaximumClosedBreakers(int incomers, int busCouplers) => Math.Max(0, busCouplers) + 1;
 
     public static string LogicSummary(int incomers, int busCouplers)
     {
@@ -25,7 +24,15 @@ public static class IndustrialSldTemplateService
         return closed <= MaximumClosedBreakers(incomersClosed.Count, couplersClosed.Count);
     }
 
-    public static ScadaPageConfig CreateTemplate(string voltageLevel, int incomers, int busCouplers, int outgoings, string? deviceName)
+    public static ScadaPageConfig CreateTemplate(
+        string voltageLevel,
+        int incomers,
+        int busCouplers,
+        int outgoings,
+        string? deviceName,
+        IReadOnlyList<string>? incomerNames = null,
+        IReadOnlyList<string>? busCouplerNames = null,
+        IReadOnlyList<string>? outgoingNames = null)
     {
         var level = string.IsNullOrWhiteSpace(voltageLevel) ? "MV" : voltageLevel.Trim().ToUpperInvariant();
         var n = Math.Clamp(incomers, 1, 8);
@@ -55,32 +62,41 @@ public static class IndustrialSldTemplateService
         for (var i = 0; i < n; i++)
         {
             var x = busX + (i + 0.5) * busWidth / n;
-            Add(page, ScadaWidgetType.Label, $"INCOMER-{i + 1}", x - 65, 100, 130, 32, deviceName, null, "#E6F8FF", "#19364A");
-            Add(page, ScadaWidgetType.Rectangle, $"I{i + 1}", x - 35, 245, 70, 48, deviceName, $"I{i + 1}", "#FFFFFF", "#19364A", true);
-            Add(page, ScadaWidgetType.Rectangle, string.Empty, x - 3, 175, 6, 70, deviceName, null, "#FFFFFF", "#19364A");
-            Add(page, ScadaWidgetType.Rectangle, string.Empty, x - 3, 293, 6, busY - 293, deviceName, null, "#FFFFFF", "#19364A");
+            var name = NameAt(incomerNames, i, $"INCOMER-{i + 1}");
+            Add(page, ScadaWidgetType.Label, name, x - 75, 100, 150, 32, deviceName, null, "#E6F8FF", "#19364A");
+            Add(page, ScadaWidgetType.Breaker, name, x - 35, 225, 70, 88, deviceName, name, "#FFFFFF", "#19364A", true, "Incomer");
+            Add(page, ScadaWidgetType.Rectangle, string.Empty, x - 3, 175, 6, 50, deviceName, null, "#FFFFFF", "#19364A");
+            Add(page, ScadaWidgetType.Rectangle, string.Empty, x - 3, 313, 6, busY - 313, deviceName, null, "#FFFFFF", "#19364A");
         }
 
         for (var c = 0; c < m; c++)
         {
             var x = busX + (c + 1) * sectionWidth;
-            Add(page, ScadaWidgetType.Rectangle, $"BC{c + 1}", x - 38, busY - 25, 76, 60, deviceName, $"BC{c + 1}", "#FFFFFF", "#19364A", true);
+            var name = NameAt(busCouplerNames, c, $"BUS COUPLER-{c + 1}");
+            Add(page, ScadaWidgetType.Breaker, name, x - 38, busY - 42, 76, 94, deviceName, name, "#FFFFFF", "#19364A", true, "BusCoupler");
         }
 
         for (var i = 0; i < feeders; i++)
         {
             var x = busX + (i + 0.5) * busWidth / feeders;
+            var name = NameAt(outgoingNames, i, $"OUTGOING-{i + 1}");
             Add(page, ScadaWidgetType.Rectangle, string.Empty, x - 3, busY + 10, 6, 62, deviceName, null, "#FFFFFF", "#19364A");
-            Add(page, ScadaWidgetType.Rectangle, $"OUT-{i + 1}", x - 35, busY + 72, 70, 44, deviceName, $"OUT-{i + 1}", "#FFFFFF", "#19364A");
-            Add(page, ScadaWidgetType.Label, $"OUTGOING-{i + 1}", x - 58, busY + 125, 116, 30, deviceName, null, "#E6F8FF", "#19364A");
+            Add(page, ScadaWidgetType.Breaker, name, x - 38, busY + 62, 76, 94, deviceName, name, "#FFFFFF", "#19364A", true, "Outgoing");
+            Add(page, ScadaWidgetType.Label, name, x - 70, busY + 165, 140, 30, deviceName, null, "#E6F8FF", "#19364A");
         }
 
         Add(page, ScadaWidgetType.Label, "Primary editable SLD layout — assign live tags and refine symbols after generation.", 35, 735, 900, 32, deviceName, null, "#9EDFF2", "#102A3E");
         return page;
     }
 
+    private static string NameAt(IReadOnlyList<string>? names, int index, string fallback)
+    {
+        var name = names != null && index >= 0 && index < names.Count ? names[index] : null;
+        return string.IsNullOrWhiteSpace(name) ? fallback : name.Trim();
+    }
+
     private static void Add(ScadaPageConfig page, ScadaWidgetType type, string caption, double x, double y, double width, double height,
-        string? device, string? parameter, string foreground, string background, bool dynamic = false)
+        string? device, string? parameter, string foreground, string background, bool dynamic = false, string symbolKind = "")
     {
         page.Widgets.Add(new ScadaWidgetConfig
         {
@@ -95,6 +111,7 @@ public static class IndustrialSldTemplateService
             Foreground = foreground,
             Background = background,
             DynamicStateColors = dynamic,
+            SymbolKind = symbolKind,
             OnForeground = "#FFFFFF",
             OnBackground = "#18A957",
             OffForeground = "#FFFFFF",
