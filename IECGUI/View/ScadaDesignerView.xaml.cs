@@ -278,6 +278,22 @@ public partial class ScadaDesignerView : UserControl
             widget.Height = height;
         }
         else if (edge.Contains('S')) widget.Height = Math.Max(1, widget.Height + dy);
+
+        // Lines are represented by a diagonal from the lower-left to the upper-right
+        // of their bounding box. Snap a nearly flat/upright line to one-pixel thickness
+        // so users can create clean horizontal and vertical conductors without hunting
+        // for an exact drag distance. Larger diagonals remain unchanged.
+        if (widget.Type == ScadaWidgetType.Line)
+        {
+            var major = Math.Max(widget.Width, widget.Height);
+            var minor = Math.Min(widget.Width, widget.Height);
+            if (major > 1 && minor <= major * 0.15)
+            {
+                if (widget.Width >= widget.Height) widget.Height = 1;
+                else widget.Width = 1;
+            }
+        }
+
         e.Handled = true;
     }
 

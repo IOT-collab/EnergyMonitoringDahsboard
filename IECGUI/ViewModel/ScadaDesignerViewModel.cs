@@ -295,7 +295,7 @@ public void CreateSldTemplate()
         if (symbol == null || SelectedPage == null) return;
         var kind = symbol.Kind?.Trim() ?? string.Empty;
         var isImage = string.Equals(kind, "Image", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(symbol.FilePath);
-        var type = isImage ? ScadaWidgetType.Image : string.Equals(kind, "Incomer", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "BusCoupler", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Outgoing", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Breaker", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Breaker : ScadaWidgetType.Rectangle;
+        var type = isImage ? ScadaWidgetType.Image : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Line : string.Equals(kind, "Incomer", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "BusCoupler", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Outgoing", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Breaker", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Breaker : ScadaWidgetType.Rectangle;
         var config = new ScadaWidgetConfig
         {
             Type = type,
@@ -305,7 +305,8 @@ public void CreateSldTemplate()
             X = Math.Max(0, location?.X ?? 120),
             Y = Math.Max(0, location?.Y ?? 120),
             Width = isImage ? 180 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 260 : type == ScadaWidgetType.Breaker ? 76 : 130,
-            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 10 : type == ScadaWidgetType.Breaker ? 94 : 54,
+            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 1 : type == ScadaWidgetType.Breaker ? 94 : 54,
+            LineThickness = type == ScadaWidgetType.Line ? 6 : 3,
             DeviceName = AvailableDevices.FirstOrDefault(),
             Foreground = "#E6F8FF",
             Background = "#19364A"
@@ -368,7 +369,7 @@ public void CreateSldTemplate()
             X = Math.Max(0, location?.X ?? (80 + (index % 5) * 250)),
             Y = Math.Max(0, location?.Y ?? (70 + (index / 5) * 105)),
             Width = type == ScadaWidgetType.Line ? 220 : 210,
-            Height = type == ScadaWidgetType.Line ? 8 : type == ScadaWidgetType.Circle ? 100 : 58,
+            Height = type == ScadaWidgetType.Line ? 1 : type == ScadaWidgetType.Circle ? 100 : 58,
             DeviceName = AvailableDevices.FirstOrDefault(),
             ParameterName = AvailableParameters.FirstOrDefault(),
             DynamicStateColors = type is ScadaWidgetType.Led or ScadaWidgetType.Button or ScadaWidgetType.Line
@@ -607,8 +608,8 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string OffCaption { get => Model.OffCaption; set { if (Model.OffCaption == value) return; Model.OffCaption = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveCaption)); } }
     public double X { get => Model.X; set { if (Math.Abs(Model.X - value) < 0.01) return; Model.X = Math.Max(0, value); OnPropertyChanged(); } }
     public double Y { get => Model.Y; set { if (Math.Abs(Model.Y - value) < 0.01) return; Model.Y = Math.Max(0, value); OnPropertyChanged(); } }
-    public double Width { get => Model.Width; set { var v = Math.Max(1, value); if (Math.Abs(Model.Width - v) < 0.01) return; Model.Width = v; OnPropertyChanged(); } }
-    public double Height { get => Model.Height; set { var v = Math.Max(1, value); if (Math.Abs(Model.Height - v) < 0.01) return; Model.Height = v; OnPropertyChanged(); } }
+    public double Width { get => Model.Width; set { var v = Math.Max(1, value); if (Math.Abs(Model.Width - v) < 0.01) return; Model.Width = v; OnPropertyChanged(); RaiseLineGeometryChanged(); } }
+    public double Height { get => Model.Height; set { var v = Math.Max(1, value); if (Math.Abs(Model.Height - v) < 0.01) return; Model.Height = v; OnPropertyChanged(); RaiseLineGeometryChanged(); } }
     public double Rotation { get => Model.Rotation; set { if (Math.Abs(Model.Rotation - value) < 0.01) return; Model.Rotation = value; OnPropertyChanged(); } }
     public double LineThickness { get => Model.LineThickness; set { var v = Math.Max(1, value); if (Math.Abs(Model.LineThickness - v) < 0.01) return; Model.LineThickness = v; OnPropertyChanged(); } }
     public bool FlowAnimationEnabled { get => Model.FlowAnimationEnabled; set { if (Model.FlowAnimationEnabled == value) return; Model.FlowAnimationEnabled = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsFlowRunning)); } }
@@ -653,6 +654,12 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
     public bool IsFlowRunning => IsLineVisible && FlowAnimationEnabled && (!FlowOnlyWhenOn || IsOn);
+    private bool IsHorizontalLine => Width >= Height && Height <= Math.Max(1d, Width * 0.15d);
+    private bool IsVerticalLine => Height > Width && Width <= Math.Max(1d, Height * 0.15d);
+    public double LineStartX => IsVerticalLine ? Width / 2d : 0d;
+    public double LineStartY => IsHorizontalLine ? Height / 2d : Height;
+    public double LineEndX => IsVerticalLine ? Width / 2d : Width;
+    public double LineEndY => IsHorizontalLine ? Height / 2d : 0d;
     public bool IsBreakerVisible => Type == ScadaWidgetType.Breaker;
     public bool IsImageVisible => Type == ScadaWidgetType.Image && !string.IsNullOrWhiteSpace(ImagePath);
     public bool IsOn => LiveValue.Equals("ON", StringComparison.OrdinalIgnoreCase) || LiveValue.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(LiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
@@ -686,6 +693,13 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
         }
     }
     public void MoveTo(double x, double y) { X = x; Y = y; }
+    private void RaiseLineGeometryChanged()
+    {
+        OnPropertyChanged(nameof(LineStartX));
+        OnPropertyChanged(nameof(LineStartY));
+        OnPropertyChanged(nameof(LineEndX));
+        OnPropertyChanged(nameof(LineEndY));
+    }
     private void RaiseVisualProperties()
     {
         OnPropertyChanged(nameof(DisplayValue));
