@@ -39,6 +39,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ObservableCollection<string> ColorTargets { get; } = new() { "Foreground", "Background", "ON foreground", "ON background", "OFF foreground", "OFF background" };
     public ObservableCollection<string> ConditionOperators { get; } = new() { "Always", "==", "!=", ">", "<", ">=", "<=", "ON", "OFF" };
     public ObservableCollection<string> FontWeights { get; } = new() { "Light", "Normal", "SemiLight", "SemiBold", "Bold", "ExtraBold", "Black" };
+    public ObservableCollection<string> FlowDirections { get; } = new() { "Forward", "Reverse" };
     public ObservableCollection<ScadaSymbolLibraryItem> SymbolLibrary { get; } = new();
     public ObservableCollection<string> SldVoltageLevels { get; } = new() { "LV", "MV", "HV" };
     public IReadOnlyList<IndustrialSldDefinition> SldDefinitions => _sldDefinitions;
@@ -74,8 +75,30 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         }
     }
 
-    public double CanvasWidth => SelectedPage?.CanvasWidth ?? 1500;
-    public double CanvasHeight => SelectedPage?.CanvasHeight ?? 800;
+    public double CanvasWidth
+    {
+        get => SelectedPage?.CanvasWidth ?? 1500;
+        set
+        {
+            if (SelectedPage == null) return;
+            var next = Math.Clamp(value, 320, 10000);
+            if (Math.Abs(SelectedPage.CanvasWidth - next) < 0.01) return;
+            SelectedPage.CanvasWidth = next;
+            OnPropertyChanged();
+        }
+    }
+    public double CanvasHeight
+    {
+        get => SelectedPage?.CanvasHeight ?? 800;
+        set
+        {
+            if (SelectedPage == null) return;
+            var next = Math.Clamp(value, 240, 10000);
+            if (Math.Abs(SelectedPage.CanvasHeight - next) < 0.01) return;
+            SelectedPage.CanvasHeight = next;
+            OnPropertyChanged();
+        }
+    }
     public string Status { get => _status; private set => SetProperty(ref _status, value); }
 
     public ICommand NewPageCommand { get; }
@@ -588,6 +611,9 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public double Height { get => Model.Height; set { var v = Math.Max(1, value); if (Math.Abs(Model.Height - v) < 0.01) return; Model.Height = v; OnPropertyChanged(); } }
     public double Rotation { get => Model.Rotation; set { if (Math.Abs(Model.Rotation - value) < 0.01) return; Model.Rotation = value; OnPropertyChanged(); } }
     public double LineThickness { get => Model.LineThickness; set { var v = Math.Max(1, value); if (Math.Abs(Model.LineThickness - v) < 0.01) return; Model.LineThickness = v; OnPropertyChanged(); } }
+    public bool FlowAnimationEnabled { get => Model.FlowAnimationEnabled; set { if (Model.FlowAnimationEnabled == value) return; Model.FlowAnimationEnabled = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsFlowRunning)); } }
+    public bool FlowOnlyWhenOn { get => Model.FlowOnlyWhenOn; set { if (Model.FlowOnlyWhenOn == value) return; Model.FlowOnlyWhenOn = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsFlowRunning)); } }
+    public string FlowDirection { get => Model.FlowDirection; set { if (Model.FlowDirection == value) return; Model.FlowDirection = value; OnPropertyChanged(); } }
     public double FontSize { get => Model.FontSize; set { var v = Math.Max(1, value); if (Math.Abs(Model.FontSize - v) < 0.01) return; Model.FontSize = v; OnPropertyChanged(); } }
     public string FontWeight { get => Model.FontWeight; set { if (Model.FontWeight == value) return; Model.FontWeight = value; OnPropertyChanged(); } }
     public string? GroupId { get => Model.GroupId; set { if (Model.GroupId == value) return; Model.GroupId = value; OnPropertyChanged(); } }
@@ -614,7 +640,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsEnabled { get => Model.IsEnabled; set { if (Model.IsEnabled == value) return; Model.IsEnabled = value; OnPropertyChanged(); } }
     public double Minimum { get => Model.Minimum; set { if (Math.Abs(Model.Minimum - value) < 0.01) return; Model.Minimum = value; OnPropertyChanged(); } }
     public double Maximum { get => Model.Maximum; set { if (Math.Abs(Model.Maximum - value) < 0.01) return; Model.Maximum = value; OnPropertyChanged(); } }
-    public string LiveValue { get => _liveValue; set { if (!SetProperty(ref _liveValue, value)) return; OnPropertyChanged(nameof(DisplayValue)); OnPropertyChanged(nameof(EffectiveCaption)); OnPropertyChanged(nameof(IsOn)); OnPropertyChanged(nameof(LedBrush)); OnPropertyChanged(nameof(EffectiveForeground)); OnPropertyChanged(nameof(EffectiveBackground)); } }
+    public string LiveValue { get => _liveValue; set { if (!SetProperty(ref _liveValue, value)) return; OnPropertyChanged(nameof(DisplayValue)); OnPropertyChanged(nameof(EffectiveCaption)); OnPropertyChanged(nameof(IsOn)); OnPropertyChanged(nameof(IsFlowRunning)); OnPropertyChanged(nameof(LedBrush)); OnPropertyChanged(nameof(EffectiveForeground)); OnPropertyChanged(nameof(EffectiveBackground)); } }
     public string EffectiveForeground => DynamicStateColors ? (IsOn ? OnForeground : OffForeground) : Foreground;
     public string EffectiveBackground => DynamicStateColors ? (IsOn ? OnBackground : OffBackground) : Background;
     public string EffectiveCaption => Type == ScadaWidgetType.Button ? (IsOn ? OnCaption : OffCaption) : Caption;
@@ -626,6 +652,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsRectangleVisible => Type == ScadaWidgetType.Rectangle;
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
+    public bool IsFlowRunning => IsLineVisible && FlowAnimationEnabled && (!FlowOnlyWhenOn || IsOn);
     public bool IsBreakerVisible => Type == ScadaWidgetType.Breaker;
     public bool IsImageVisible => Type == ScadaWidgetType.Image && !string.IsNullOrWhiteSpace(ImagePath);
     public bool IsOn => LiveValue.Equals("ON", StringComparison.OrdinalIgnoreCase) || LiveValue.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(LiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
@@ -669,6 +696,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
         OnPropertyChanged(nameof(IsRectangleVisible));
         OnPropertyChanged(nameof(IsCircleVisible));
         OnPropertyChanged(nameof(IsLineVisible));
+        OnPropertyChanged(nameof(IsFlowRunning));
         OnPropertyChanged(nameof(IsBreakerVisible));
         OnPropertyChanged(nameof(IsImageVisible));
     }

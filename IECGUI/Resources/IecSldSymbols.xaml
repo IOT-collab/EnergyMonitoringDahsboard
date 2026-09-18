@@ -49,4 +49,39 @@
             </Canvas>
         </Viewbox>
     </DataTemplate>
+
+    
+
+    <Style x:Key="ScadaFlowLineStyle" TargetType="{x:Type Line}">
+        <Setter Property="StrokeDashArray" Value="2,5"/>
+        <Setter Property="StrokeDashOffset" Value="0"/>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsFlowRunning}" Value="True"/>
+                    <Condition Binding="{Binding FlowDirection}" Value="Forward"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetProperty="StrokeDashOffset" From="0" To="7" Duration="0:0:0.65"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiDataTrigger.EnterActions>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsFlowRunning}" Value="True"/>
+                    <Condition Binding="{Binding FlowDirection}" Value="Reverse"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetProperty="StrokeDashOffset" From="7" To="0" Duration="0:0:0.65"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </MultiDataTrigger.EnterActions>
+            </MultiDataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

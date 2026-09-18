@@ -51,6 +51,10 @@ public sealed class ScadaWidgetConfig
     public double Height { get; set; } = 60;
     public double Rotation { get; set; }
     public double LineThickness { get; set; } = 3;
+    // Optional animated flow overlay for line widgets.
+    public bool FlowAnimationEnabled { get; set; }
+    public bool FlowOnlyWhenOn { get; set; } = true;
+    public string FlowDirection { get; set; } = "Forward";
     public double FontSize { get; set; } = 20;
     public string FontWeight { get; set; } = "SemiBold";
     public string? ImagePath { get; set; }

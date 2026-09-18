@@ -16,5 +16,90 @@
       "OUTGOING-3",
       "OUTGOING-4"
     ]
+  },
+  {
+    "Id": "5c71f6065b674c35b4bc9d055a526712",
+    "Name": "Prime Steel S/S Grid-01",
+    "VoltageLevel": "HV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2",
+      "INCOMER-3",
+      "INCOMER-4",
+      "INCOMER-5"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1",
+      "BUS COUPLER-2",
+      "BUS COUPLER-3",
+      "BUS COUPLER-4",
+      "BUS COUPLER-5"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4",
+      "OUTGOING-5",
+      "OUTGOING-6",
+      "OUTGOING-7",
+      "OUTGOING-8",
+      "OUTGOING-9",
+      "OUTGOING-10",
+      "OUTGOING-11",
+      "OUTGOING-12",
+      "OUTGOING-13",
+      "OUTGOING-14"
+    ]
+  },
+  {
+    "Id": "9fcbc8381d044928a4706461c7ca071b",
+    "Name": "Prime Steel",
+    "VoltageLevel": "HV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2",
+      "INCOMER-3",
+      "INCOMER-4",
+      "INCOMER-5"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1",
+      "BUS COUPLER-2",
+      "BUS COUPLER-3"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4",
+      "OUTGOING-5",
+      "OUTGOING-6",
+      "OUTGOING-7",
+      "OUTGOING-8",
+      "OUTGOING-9",
+      "OUTGOING-10",
+      "OUTGOING-11",
+      "OUTGOING-12",
+      "OUTGOING-13"
+    ]
+  },
+  {
+    "Id": "4abc3d3ab9994fa698487483935e1ee0",
+    "Name": "dwd",
+    "VoltageLevel": "MV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4"
+    ]
   }
 ]
