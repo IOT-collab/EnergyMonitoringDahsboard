@@ -30,6 +30,16 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private int _sldOutgoingCount = 4;
     private readonly IndustrialSldDefinitionStore _sldDefinitionStore;
     private readonly List<IndustrialSldDefinition> _sldDefinitions = new();
+    private readonly Stack<string> _undoHistory = new();
+    private bool _undoBoundaryCaptured;
+    private bool _restoringUndo;
+    private string? _undoBoundarySnapshot;
+
+    private sealed class DesignerUndoSnapshot
+    {
+        public List<ScadaPageConfig> Pages { get; set; } = new();
+        public int SelectedPageIndex { get; set; } = -1;
+    }
 
     public ObservableCollection<ScadaPageConfig> Pages { get; } = new();
     public ObservableCollection<ScadaWidgetViewModel> Widgets { get; } = new();
@@ -128,6 +138,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     public ICommand AddSymbolCommand { get; }
     public ICommand ToggleFavoriteSymbolCommand { get; }
     public ICommand DeleteSymbolCommand { get; }
+    public ICommand UndoCommand { get; }
 
     public ScadaDesignerViewModel(
         ConfigurationManagerService configuration,
@@ -175,6 +186,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         AddSymbolCommand = new RelayCommand<ScadaSymbolLibraryItem>(item => AddSymbolAt(item?.Id, null));
         ToggleFavoriteSymbolCommand = new RelayCommand<ScadaSymbolLibraryItem>(ToggleFavoriteSymbol);
         DeleteSymbolCommand = new RelayCommand(DeleteSelectedSymbol);
+        UndoCommand = new RelayCommand(Undo);
 
         LoadSymbolLibrary();
 
@@ -199,8 +211,101 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         RefreshLiveValues();
     }
 
+    public void BeginUndoBoundary()
+    {
+        if (_restoringUndo || _undoBoundaryCaptured) return;
+        _undoBoundarySnapshot = CreateUndoSnapshot();
+        _undoBoundaryCaptured = true;
+    }
+
+    public void EndUndoBoundary()
+    {
+        if (!_undoBoundaryCaptured) return;
+        var before = _undoBoundarySnapshot;
+        _undoBoundaryCaptured = false;
+        _undoBoundarySnapshot = null;
+        if (before != null && !string.Equals(before, CreateUndoSnapshot(), StringComparison.Ordinal))
+            CommitUndoSnapshot(before);
+    }
+
+    private void CaptureUndoSnapshot()
+    {
+        if (_restoringUndo) return;
+        CommitUndoSnapshot(CreateUndoSnapshot());
+    }
+
+    private string CreateUndoSnapshot()
+    {
+        SyncSelectedPageWidgets();
+        var snapshot = new DesignerUndoSnapshot
+        {
+            Pages = Pages
+                .Select(page => JsonSerializer.Deserialize<ScadaPageConfig>(JsonSerializer.Serialize(page)))
+                .Where(page => page != null)
+                .Cast<ScadaPageConfig>()
+                .ToList(),
+            SelectedPageIndex = SelectedPage == null ? -1 : Pages.IndexOf(SelectedPage)
+        };
+        return JsonSerializer.Serialize(snapshot);
+    }
+
+    private void CommitUndoSnapshot(string serialized)
+    {
+        if (_undoHistory.Count > 0 && string.Equals(_undoHistory.Peek(), serialized, StringComparison.Ordinal)) return;
+        _undoHistory.Push(serialized);
+        if (_undoHistory.Count > 50)
+        {
+            var retained = _undoHistory.Take(50).ToArray();
+            _undoHistory.Clear();
+            for (var index = retained.Length - 1; index >= 0; index--) _undoHistory.Push(retained[index]);
+        }
+    }
+
+    private void SyncSelectedPageWidgets()
+    {
+        if (SelectedPage != null)
+            SelectedPage.Widgets = Widgets.Select(widget => widget.Model).ToList();
+    }
+
+    public void Undo()
+    {
+        if (_undoHistory.Count == 0)
+        {
+            Status = "Nothing to undo.";
+            return;
+        }
+
+        var serialized = _undoHistory.Pop();
+        var snapshot = JsonSerializer.Deserialize<DesignerUndoSnapshot>(serialized);
+        if (snapshot == null)
+        {
+            Status = "Unable to restore the previous designer state.";
+            return;
+        }
+
+        _restoringUndo = true;
+        try
+        {
+            Pages.Clear();
+            foreach (var page in snapshot.Pages) Pages.Add(page);
+            _selectedPage = null;
+            OnPropertyChanged(nameof(SelectedPage));
+            SelectedPage = snapshot.SelectedPageIndex >= 0 && snapshot.SelectedPageIndex < Pages.Count
+                ? Pages[snapshot.SelectedPageIndex]
+                : Pages.FirstOrDefault();
+            Status = "Undid the last designer change.";
+        }
+        finally
+        {
+            _undoBoundaryCaptured = false;
+            _undoBoundarySnapshot = null;
+            _restoringUndo = false;
+        }
+    }
+
     private void NewPage()
     {
+        CaptureUndoSnapshot();
         var page = new ScadaPageConfig { PageName = $"Page {Pages.Count + 1}" };
         Pages.Add(page);
         SelectedPage = page;
@@ -210,6 +315,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private void DeletePage()
     {
         if (SelectedPage == null || Pages.Count <= 1) return;
+        CaptureUndoSnapshot();
         var name = SelectedPage.PageName;
         Pages.Remove(SelectedPage);
         SelectedPage = Pages.FirstOrDefault();
@@ -257,6 +363,7 @@ public void CreateSldTemplate()
     public void CreateSldFromDefinition(IndustrialSldDefinition definition)
     {
         if (definition == null) return;
+        CaptureUndoSnapshot();
         definition.IncomerNames ??= new List<string>();
         definition.BusCouplerNames ??= new List<string>();
         definition.OutgoingNames ??= new List<string>();
@@ -293,6 +400,7 @@ public void CreateSldTemplate()
     {
         var symbol = SymbolLibrary.FirstOrDefault(x => string.Equals(x.Id, symbolId, StringComparison.OrdinalIgnoreCase));
         if (symbol == null || SelectedPage == null) return;
+        CaptureUndoSnapshot();
         var kind = symbol.Kind?.Trim() ?? string.Empty;
         var isImage = string.Equals(kind, "Image", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(symbol.FilePath);
         var type = isImage ? ScadaWidgetType.Image : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Line : string.Equals(kind, "Incomer", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "BusCoupler", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Outgoing", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Breaker", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Breaker : ScadaWidgetType.Rectangle;
@@ -348,6 +456,7 @@ public void CreateSldTemplate()
     public void AddWidgetAt(ScadaWidgetType type, Point? location)
     {
         if (SelectedPage == null) return;
+        CaptureUndoSnapshot();
         var index = Widgets.Count;
         var config = new ScadaWidgetConfig
         {
@@ -432,6 +541,7 @@ public void CreateSldTemplate()
     public void PasteSelected()
     {
         if (_clipboardWidget == null || SelectedPage == null) return;
+        CaptureUndoSnapshot();
         var copy = JsonSerializer.Deserialize<ScadaWidgetConfig>(JsonSerializer.Serialize(_clipboardWidget));
         if (copy == null) return;
         copy.Id = Guid.NewGuid().ToString("N");
@@ -448,6 +558,7 @@ public void CreateSldTemplate()
     private void DeleteSelectedWidget()
     {
         if (SelectedPage == null || SelectedWidgets.Count == 0) return;
+        CaptureUndoSnapshot();
         var removed = SelectedWidgets.ToList();
         foreach (var widget in removed) Widgets.Remove(widget);
         SelectedWidgets.Clear();
@@ -462,6 +573,7 @@ public void CreateSldTemplate()
             Status = "Select at least two objects with Ctrl-click before grouping.";
             return;
         }
+        CaptureUndoSnapshot();
         var groupId = SelectedWidgets.Select(x => x.GroupId).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)) ?? Guid.NewGuid().ToString("N");
         foreach (var widget in SelectedWidgets) widget.GroupId = groupId;
         Status = "Objects grouped. Use Ungroup to release them.";
@@ -471,6 +583,7 @@ public void CreateSldTemplate()
     {
         var groups = SelectedWidgets.Where(x => !string.IsNullOrWhiteSpace(x.GroupId)).Select(x => x.GroupId).ToHashSet(StringComparer.OrdinalIgnoreCase);
         if (groups.Count == 0) { Status = "Select grouped objects first."; return; }
+        CaptureUndoSnapshot();
         foreach (var widget in Widgets.Where(x => x.GroupId != null && groups.Contains(x.GroupId)).ToList()) widget.GroupId = null;
         Status = "Objects ungrouped.";
     }
@@ -478,6 +591,7 @@ public void CreateSldTemplate()
     private void MoveSelected(int delta)
     {
         if (SelectedWidgets.Count == 0) return;
+        CaptureUndoSnapshot();
         var ordered = SelectedWidgets.OrderBy(x => Widgets.IndexOf(x)).ToList();
         if (delta > 0) ordered.Reverse();
         foreach (var widget in ordered)
@@ -492,6 +606,7 @@ public void CreateSldTemplate()
     private void MoveSelectedToEdge(bool front)
     {
         if (SelectedWidgets.Count == 0) return;
+        CaptureUndoSnapshot();
         var ordered = SelectedWidgets.OrderBy(x => Widgets.IndexOf(x)).ToList();
         if (front)
         {
@@ -508,6 +623,7 @@ public void CreateSldTemplate()
     private void AdjustSelected(string? adjustment)
     {
         if (SelectedWidget == null || string.IsNullOrWhiteSpace(adjustment)) return;
+        CaptureUndoSnapshot();
         const double positionStep = 1;
         const double sizeStep = 1;
         const double rotationStep = 1;

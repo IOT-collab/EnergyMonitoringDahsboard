@@ -41,6 +41,12 @@ public partial class ScadaDesignerView : UserControl
 
     private void DesignerPreviewKeyDown(object sender, KeyEventArgs e)
     {
+        if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.Z)
+        {
+            ViewModel?.Undo();
+            e.Handled = true;
+            return;
+        }
         if (e.OriginalSource is TextBox) return;
         if (e.Key == Key.Delete)
         {
@@ -61,9 +67,22 @@ public partial class ScadaDesignerView : UserControl
         }
     }
 
+    private void DesignerPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (e.NewFocus is TextBox || e.NewFocus is ComboBox)
+            ViewModel?.BeginUndoBoundary();
+    }
+
+    private void DesignerPreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (e.OldFocus is TextBox || e.OldFocus is ComboBox)
+            ViewModel?.EndUndoBoundary();
+    }
+
     private void WidgetMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (_resizing || sender is not FrameworkElement element || element.DataContext is not ScadaWidgetViewModel widget) return;
+        ViewModel?.BeginUndoBoundary();
         ViewModel?.SelectWidget(widget, Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
         _dragWidget = widget;
         var point = e.GetPosition(DesignCanvas);
@@ -92,6 +111,7 @@ public partial class ScadaDesignerView : UserControl
     {
         if (sender is UIElement element) element.ReleaseMouseCapture();
         _dragWidget = null;
+        ViewModel?.EndUndoBoundary();
     }
 
     private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
@@ -254,6 +274,7 @@ public partial class ScadaDesignerView : UserControl
     private void ResizeHandleMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is not Thumb thumb || thumb.DataContext is not ScadaWidgetViewModel widget) return;
+        ViewModel?.BeginUndoBoundary();
         _resizing = true;
         ViewModel?.SelectWidget(widget, false);
         e.Handled = false;
@@ -297,5 +318,9 @@ public partial class ScadaDesignerView : UserControl
         e.Handled = true;
     }
 
-    private void ResizeHandleDragCompleted(object sender, DragCompletedEventArgs e) => _resizing = false;
+    private void ResizeHandleDragCompleted(object sender, DragCompletedEventArgs e)
+    {
+        _resizing = false;
+        ViewModel?.EndUndoBoundary();
+    }
 }
