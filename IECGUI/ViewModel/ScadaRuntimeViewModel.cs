@@ -21,6 +21,7 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
     private readonly IDialogService _dialog;
     private ScadaPageConfig _selectedPage;
     private string _status = "Runtime view is locked. Values are read from configured devices.";
+    private bool _isFullScreen;
 
     public ObservableCollection<ScadaPageConfig> Pages { get; } = new();
     public ObservableCollection<ScadaWidgetViewModel> Widgets { get; } = new();
@@ -40,9 +41,26 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
 
     public double CanvasWidth => SelectedPage?.CanvasWidth ?? 1500;
     public double CanvasHeight => SelectedPage?.CanvasHeight ?? 800;
+    public bool IsFullScreen
+    {
+        get => _isFullScreen;
+        private set
+        {
+            if (!SetProperty(ref _isFullScreen, value)) return;
+            OnPropertyChanged(nameof(HeaderRowHeight));
+            OnPropertyChanged(nameof(PageRowHeight));
+            OnPropertyChanged(nameof(FooterRowHeight));
+            OnPropertyChanged(nameof(FullScreenButtonText));
+        }
+    }
+    public GridLength HeaderRowHeight => IsFullScreen ? new GridLength(0) : new GridLength(78);
+    public GridLength PageRowHeight => IsFullScreen ? new GridLength(0) : new GridLength(54);
+    public GridLength FooterRowHeight => IsFullScreen ? new GridLength(0) : new GridLength(42);
+    public string FullScreenButtonText => IsFullScreen ? "EXIT FULL SCREEN" : "FULL SCREEN";
     public string Status { get => _status; private set => SetProperty(ref _status, value); }
     public ICommand WriteCommand { get; }
     public ICommand BackCommand { get; }
+    public ICommand ToggleFullScreenCommand { get; }
 
     public ScadaRuntimeViewModel(
         ConfigurationManagerService configuration,
@@ -60,6 +78,7 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
         _dialog = dialog;
         WriteCommand = new RelayCommand<ScadaWidgetViewModel>(async widget => await WriteAsync(widget));
         BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+        ToggleFullScreenCommand = new RelayCommand(() => IsFullScreen = !IsFullScreen);
 
         _layouts.LayoutSaved += ReloadLayout;
         _runtime.SnapshotUpdated += OnSnapshotUpdated;

@@ -413,7 +413,7 @@ public void CreateSldTemplate()
             X = Math.Max(0, location?.X ?? 120),
             Y = Math.Max(0, location?.Y ?? 120),
             Width = isImage ? 180 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 260 : type == ScadaWidgetType.Breaker ? 76 : 130,
-            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 1 : type == ScadaWidgetType.Breaker ? 94 : 54,
+            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 2 : type == ScadaWidgetType.Breaker ? 94 : 54,
             LineThickness = type == ScadaWidgetType.Line ? 6 : 3,
             DeviceName = AvailableDevices.FirstOrDefault(),
             Foreground = "#E6F8FF",
@@ -478,7 +478,7 @@ public void CreateSldTemplate()
             X = Math.Max(0, location?.X ?? (80 + (index % 5) * 250)),
             Y = Math.Max(0, location?.Y ?? (70 + (index / 5) * 105)),
             Width = type == ScadaWidgetType.Line ? 220 : 210,
-            Height = type == ScadaWidgetType.Line ? 1 : type == ScadaWidgetType.Circle ? 100 : 58,
+            Height = type == ScadaWidgetType.Line ? 2 : type == ScadaWidgetType.Circle ? 100 : 58,
             DeviceName = AvailableDevices.FirstOrDefault(),
             ParameterName = AvailableParameters.FirstOrDefault(),
             DynamicStateColors = type is ScadaWidgetType.Led or ScadaWidgetType.Button or ScadaWidgetType.Line
@@ -663,6 +663,9 @@ public void CreateSldTemplate()
             var name = string.IsNullOrWhiteSpace(register.ParameterName) ? register.RegisterAddress.ToString(CultureInfo.InvariantCulture) : register.ParameterName;
             if (!AvailableParameters.Contains(name, StringComparer.OrdinalIgnoreCase)) AvailableParameters.Add(name);
         }
+        var selected = SelectedWidget?.ParameterName?.Trim();
+        if (!string.IsNullOrWhiteSpace(selected) && !AvailableParameters.Contains(selected, StringComparer.OrdinalIgnoreCase))
+            AvailableParameters.Insert(0, selected);
     }
 
     private void OnSelectedWidgetDeviceNameChanged(object? sender, EventArgs e) => RefreshParameters();
@@ -742,7 +745,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string ConditionValue { get => Model.ConditionValue; set { if (Model.ConditionValue == value) return; Model.ConditionValue = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveVisibility)); } }
     public string ConditionLiveValue { get => _conditionLiveValue; set { if (SetProperty(ref _conditionLiveValue, value)) OnPropertyChanged(nameof(EffectiveVisibility)); } }
     public string DeviceName { get => Model.DeviceName ?? string.Empty; set { if (Model.DeviceName == value) return; Model.DeviceName = value; OnPropertyChanged(); DeviceNameChanged?.Invoke(this, EventArgs.Empty); } }
-    public string ParameterName { get => Model.ParameterName ?? string.Empty; set { if (Model.ParameterName == value) return; Model.ParameterName = value; OnPropertyChanged(); } }
+    public string ParameterName { get => Model.ParameterName ?? string.Empty; set { var normalized = value?.Trim() ?? string.Empty; if (Model.ParameterName == normalized) return; Model.ParameterName = normalized; OnPropertyChanged(); } }
     public string ImagePath { get => Model.ImagePath ?? string.Empty; set { if (Model.ImagePath == value) return; Model.ImagePath = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsImageVisible)); } }
     public string SymbolKind { get => Model.SymbolKind ?? string.Empty; set { if (Model.SymbolKind == value) return; Model.SymbolKind = value; OnPropertyChanged(); } }
     public string Unit { get => Model.Unit; set { if (Model.Unit == value) return; Model.Unit = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
@@ -770,8 +773,8 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
     public bool IsFlowRunning => IsLineVisible && FlowAnimationEnabled && (!FlowOnlyWhenOn || IsOn);
-    private bool IsHorizontalLine => Width >= Height && Height <= Math.Max(1d, Width * 0.15d);
-    private bool IsVerticalLine => Height > Width && Width <= Math.Max(1d, Height * 0.15d);
+    private bool IsHorizontalLine => Width >= Height && Height <= Math.Max(2d, Width * 0.15d);
+    private bool IsVerticalLine => Height > Width && Width <= Math.Max(2d, Height * 0.15d);
     public double LineStartX => IsVerticalLine ? Width / 2d : 0d;
     public double LineStartY => IsHorizontalLine ? Height / 2d : Height;
     public double LineEndX => IsVerticalLine ? Width / 2d : Width;

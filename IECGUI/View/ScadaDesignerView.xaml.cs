@@ -246,6 +246,12 @@ public partial class ScadaDesignerView : UserControl
         if (dialog.ShowDialog() == true) ViewModel?.AddCustomSymbol(dialog.FileName);
     }
 
+    private void ParameterSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems.Count > 0 && e.AddedItems[0] is string parameter && ViewModel?.SelectedWidget != null)
+            ViewModel.SelectedWidget.ParameterName = parameter;
+    }
+
     private static T? FindVisualParent<T>(DependencyObject? child) where T : DependencyObject
     {
         while (child != null)
@@ -301,7 +307,8 @@ public partial class ScadaDesignerView : UserControl
         else if (edge.Contains('S')) widget.Height = Math.Max(1, widget.Height + dy);
 
         // Lines are represented by a diagonal from the lower-left to the upper-right
-        // of their bounding box. Snap a nearly flat/upright line to one-pixel thickness
+        // of their bounding box. Snap a nearly flat/upright line to a two-pixel
+        // thickness so the animated flow overlay remains visible.
         // so users can create clean horizontal and vertical conductors without hunting
         // for an exact drag distance. Larger diagonals remain unchanged.
         if (widget.Type == ScadaWidgetType.Line)
@@ -310,8 +317,8 @@ public partial class ScadaDesignerView : UserControl
             var minor = Math.Min(widget.Width, widget.Height);
             if (major > 1 && minor <= major * 0.15)
             {
-                if (widget.Width >= widget.Height) widget.Height = 1;
-                else widget.Width = 1;
+                if (widget.Width >= widget.Height) widget.Height = 2;
+                else widget.Width = 2;
             }
         }
 

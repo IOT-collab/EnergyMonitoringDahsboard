@@ -56,7 +56,7 @@ public static class IndustrialSldTemplateService
         for (var section = 0; section < sections; section++)
         {
             var x = busX + section * sectionWidth;
-            Add(page, ScadaWidgetType.Line, $"BUS {section + 1}", x, busY, sectionWidth - 8, 1, deviceName, null, "#E6F8FF", "#19364A", lineThickness: 6);
+            Add(page, ScadaWidgetType.Line, $"BUS {section + 1}", x, busY, sectionWidth - 8, 2, deviceName, null, "#E6F8FF", "#19364A", lineThickness: 6);
         }
 
         for (var i = 0; i < n; i++)
@@ -65,8 +65,8 @@ public static class IndustrialSldTemplateService
             var name = NameAt(incomerNames, i, $"INCOMER-{i + 1}");
             Add(page, ScadaWidgetType.Label, name, x - 75, 100, 150, 32, deviceName, null, "#E6F8FF", "#19364A");
             Add(page, ScadaWidgetType.Breaker, name, x - 35, 225, 70, 88, deviceName, name, "#FFFFFF", "#19364A", true, "Incomer");
-            Add(page, ScadaWidgetType.Line, string.Empty, x - 0.5, 175, 1, 50, deviceName, null, "#FFFFFF", "#19364A", lineThickness: 4);
-            Add(page, ScadaWidgetType.Line, string.Empty, x - 0.5, 313, 1, busY - 313, deviceName, null, "#FFFFFF", "#19364A", lineThickness: 4);
+            Add(page, ScadaWidgetType.Line, string.Empty, x - 1, 175, 2, 50, deviceName, null, "#FFFFFF", "#19364A", lineThickness: 4);
+            Add(page, ScadaWidgetType.Line, string.Empty, x - 1, 313, 2, busY - 313, deviceName, null, "#FFFFFF", "#19364A", lineThickness: 4);
         }
 
         for (var c = 0; c < m; c++)
@@ -80,7 +80,7 @@ public static class IndustrialSldTemplateService
         {
             var x = busX + (i + 0.5) * busWidth / feeders;
             var name = NameAt(outgoingNames, i, $"OUTGOING-{i + 1}");
-            Add(page, ScadaWidgetType.Line, string.Empty, x - 0.5, busY + 10, 1, 62, deviceName, null, "#FFFFFF", "#19364A", lineThickness: 4);
+            Add(page, ScadaWidgetType.Line, string.Empty, x - 1, busY + 10, 2, 62, deviceName, null, "#FFFFFF", "#19364A", lineThickness: 4);
             Add(page, ScadaWidgetType.Breaker, name, x - 38, busY + 62, 76, 94, deviceName, name, "#FFFFFF", "#19364A", true, "Outgoing");
             Add(page, ScadaWidgetType.Label, name, x - 70, busY + 165, 140, 30, deviceName, null, "#E6F8FF", "#19364A");
         }
