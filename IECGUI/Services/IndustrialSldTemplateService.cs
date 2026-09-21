@@ -112,7 +112,7 @@ public static class IndustrialSldTemplateService
             Foreground = foreground,
             Background = background,
             DynamicStateColors = dynamic,
-            SymbolKind = symbolKind,
+            SymbolKind = type == ScadaWidgetType.Breaker ? "VCB" : symbolKind,
             OnForeground = "#FFFFFF",
             OnBackground = "#18A957",
             OffForeground = "#FFFFFF",

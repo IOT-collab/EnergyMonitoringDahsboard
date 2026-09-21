@@ -215,5 +215,23 @@
       "OUTGOING-7",
       "OUTGOING-8"
     ]
+  },
+  {
+    "Id": "10cba0d70e784d658ff2b363f51f4b69",
+    "Name": "HV Substation SLD1",
+    "VoltageLevel": "HV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4"
+    ]
   }
 ]

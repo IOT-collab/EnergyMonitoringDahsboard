@@ -58,7 +58,7 @@ public sealed class ScadaWidgetConfig
     public double FontSize { get; set; } = 20;
     public string FontWeight { get; set; } = "SemiBold";
     public string? ImagePath { get; set; }
-    // Optional IEC SLD variant: Incomer, BusCoupler, or Outgoing.
+    // Optional IEC SLD variant: ACB, VCB, Disconnector, Fuse, Transformer, CT/VT, etc.
     public string SymbolKind { get; set; } = string.Empty;
     public string? DeviceName { get; set; }
     public string? ParameterName { get; set; }

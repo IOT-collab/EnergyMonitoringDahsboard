@@ -330,16 +330,17 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
 
         var defaults = new[]
         {
-            new ScadaSymbolLibraryItem { Id = "iec-lv-incomer", Name = "LV · Incomer", VoltageLevel = "LV", Kind = "Incomer" },
-            new ScadaSymbolLibraryItem { Id = "iec-mv-incomer", Name = "MV · Incomer", VoltageLevel = "MV", Kind = "Incomer" },
-            new ScadaSymbolLibraryItem { Id = "iec-hv-incomer", Name = "HV · Incomer", VoltageLevel = "HV", Kind = "Incomer" },
-            new ScadaSymbolLibraryItem { Id = "iec-lv-coupler", Name = "LV · Bus coupler", VoltageLevel = "LV", Kind = "BusCoupler" },
-            new ScadaSymbolLibraryItem { Id = "iec-mv-coupler", Name = "MV · Bus coupler", VoltageLevel = "MV", Kind = "BusCoupler" },
-            new ScadaSymbolLibraryItem { Id = "iec-hv-coupler", Name = "HV · Bus coupler", VoltageLevel = "HV", Kind = "BusCoupler" },
-            new ScadaSymbolLibraryItem { Id = "iec-lv-outgoing", Name = "LV · Outgoing feeder", VoltageLevel = "LV", Kind = "Outgoing" },
-            new ScadaSymbolLibraryItem { Id = "iec-mv-outgoing", Name = "MV · Outgoing feeder", VoltageLevel = "MV", Kind = "Outgoing" },
-            new ScadaSymbolLibraryItem { Id = "iec-hv-outgoing", Name = "HV · Outgoing feeder", VoltageLevel = "HV", Kind = "Outgoing" },
-            new ScadaSymbolLibraryItem { Id = "iec-breaker", Name = "IEC · Breaker", VoltageLevel = "All", Kind = "Breaker" },
+            new ScadaSymbolLibraryItem { Id = "iec-acb", Name = "ACB · Air circuit breaker", VoltageLevel = "All", Kind = "ACB" },
+            new ScadaSymbolLibraryItem { Id = "iec-vcb", Name = "VCB · Vacuum circuit breaker", VoltageLevel = "MV/HV", Kind = "VCB" },
+            new ScadaSymbolLibraryItem { Id = "iec-disconnector", Name = "IEC · Disconnector / isolator", VoltageLevel = "All", Kind = "Disconnector" },
+            new ScadaSymbolLibraryItem { Id = "iec-fuse", Name = "IEC · Fuse", VoltageLevel = "LV/MV", Kind = "Fuse" },
+            new ScadaSymbolLibraryItem { Id = "iec-earth-switch", Name = "IEC · Earth switch", VoltageLevel = "MV/HV", Kind = "EarthSwitch" },
+            new ScadaSymbolLibraryItem { Id = "iec-transformer", Name = "IEC · Transformer", VoltageLevel = "All", Kind = "Transformer" },
+            new ScadaSymbolLibraryItem { Id = "iec-ct", Name = "IEC · Current transformer (CT)", VoltageLevel = "All", Kind = "CT" },
+            new ScadaSymbolLibraryItem { Id = "iec-vt", Name = "IEC · Voltage transformer (VT/PT)", VoltageLevel = "All", Kind = "VT" },
+            new ScadaSymbolLibraryItem { Id = "iec-motor", Name = "IEC · Motor", VoltageLevel = "All", Kind = "Motor" },
+            new ScadaSymbolLibraryItem { Id = "iec-generator", Name = "IEC · Generator", VoltageLevel = "All", Kind = "Generator" },
+            new ScadaSymbolLibraryItem { Id = "iec-capacitor", Name = "IEC · Capacitor bank", VoltageLevel = "All", Kind = "Capacitor" },
             new ScadaSymbolLibraryItem { Id = "iec-busbar", Name = "IEC · Busbar", VoltageLevel = "All", Kind = "Busbar" }
         };
         foreach (var item in defaults)
@@ -402,8 +403,15 @@ public void CreateSldTemplate()
         if (symbol == null || SelectedPage == null) return;
         CaptureUndoSnapshot();
         var kind = symbol.Kind?.Trim() ?? string.Empty;
+        var isBreaker = string.Equals(kind, "ACB", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(kind, "VCB", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(kind, "Breaker", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(kind, "Incomer", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(kind, "BusCoupler", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(kind, "Outgoing", StringComparison.OrdinalIgnoreCase);
+        var isIecDevice = ScadaWidgetViewModel.IsIecDeviceKind(kind);
         var isImage = string.Equals(kind, "Image", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(symbol.FilePath);
-        var type = isImage ? ScadaWidgetType.Image : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Line : string.Equals(kind, "Incomer", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "BusCoupler", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Outgoing", StringComparison.OrdinalIgnoreCase) || string.Equals(kind, "Breaker", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Breaker : ScadaWidgetType.Rectangle;
+        var type = isImage ? ScadaWidgetType.Image : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? ScadaWidgetType.Line : isBreaker ? ScadaWidgetType.Breaker : ScadaWidgetType.Rectangle;
         var config = new ScadaWidgetConfig
         {
             Type = type,
@@ -412,8 +420,8 @@ public void CreateSldTemplate()
             SymbolKind = kind,
             X = Math.Max(0, location?.X ?? 120),
             Y = Math.Max(0, location?.Y ?? 120),
-            Width = isImage ? 180 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 260 : type == ScadaWidgetType.Breaker ? 76 : 130,
-            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 2 : type == ScadaWidgetType.Breaker ? 94 : 54,
+            Width = isImage ? 180 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 260 : type == ScadaWidgetType.Breaker ? 76 : isIecDevice ? 110 : 130,
+            Height = isImage ? 110 : string.Equals(kind, "Busbar", StringComparison.OrdinalIgnoreCase) ? 2 : type == ScadaWidgetType.Breaker ? 94 : isIecDevice ? 78 : 54,
             LineThickness = type == ScadaWidgetType.Line ? 6 : 3,
             DeviceName = AvailableDevices.FirstOrDefault(),
             Foreground = "#E6F8FF",
@@ -461,7 +469,7 @@ public void CreateSldTemplate()
         var config = new ScadaWidgetConfig
         {
             Type = type,
-            SymbolKind = type == ScadaWidgetType.Breaker ? "Breaker" : string.Empty,
+            SymbolKind = type == ScadaWidgetType.Breaker ? "VCB" : string.Empty,
             Caption = type switch
             {
                 ScadaWidgetType.Value => "Live value",
@@ -747,7 +755,8 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public string DeviceName { get => Model.DeviceName ?? string.Empty; set { if (Model.DeviceName == value) return; Model.DeviceName = value; OnPropertyChanged(); DeviceNameChanged?.Invoke(this, EventArgs.Empty); } }
     public string ParameterName { get => Model.ParameterName ?? string.Empty; set { var normalized = value?.Trim() ?? string.Empty; if (Model.ParameterName == normalized) return; Model.ParameterName = normalized; OnPropertyChanged(); } }
     public string ImagePath { get => Model.ImagePath ?? string.Empty; set { if (Model.ImagePath == value) return; Model.ImagePath = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsImageVisible)); } }
-    public string SymbolKind { get => Model.SymbolKind ?? string.Empty; set { if (Model.SymbolKind == value) return; Model.SymbolKind = value; OnPropertyChanged(); } }
+    public string SymbolKind { get => Model.SymbolKind ?? string.Empty; set { if (Model.SymbolKind == value) return; Model.SymbolKind = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveSymbolKind)); OnPropertyChanged(nameof(IsIecDeviceVisible)); OnPropertyChanged(nameof(IsRectangleVisible)); OnPropertyChanged(nameof(IsBreakerVisible)); } }
+    public string EffectiveSymbolKind => IsLegacyBreakerKind(SymbolKind) ? "VCB" : string.IsNullOrWhiteSpace(SymbolKind) ? "VCB" : SymbolKind;
     public string Unit { get => Model.Unit; set { if (Model.Unit == value) return; Model.Unit = value; OnPropertyChanged(); OnPropertyChanged(nameof(DisplayValue)); } }
     public string Foreground { get => Model.Foreground; set { if (Model.Foreground == value) return; Model.Foreground = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveForeground)); } }
     public string Background { get => Model.Background; set { if (Model.Background == value) return; Model.Background = value; OnPropertyChanged(); OnPropertyChanged(nameof(EffectiveBackground)); } }
@@ -769,7 +778,8 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool HasFontAppearance => Type is ScadaWidgetType.Label or ScadaWidgetType.Value or ScadaWidgetType.Button;
     public bool IsButtonVisible => Type == ScadaWidgetType.Button;
     public bool IsLedVisible => Type == ScadaWidgetType.Led;
-    public bool IsRectangleVisible => Type == ScadaWidgetType.Rectangle;
+    public bool IsRectangleVisible => Type == ScadaWidgetType.Rectangle && !IsIecDeviceKind(SymbolKind);
+    public bool IsIecDeviceVisible => Type == ScadaWidgetType.Rectangle && IsIecDeviceKind(SymbolKind);
     public bool IsCircleVisible => Type == ScadaWidgetType.Circle;
     public bool IsLineVisible => Type == ScadaWidgetType.Line;
     public bool IsFlowRunning => IsLineVisible && FlowAnimationEnabled && (!FlowOnlyWhenOn || IsOn);
@@ -782,6 +792,12 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
     public bool IsBreakerVisible => Type == ScadaWidgetType.Breaker;
     public bool IsImageVisible => Type == ScadaWidgetType.Image && !string.IsNullOrWhiteSpace(ImagePath);
     public bool IsOn => LiveValue.Equals("ON", StringComparison.OrdinalIgnoreCase) || LiveValue.Equals("true", StringComparison.OrdinalIgnoreCase) || double.TryParse(LiveValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var n) && Math.Abs(n) > double.Epsilon;
+    public static bool IsIecDeviceKind(string? kind) => kind switch
+    {
+        "Disconnector" or "Fuse" or "EarthSwitch" or "Transformer" or "CT" or "VT" or "Motor" or "Generator" or "Capacitor" => true,
+        _ => false
+    };
+    private static bool IsLegacyBreakerKind(string? kind) => kind is "Breaker" or "Incomer" or "BusCoupler" or "Outgoing";
     public bool EffectiveVisibility => IsVisible && ConditionMatches();
     public string LedBrush => DynamicStateColors ? EffectiveBackground : (IsOn ? "#39E68A" : "#566D80");
     private bool ConditionMatches()
@@ -827,6 +843,7 @@ public sealed class ScadaWidgetViewModel : ObservableObjectVM
         OnPropertyChanged(nameof(IsButtonVisible));
         OnPropertyChanged(nameof(IsLedVisible));
         OnPropertyChanged(nameof(IsRectangleVisible));
+        OnPropertyChanged(nameof(IsIecDeviceVisible));
         OnPropertyChanged(nameof(IsCircleVisible));
         OnPropertyChanged(nameof(IsLineVisible));
         OnPropertyChanged(nameof(IsFlowRunning));
