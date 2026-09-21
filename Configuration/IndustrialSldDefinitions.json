@@ -152,5 +152,68 @@
       "OUTGOING-9",
       "OUTGOING-10"
     ]
+  },
+  {
+    "Id": "8288cfa379db4e1b9abdc60d33e50a5a",
+    "Name": "MV Substation SLD",
+    "VoltageLevel": "MV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4"
+    ]
+  },
+  {
+    "Id": "abcbc0034ab04713a376c88d1241dbe7",
+    "Name": "JP Green Hospital S/S",
+    "VoltageLevel": "HV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1",
+      "BUS COUPLER-2"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4",
+      "OUTGOING-5",
+      "OUTGOING-6"
+    ]
+  },
+  {
+    "Id": "4b23d23056f54f169a1cd1815f4b0bc8",
+    "Name": "Prime Steel S/S Nepal",
+    "VoltageLevel": "HV",
+    "IncomerNames": [
+      "INCOMER-1",
+      "INCOMER-2",
+      "INCOMER-3"
+    ],
+    "BusCouplerNames": [
+      "BUS COUPLER-1",
+      "BUS COUPLER-2"
+    ],
+    "OutgoingNames": [
+      "OUTGOING-1",
+      "OUTGOING-2",
+      "OUTGOING-3",
+      "OUTGOING-4",
+      "OUTGOING-5",
+      "OUTGOING-6",
+      "OUTGOING-7",
+      "OUTGOING-8"
+    ]
   }
 ]

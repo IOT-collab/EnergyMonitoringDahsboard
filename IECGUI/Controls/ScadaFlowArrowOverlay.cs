@@ -5,7 +5,7 @@ using System.Windows.Media;
 namespace IECGUI.Controls;
 
 /// <summary>
-/// Renders several large triangular arrowheads travelling along a line.
+/// Renders one compact triangular arrowhead travelling along a line.
 /// </summary>
 public sealed class ScadaFlowArrowOverlay : FrameworkElement
 {
@@ -25,7 +25,6 @@ public sealed class ScadaFlowArrowOverlay : FrameworkElement
         DependencyProperty.Register(nameof(LineThickness), typeof(double), typeof(ScadaFlowArrowOverlay),
             new FrameworkPropertyMetadata(2d, OnAnimationPropertyChanged));
 
-    private const int ArrowCount = 4;
     private double _phase;
     private DateTime _lastFrame;
     private bool _rendering;
@@ -98,8 +97,8 @@ public sealed class ScadaFlowArrowOverlay : FrameworkElement
 
         var width = ActualWidth;
         var height = ActualHeight;
-        var isHorizontal = width >= height && height <= Math.Max(1d, width * 0.15d);
-        var isVertical = height > width && width <= Math.Max(1d, height * 0.15d);
+        var isHorizontal = width >= height && height <= Math.Max(2d, width * 0.15d);
+        var isVertical = height > width && width <= Math.Max(2d, height * 0.15d);
         var axis = isHorizontal ? new Vector(width, 0) : isVertical ? new Vector(0, -height) : new Vector(width, -height);
         var lineLength = axis.Length;
         if (lineLength <= 1)
@@ -110,33 +109,36 @@ public sealed class ScadaFlowArrowOverlay : FrameworkElement
         var direction = reverse ? -axis : axis;
         var normal = new Vector(-direction.Y, direction.X);
         var start = isHorizontal ? new Point(0, height / 2d) : isVertical ? new Point(width / 2d, height) : new Point(0, height);
-        var arrowLength = Math.Clamp(Math.Min(48d, lineLength * 0.14d), 20d, 48d);
-        var arrowWidth = Math.Clamp(Math.Max(12d, LineThickness * 4.5d), 12d, 30d);
+        // Keep one small arrow fully inside the line bounds. This avoids overlapping
+        // arrowheads on short conductors while retaining a visible travelling marker.
+        var arrowLength = Math.Min(Math.Clamp(lineLength * 0.22d, 5d, 22d), lineLength * 0.8d);
+        var arrowWidth = Math.Min(Math.Clamp(Math.Max(5d, LineThickness * 2.2d), 5d, 14d), Math.Max(3d, lineLength * 0.5d));
+        if (arrowLength <= 0.5d || arrowWidth <= 0.5d)
+            return;
         var halfWidth = arrowWidth / 2d;
         var brush = CreateBrush(ArrowColor);
         var outline = new Pen(brush, Math.Max(1d, LineThickness * 0.45d));
         outline.Freeze();
 
-        for (var index = 0; index < ArrowCount; index++)
+        var span = arrowLength / lineLength;
+        var lineProgress = reverse
+            ? 1d - _phase * (1d - span)
+            : span + _phase * (1d - span);
+        var tip = start + axis * (lineLength * lineProgress);
+        var basePoint = tip - direction * arrowLength;
+        var left = basePoint + normal * halfWidth;
+        var right = basePoint - normal * halfWidth;
+
+        var geometry = new StreamGeometry();
+        using (var context = geometry.Open())
         {
-            var progress = (_phase + index / (double)ArrowCount) % 1d;
-            var lineProgress = reverse ? 1d - progress : progress;
-            var tip = start + axis * (lineLength * lineProgress);
-            var basePoint = tip - direction * arrowLength;
-            var left = basePoint + normal * halfWidth;
-            var right = basePoint - normal * halfWidth;
-
-            var geometry = new StreamGeometry();
-            using (var context = geometry.Open())
-            {
-                context.BeginFigure(tip, isFilled: true, isClosed: true);
-                context.LineTo(left, isStroked: true, isSmoothJoin: true);
-                context.LineTo(right, isStroked: true, isSmoothJoin: true);
-            }
-
-            geometry.Freeze();
-            drawingContext.DrawGeometry(brush, outline, geometry);
+            context.BeginFigure(tip, isFilled: true, isClosed: true);
+            context.LineTo(left, isStroked: true, isSmoothJoin: true);
+            context.LineTo(right, isStroked: true, isSmoothJoin: true);
         }
+
+        geometry.Freeze();
+        drawingContext.DrawGeometry(brush, outline, geometry);
 
     }
 
