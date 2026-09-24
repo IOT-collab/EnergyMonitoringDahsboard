@@ -160,27 +160,32 @@
                                LineHeight="34"/>
                 </Grid>
 
-                <Grid Grid.Row="2" Margin="34,0,34,28">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="18"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="34,0,34,28">
 
-                    <Button Grid.Column="0"
-                            Command="{Binding NoCommand}"
-                            Content="{Binding NoText}"
-                            Visibility="{Binding IsCancelVisible, Converter={StaticResource BoolToVis}}"
-                            Style="{StaticResource DialogGhostButton}"
-                            HorizontalAlignment="Right"/>
-
-                    <Button Grid.Column="2"
+                    <Button
                             Command="{Binding YesCommand}"
                             Content="{Binding YesText}"
                             IsDefault="True"
                             Style="{StaticResource DialogActionButton}"
-                            HorizontalAlignment="Left"/>
-                </Grid>
+                            Margin="6,0"/>
+                    <Button
+                            Command="{Binding NoCommand}"
+                            Content="{Binding NoText}"
+                            Visibility="{Binding IsCancelVisible, Converter={StaticResource BoolToVis}}"
+                            Style="{StaticResource DialogGhostButton}"
+                            Margin="6,0"/>
+
+                    <Button
+                            Command="{Binding CancelCommand}"
+                            Content="{Binding CancelText}"
+                            Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BoolToVis}}"
+                            Style="{StaticResource DialogGhostButton}"
+                            Margin="6,0"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

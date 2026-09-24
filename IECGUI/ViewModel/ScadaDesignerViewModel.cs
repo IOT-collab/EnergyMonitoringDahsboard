@@ -34,6 +34,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private bool _undoBoundaryCaptured;
     private bool _restoringUndo;
     private string? _undoBoundarySnapshot;
+    private string _savedDesignFingerprint = string.Empty;
 
     private sealed class DesignerUndoSnapshot
     {
@@ -67,6 +68,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         get => _selectedPage;
         set
         {
+            if (ReferenceEquals(_selectedPage, value)) return;
+            SynchronizeSelectedPage();
             if (!SetProperty(ref _selectedPage, value) || value == null) return;
             LoadSelectedPage();
         }
@@ -110,6 +113,14 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         }
     }
     public string Status { get => _status; private set => SetProperty(ref _status, value); }
+    public bool HasUnsavedChanges
+    {
+        get
+        {
+            SynchronizeSelectedPage();
+            return !string.Equals(_savedDesignFingerprint, CreateDesignFingerprint(), StringComparison.Ordinal);
+        }
+    }
 
     public ICommand NewPageCommand { get; }
     public ICommand DeletePageCommand { get; }
@@ -192,6 +203,7 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
 
         foreach (var page in _layouts.LoadPages()) Pages.Add(page);
         SelectedPage = Pages.FirstOrDefault();
+        _savedDesignFingerprint = CreateDesignFingerprint();
         _layouts.LayoutSaved += OnLayoutSaved;
         _runtime.SnapshotUpdated += OnSnapshotUpdated;
         RefreshLiveValues();
@@ -209,6 +221,17 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         OnPropertyChanged(nameof(CanvasWidth));
         OnPropertyChanged(nameof(CanvasHeight));
         RefreshLiveValues();
+    }
+
+    private void SynchronizeSelectedPage()
+    {
+        if (_selectedPage == null) return;
+        _selectedPage.Widgets = Widgets.Select(x => x.Model).ToList();
+    }
+
+    private string CreateDesignFingerprint()
+    {
+        return JsonSerializer.Serialize(new { Pages, Definitions = _sldDefinitions });
     }
 
     public void BeginUndoBoundary()
@@ -376,9 +399,7 @@ public void CreateSldTemplate()
         var existing = _sldDefinitions.FindIndex(x => string.Equals(x.Id, definition.Id, StringComparison.OrdinalIgnoreCase));
         if (existing >= 0) _sldDefinitions[existing] = definition; else _sldDefinitions.Add(definition);
         _configuration.Configuration.IndustrialSldDefinitions = _sldDefinitions.ToList();
-        _sldDefinitionStore.Save(_sldDefinitions);
-        Save();
-        Status = $"Created editable {page.PageName}: {IndustrialSldTemplateService.LogicSummary(definition.IncomerNames.Count, definition.BusCouplerNames.Count)}.";
+        Status = $"Created editable {page.PageName}: {IndustrialSldTemplateService.LogicSummary(definition.IncomerNames.Count, definition.BusCouplerNames.Count)}. Press SAVE LAYOUT to persist it.";
     }
     public void AddCustomSymbol(string filePath)
     {
@@ -654,12 +675,27 @@ public void CreateSldTemplate()
 
     private void Save()
     {
-        if (SelectedPage == null) return;
+        TrySaveChanges();
+    }
+
+    public bool TrySaveChanges()
+    {
+        if (SelectedPage == null) return false;
+        SynchronizeSelectedPage();
         foreach (var page in Pages)
-            page.Widgets = page == SelectedPage ? Widgets.Select(x => x.Model).ToList() : page.Widgets ?? new();
+            page.Widgets ??= new();
         _configuration.Configuration.ScadaSymbolLibrary = SymbolLibrary.ToList();
-        if (_layouts.SavePages(Pages)) Status = $"Saved {Pages.Count} page(s) to the project configuration.";
-        else Status = "Unable to save the SCADA layout.";
+        _configuration.Configuration.IndustrialSldDefinitions = _sldDefinitions.ToList();
+        var definitionsSaved = _sldDefinitionStore.Save(_sldDefinitions);
+        var pagesSaved = _layouts.SavePages(Pages);
+        if (definitionsSaved && pagesSaved)
+        {
+            _savedDesignFingerprint = CreateDesignFingerprint();
+            Status = $"Saved {Pages.Count} page(s) to the project configuration.";
+            return true;
+        }
+        Status = "Unable to save the SCADA layout.";
+        return false;
     }
 
     private void RefreshParameters()

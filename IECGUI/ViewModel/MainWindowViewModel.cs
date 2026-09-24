@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace IECGUI.ViewModel
 {
@@ -43,17 +44,20 @@ namespace IECGUI.ViewModel
 
         private readonly IDialogService _dialogService;
         private readonly LicenseService _licenseService;
+        private readonly ScadaDesignerViewModel _scadaDesigner;
 
         public MainWindowViewModel(INavigationService navigation,
             IDialogService dialogService,
             AlarmMonitoringService alarmService,
             DeviceRuntimeService deviceRuntime,
-            LicenseService licenseService)
+            LicenseService licenseService,
+            ScadaDesignerViewModel scadaDesigner)
         {
             Navigation = navigation;
             _dialogService = dialogService;
             AlarmService = alarmService;
             _licenseService = licenseService;
+            _scadaDesigner = scadaDesigner;
             SessionControlsVisibility = _licenseService.Current.CanRun
                 ? Visibility.Visible
                 : Visibility.Collapsed;
@@ -70,12 +74,14 @@ namespace IECGUI.ViewModel
             LogoutCommand = new RelayCommand(ExecuteLogout);
             MinimizeCommand = new RelayCommand(ExecuteMinimize);
 
-            isLoginView(); // Initial state
+           
 
             if (_licenseService.Current.CanRun)
             {
-                //_dialogService.ShowMessage($"Trail Period Activated. Remaining Days :{_licenseService.Current.Message}","Information");
-                MessageBox.Show($"{_licenseService.Current.Message}","License Info",MessageBoxButton.OK,MessageBoxImage.Warning);
+                var licenseMessage = _licenseService.Current.Message;
+                Application.Current.Dispatcher.BeginInvoke(
+                    DispatcherPriority.ApplicationIdle,
+                    new Action(() => _dialogService.ShowWarning(licenseMessage)));
                 _ = StartRuntimeAsync(deviceRuntime);
                 Navigation.NavigateTo<LoginViewModel>();
             }
@@ -88,6 +94,8 @@ namespace IECGUI.ViewModel
 
             // Set initial time immediately
             SystemTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
+
+            isLoginView(); // Initial state
         }
 
         private async Task StartRuntimeAsync(DeviceRuntimeService deviceRuntime)
@@ -118,11 +126,30 @@ namespace IECGUI.ViewModel
 
         private void ExecuteCloseApp()
         {
-            if (_dialogService.ShowYesNo("Are you sure you want to exit?", "Confirm Exit") == true)
-                
+            Application.Current.MainWindow?.Close();
+        }
+
+        public bool ConfirmClose()
+        {
+            if (_scadaDesigner.HasUnsavedChanges)
             {
-                Application.Current.Shutdown();
+                var choice = _dialogService.ShowYesNoCancel(
+                    "You have some unsaved changes.\n Do you want to save changes?",
+                    "Unsaved SCADA changes");
+
+                if (choice == CustomMessageBoxResult.Cancel)
+                    return false;
+
+                if (choice == CustomMessageBoxResult.Yes && !_scadaDesigner.TrySaveChanges())
+                {
+                    _dialogService.ShowMessage("The SCADA layout could not be saved. The application will remain open.", "Save failed");
+                    return false;
+                }
+
+                return true;
             }
+
+            return _dialogService.ShowYesNo("Are you sure you want to exit?", "Confirm Exit");
         }
 
         private void ExecuteLogout()

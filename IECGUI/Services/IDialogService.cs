@@ -12,6 +12,7 @@ namespace IECGUI.Services
         void ShowWarning(string message);
 
         bool ShowYesNo(string message, string title = "Confirm");
+        IECGUI.ViewModel.CustomMessageBoxResult ShowYesNoCancel(string message, string title = "Confirm");
 
 
 

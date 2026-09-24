@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 
 namespace IECGUI
@@ -26,6 +27,12 @@ namespace IECGUI
             DataContext = viewModel;
 
 
+        }
+
+        private void MainWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            if (DataContext is MainWindowViewModel viewModel && !viewModel.ConfirmClose())
+                e.Cancel = true;
         }
     }
 }

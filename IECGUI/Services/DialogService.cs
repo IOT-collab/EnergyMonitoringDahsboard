@@ -19,6 +19,12 @@ namespace IECGUI.Services
             return ShowWindow(vm);
         }
 
+        public CustomMessageBoxResult ShowYesNoCancel(string message, string title = "Confirm")
+        {
+            var vm = new CustomMessageBoxViewModel(message, title, "Yes", "No", "Cancel");
+            return ShowWindowResult(vm);
+        }
+
         public void ShowMessage(string message, string DialogBoxName = "Information")
         {
             // FALSE = Info (Blue button, Hide Cancel)
@@ -39,13 +45,46 @@ namespace IECGUI.Services
         private bool ShowWindow(CustomMessageBoxViewModel vm)
         {
             var msgBox = new CustomMessageBox();
-            if (Application.Current.MainWindow != null)
-            {
-                msgBox.Owner = Application.Current.MainWindow;
-            }
+            SetOwner(msgBox);
             msgBox.Initialize(vm);
             var result = msgBox.ShowDialog();
             return result == true;
+        }
+
+        private CustomMessageBoxResult ShowWindowResult(CustomMessageBoxViewModel vm)
+        {
+            var msgBox = new CustomMessageBox();
+            SetOwner(msgBox);
+            msgBox.Initialize(vm);
+            msgBox.ShowDialog();
+            return msgBox.Result;
+        }
+
+        private static void SetOwner(Window dialog)
+        {
+            var owner = Application.Current?.MainWindow;
+            if (owner == null || ReferenceEquals(owner, dialog))
+            {
+                owner = Application.Current?.Windows
+                    .OfType<Window>()
+                    .FirstOrDefault(window => !ReferenceEquals(window, dialog) && IsShown(window));
+            }
+
+            if (owner != null && !ReferenceEquals(owner, dialog) && IsShown(owner))
+            {
+                dialog.Owner = owner;
+            }
+            else
+            {
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+        }
+
+        private static bool IsShown(Window window)
+        {
+            return window.IsLoaded
+                && window.IsVisible
+                && PresentationSource.FromVisual(window) != null;
         }
 
     }

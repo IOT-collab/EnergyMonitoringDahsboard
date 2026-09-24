@@ -5,6 +5,8 @@ namespace IECGUI.View
 {
     public partial class CustomMessageBox : Window
     {
+        public CustomMessageBoxResult Result { get; private set; } = CustomMessageBoxResult.Cancel;
+
         public CustomMessageBox()
         {
             InitializeComponent();
@@ -15,12 +17,20 @@ namespace IECGUI.View
         {
             this.DataContext = vm;
 
-            // Subscribe to the CloseRequested event
             vm.CloseRequested += (result) =>
             {
-                this.DialogResult = result;
-                this.Close();
+                Complete(result ? CustomMessageBoxResult.Yes : CustomMessageBoxResult.No);
             };
+            vm.ResultRequested += Complete;
+        }
+
+        private void Complete(CustomMessageBoxResult result)
+        {
+            Result = result;
+            DialogResult = result == CustomMessageBoxResult.Yes
+                ? true
+                : result == CustomMessageBoxResult.No ? false : null;
+            Close();
         }
     }
 }
