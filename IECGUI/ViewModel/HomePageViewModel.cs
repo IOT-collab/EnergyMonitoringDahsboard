@@ -177,8 +177,8 @@ namespace IECGUI.ViewModel
                 if (CanSeeGauge) ScreenTiles.Add(new("Gauge View", "\uE9D9", GaugeViewCommand));
                 if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Config", "\uE713", ConfigViewCommand));
                 if (CanSeeDeviceConfig) ScreenTiles.Add(new("Device Diagnostics", "\uE7F5", DeviceDiagnosticsCommand));
-                if (CanSeeDeviceConfig) ScreenTiles.Add(new("Custom Building View", "\uE8A1", ScadaDesignerCommand));
-                if (CanSeeMainScreens) ScreenTiles.Add(new("SCADA Runtime", "\uE9D9", ScadaRuntimeCommand));
+                if (CanSeeDeviceConfig) ScreenTiles.Add(new("SLD Designer", "\uE8A1", ScadaDesignerCommand));
+                if (CanSeeMainScreens) ScreenTiles.Add(new("Runtime", "\uE9D9", ScadaRuntimeCommand));
                 if (CanSeeRelay) ScreenTiles.Add(new("Relay Monitor", "\uE7F4", ProtRelayMonitorViewCommand));
                 if (CanSeeRemote) ScreenTiles.Add(new("Remote View", "\uE774", MqttViewCommad));
                 if (CanSeeReports) ScreenTiles.Add(new("Reports", "\uE9D2", ReportViewerCommand));

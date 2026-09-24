@@ -21,6 +21,12 @@ namespace IECGUI.ViewModel
             get => _systemTime;
             set => SetProperty(ref _systemTime, value);
         }
+        private object _currentView;
+        public object CurrentView
+        {
+            get => _currentView;
+            set => SetProperty(ref _currentView, value);
+        }
 
 
         private readonly SafePoller _liveDataTimer;
@@ -31,6 +37,8 @@ namespace IECGUI.ViewModel
 
         public ICommand CloseAppCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
+
+        public ICommand MinimizeCommand { get; set; }
         public Visibility SessionControlsVisibility { get; private set; }
 
         private readonly IDialogService _dialogService;
@@ -52,10 +60,17 @@ namespace IECGUI.ViewModel
             _licenseService.StatusChanged += OnLicenseStatusChanged;
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
-            Navigation.CurrentViewChanged += () => OnPropertyChanged(nameof(Navigation));
+            Navigation.CurrentViewChanged += () => { OnPropertyChanged(nameof(Navigation)); isLoginView(); }; 
 
+            
+
+            _currentView = Navigation.CurrentView;
+                        
             CloseAppCommand = new RelayCommand(ExecuteCloseApp);
             LogoutCommand = new RelayCommand(ExecuteLogout);
+            MinimizeCommand = new RelayCommand(ExecuteMinimize);
+
+            isLoginView(); // Initial state
 
             if (_licenseService.Current.CanRun)
             {
@@ -120,7 +135,19 @@ namespace IECGUI.ViewModel
             if (_dialogService.ShowYesNo("Are you sure you want to logout?", "Confirm Logout") == true)
             {
                 Navigation.NavigateTo<LoginViewModel>();
+              
             }
+        }
+
+        private void ExecuteMinimize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        private void isLoginView()
+        {
+            SessionControlsVisibility = (Navigation.CurrentView is LoginViewModel) ? Visibility.Collapsed : Visibility.Visible;
+            OnPropertyChanged(nameof(SessionControlsVisibility));
         }
 
         private void OnLicenseStatusChanged(LicenseStatus status)
