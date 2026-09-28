@@ -81,7 +81,7 @@
         <Border Grid.Row="3" Background="#122A3D" BorderBrush="#335E78" BorderThickness="1,1,1,0" Padding="18,0">
             <TextBlock Text="Runtime view is read-only. Write buttons require a configured writable mapping and confirmation." Foreground="#BCEFFF" VerticalAlignment="Center" FontSize="13"/>
         </Border>
-        <Button Grid.RowSpan="4" Content="{Binding FullScreenButtonText}" Command="{Binding ToggleFullScreenCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,135,0" Height="34" Padding="14,0" Background="#123B52" Foreground="#BCEFFF" BorderBrush="#4EC9FF" BorderThickness="1" FontSize="12" FontWeight="SemiBold" Cursor="Hand" Panel.ZIndex="20" ToolTip="Toggle runtime full-screen view"/>
+        <Button Grid.RowSpan="4" Content="{Binding FullScreenButtonText}" Command="{Binding ToggleFullScreenCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,205,0" Height="40" Padding="14,0" Background="#123B52" Foreground="#BCEFFF" BorderBrush="#4EC9FF" BorderThickness="1" FontSize="12" FontWeight="SemiBold" Cursor="Hand" Panel.ZIndex="20" ToolTip="Toggle runtime full-screen view"/>
     </Grid>
 </UserControl>
 

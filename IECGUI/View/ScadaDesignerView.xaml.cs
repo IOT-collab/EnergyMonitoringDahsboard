@@ -79,6 +79,15 @@ public partial class ScadaDesignerView : UserControl
             ViewModel?.EndUndoBoundary();
     }
 
+    private void CanvasSizePreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter || sender is not TextBox textBox) return;
+
+        textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+        Keyboard.ClearFocus();
+        e.Handled = true;
+    }
+
     private void WidgetMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (_resizing || sender is not FrameworkElement element || element.DataContext is not ScadaWidgetViewModel widget) return;

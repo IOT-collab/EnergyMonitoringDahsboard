@@ -2024,8 +2024,8 @@
   "ScadaPages": [
     {
       "PageName": "Prime Steel Plant S/S",
-      "CanvasWidth": 1320,
-      "CanvasHeight": 540,
+      "CanvasWidth": 1930,
+      "CanvasHeight": 1080,
       "Widgets": [
         {
           "Id": "809d4a5352e24a00b441a2111afbf3b8",
