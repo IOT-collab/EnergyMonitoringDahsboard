@@ -60,7 +60,7 @@
                 <Button Content="OPEN RUNTIME" Command="{Binding OpenRuntimeCommand}" Style="{StaticResource GlassButton.Cyan}" Width="125" Height="34" Margin="8,0,0,0"/>
                 <Separator Width="1" Height="28" Margin="12,0"/>
                 <TextBlock Text="SLD" Foreground="#BCEFFF" VerticalAlignment="Center" Margin="0,0,4,0"/>
-                <ComboBox Width="62" Height="30" ItemsSource="{Binding SldVoltageLevels}" SelectedItem="{Binding SelectedSldVoltageLevel}"/>
+                <ComboBox Width="62" Height="30" ItemsSource="{Binding SldVoltageLevels}" SelectedItem="{Binding SelectedSldVoltageLevel}" Style="{StaticResource GlassComboBox}"/>
                 <TextBox Width="34" Height="30" Text="{Binding SldIncomerCount, UpdateSourceTrigger=PropertyChanged}" ToolTip="Incomers" Margin="4,0,2,0"/>
                 <TextBox Width="34" Height="30" Text="{Binding SldBusCouplerCount, UpdateSourceTrigger=PropertyChanged}" ToolTip="Bus couplers" Margin="2,0,2,0"/>
                 <TextBox Width="34" Height="30" Text="{Binding SldOutgoingCount, UpdateSourceTrigger=PropertyChanged}" ToolTip="Outgoing feeders" Margin="2,0,2,0"/>
