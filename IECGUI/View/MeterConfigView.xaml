@@ -45,7 +45,7 @@
                     VerticalAlignment="Center"/>
 
             <Button Content="Back" Style="{StaticResource GlassButton.Cyan}"
-                    Height="50" Width="180" FontSize="20" HorizontalAlignment="Right" Margin="0,20,200,0" Command="{Binding MenuCommand}"/>
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,20,200,0" Command="{Binding MenuCommand}"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="{Binding DeviceRuntime.Status}" Foreground="#BCEFFF" FontSize="16" VerticalAlignment="Center" Margin="0,0,18,0"/>

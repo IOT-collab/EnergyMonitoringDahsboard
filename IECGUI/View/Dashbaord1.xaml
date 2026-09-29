@@ -42,7 +42,7 @@
 
                 <Button Content="Back"
                         DockPanel.Dock="Right"
-                        Margin="0,0,178,0" Height="50" Width="180" FontSize="21" FontWeight="SemiBold"
+                        Margin="20,10,200,0" Height="50" Width="180" FontSize="21" FontWeight="SemiBold"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Command="{Binding MenuCommand}"

@@ -38,7 +38,7 @@
 
         <Border Grid.Row="0" Background="#102A3E" BorderBrush="#315B73" BorderThickness="0,0,0,1" Padding="20,0,125,0">
             <DockPanel>
-                <Button DockPanel.Dock="Left" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Width="110" Height="40" VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Left" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 <StackPanel Margin="24,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="CUSTOM BUILDING VIEW" Foreground="White" FontSize="25" FontWeight="Bold"/>
                     <TextBlock Text="SCADA designer — create a protected plant mimic from live device data" Foreground="#9EDFF2" FontSize="13" Margin="0,3,0,0"/>

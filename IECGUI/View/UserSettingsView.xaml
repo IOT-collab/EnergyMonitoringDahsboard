@@ -120,7 +120,7 @@
                     </StackPanel>
                     <Button Grid.Column="1" Command="{Binding HomeCommand}"
                             Style="{StaticResource GlassButton.Cyan}"
-                            Width="120" Height="40" FontSize="21" FontWeight="SemiBold"
+                            Width="180" Height="50" FontSize="21" FontWeight="SemiBold"
                             Content="Back" VerticalAlignment="Center"/>
                 </Grid>
 
