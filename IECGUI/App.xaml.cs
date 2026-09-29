@@ -45,6 +45,7 @@ namespace IECGUI
             services.AddSingleton<MqttConfigurationService>();
             services.AddTransient<MqttMonitorViewModel>();
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<ISoundService, SoundService>();
             services.AddSingleton<AlarmMonitoringService>();
             services.AddSingleton<DeviceRuntimeService>();
             services.AddSingleton<ScadaLayoutService>();

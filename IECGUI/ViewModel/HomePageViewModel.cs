@@ -31,6 +31,7 @@ namespace IECGUI.ViewModel
         private readonly IAuthService? _auth;
         private readonly DeviceRuntimeService _deviceRuntime;
         private readonly AlarmMonitoringService _alarmService;
+        private readonly ISoundService _soundService;
         private string _averageVoltage = "--";
         private string _totalActivePower = "--";
         private string _deviceSummary = "0 / 0";
@@ -42,27 +43,29 @@ namespace IECGUI.ViewModel
         public int ActiveAlarmCount => _alarmService.ActiveAlarmCount;
 
         public HomePageViewModel(INavigationService navigation, IDialogService dialogService,
-            DeviceRuntimeService deviceRuntime, AlarmMonitoringService alarmService, IAuthService? auth = null)
+            DeviceRuntimeService deviceRuntime, AlarmMonitoringService alarmService,
+            ISoundService soundService, IAuthService? auth = null)
         {
             _navigation = navigation;
             _dialogService = dialogService;
             _auth = auth;
             _deviceRuntime = deviceRuntime;
             _alarmService = alarmService;
+            _soundService = soundService;
 
             SldViewCommand = new RelayCommand(SLDViewLogin);
-            EnergyViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel>());
-            GaugeViewCommand = new RelayCommand(() => _navigation.NavigateTo<EnergyMonitorViewModel2>());
-            ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ConfigurationViewModel>());
-            DeviceDiagnosticsCommand = new RelayCommand(() => _navigation.NavigateTo<DeviceDiagnosticsViewModel>());
-            ScadaDesignerCommand = new RelayCommand(() => _navigation.NavigateTo<ScadaDesignerViewModel>());
-            ScadaRuntimeCommand = new RelayCommand(() => _navigation.NavigateTo<ScadaRuntimeViewModel>());
-            ProtRelayMonitorViewCommand = new RelayCommand(() => _navigation.NavigateTo<Iec61850MonitorViewModel>());
-            MqttViewCommad = new RelayCommand(() => _navigation.NavigateTo<MqttMonitorViewModel>());
-            ReportViewerCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
-            AlarmViewCommand = new RelayCommand(() => _navigation.NavigateTo<AlarmViewModel>());
-            UserConfigCommand = new RelayCommand(() => _navigation.NavigateTo<UserSettingsViewModel>());
-            LicenseInfoCommand = new RelayCommand(() => _navigation.NavigateTo<LicenseInfoViewModel>());
+            EnergyViewCommand = new RelayCommand(() => NavigateWithClick<EnergyMonitorViewModel>());
+            GaugeViewCommand = new RelayCommand(() => NavigateWithClick<EnergyMonitorViewModel2>());
+            ConfigViewCommand = new RelayCommand(() => NavigateWithClick<ConfigurationViewModel>());
+            DeviceDiagnosticsCommand = new RelayCommand(() => NavigateWithClick<DeviceDiagnosticsViewModel>());
+            ScadaDesignerCommand = new RelayCommand(() => NavigateWithClick<ScadaDesignerViewModel>());
+            ScadaRuntimeCommand = new RelayCommand(() => NavigateWithClick<ScadaRuntimeViewModel>());
+            ProtRelayMonitorViewCommand = new RelayCommand(() => NavigateWithClick<Iec61850MonitorViewModel>());
+            MqttViewCommad = new RelayCommand(() => NavigateWithClick<MqttMonitorViewModel>());
+            ReportViewerCommand = new RelayCommand(() => NavigateWithClick<ReportViewerViewModel>());
+            AlarmViewCommand = new RelayCommand(() => NavigateWithClick<AlarmViewModel>());
+            UserConfigCommand = new RelayCommand(() => NavigateWithClick<UserSettingsViewModel>());
+            LicenseInfoCommand = new RelayCommand(() => NavigateWithClick<LicenseInfoViewModel>());
             RebuildScreenTiles();
 
             // subscribe to auth changes to update visibility properties
@@ -135,7 +138,13 @@ namespace IECGUI.ViewModel
             if (dispatcher == null || dispatcher.CheckAccess()) action(); else dispatcher.BeginInvoke(action);
         }
 
-        private void SLDViewLogin() => _navigation.NavigateTo<Dashboard1ViewModel>();
+        private void SLDViewLogin() => NavigateWithClick<Dashboard1ViewModel>();
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
+        }
 
         // Exposed properties used by XAML for visibility
         public bool CanSeeUserConfig => _auth?.CurrentUser != null && _auth.CurrentUser.Role == IEC.Shared.Models.UserRole.Admin;
