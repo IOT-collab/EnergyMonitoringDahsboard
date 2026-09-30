@@ -21,6 +21,7 @@ namespace IECGUI.ViewModel
         private readonly IDialogService _dialogService;
         private readonly DeviceRuntimeService _deviceRuntime;
         private readonly IAuthService _auth;
+        private readonly ISoundService _soundService;
 
         public MetersConfig SelectedMeter
         {
@@ -137,11 +138,12 @@ namespace IECGUI.ViewModel
         public ObservableCollection<byte> SlaveIds { get; } = new ObservableCollection<byte>(
             Enumerable.Range(1, 255).Select(i => (byte)i));
 
-        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config, IDialogService dialogService, DeviceRuntimeService deviceRuntime, IAuthService auth)
+        public ConfigurationViewModel(INavigationService navigation, ConfigurationManagerService config, IDialogService dialogService, DeviceRuntimeService deviceRuntime, ISoundService soundService ,IAuthService auth)
         {
             _config = config;
             _deviceRuntime = deviceRuntime;
             _auth = auth;
+            _soundService = soundService;
             SldBreakers = new ObservableCollection<SldBreakerConfig>(_config.Configuration.SldBreakers);
             if (SldBreakers.Count == 0)
             {
@@ -187,7 +189,7 @@ namespace IECGUI.ViewModel
             // Load default registers command
             LoadDefaultRegistersCommand = new RelayCommand(LoadDefaultRegisters);
 
-            MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+            MenuCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
 
             _auth.PropertyChanged += (_, e) =>
             {
@@ -219,6 +221,12 @@ namespace IECGUI.ViewModel
                 
                 _dialogService.ShowMessage(ex.ToString(), "COM Port Error");
             }
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         // Add Communincation Confiuration//

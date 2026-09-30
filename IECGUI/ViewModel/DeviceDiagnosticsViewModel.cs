@@ -21,6 +21,7 @@ namespace IECGUI.ViewModel
         private MetersConfig _selectedDevice;
         private string _status = "Select a device and read its configured mappings.";
         private bool _isBusy;
+        private readonly ISoundService _soundService;
 
         public ObservableCollection<MetersConfig> Devices { get; } = new();
         public ObservableCollection<DeviceTagRowViewModel> Tags { get; } = new();
@@ -59,6 +60,7 @@ namespace IECGUI.ViewModel
             IMultiEnergyMeterService devices,
             McSlmpDeviceService mcService,
             INavigationService navigation,
+            ISoundService soundService,
             IDialogService dialog)
         {
             _configuration = configuration;
@@ -66,6 +68,7 @@ namespace IECGUI.ViewModel
             _mcService = mcService;
             _navigation = navigation;
             _dialog = dialog;
+            _soundService = soundService;
 
             foreach (var meter in (_configuration.Configuration.Meters ?? new())
                 .Where(m => m != null && !string.IsNullOrWhiteSpace(m.MeterName))
@@ -76,7 +79,7 @@ namespace IECGUI.ViewModel
 
             ReadCommand = new RelayCommand(async () => await ReadSelectedAsync());
             WriteCommand = new RelayCommand<DeviceTagRowViewModel>(async row => await WriteAsync(row));
-            BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+            BackCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
 
             SelectedDevice = Devices.FirstOrDefault();
         }
@@ -124,6 +127,12 @@ namespace IECGUI.ViewModel
             {
                 IsBusy = false;
             }
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         private async Task WriteAsync(DeviceTagRowViewModel tag)

@@ -13,6 +13,7 @@ namespace IECGUI.ViewModel
         private readonly INavigationService _navigation;
         private readonly IUserSettingsService _userService;
         private readonly IAuthService _authService;
+        private readonly ISoundService _soundService;
 
         public ICommand LoginCommand { get; }
 
@@ -22,12 +23,13 @@ namespace IECGUI.ViewModel
         public string Password { get => _password; set => SetProperty(ref _password, value); }
         private string _password;
 
-        public LoginViewModel(INavigationService navigation, IDialogService dialogService, IUserSettingsService userService, IAuthService authService)
+        public LoginViewModel(INavigationService navigation, IDialogService dialogService, IUserSettingsService userService, ISoundService soundService,IAuthService authService)
         {
             _navigation = navigation;
             _dialogService = dialogService;
             _userService = userService;
             _authService = authService;
+            _soundService = soundService;
 
             LoginCommand = new RelayCommand(async () => await ExecuteLoginAsync());
         }
@@ -55,7 +57,7 @@ namespace IECGUI.ViewModel
                     ,ScreenPermissions = user.ScreenPermissions ?? ScreenPermissions.ForRole(user.Role)
                 };
 
-                _navigation.NavigateTo<HomePageViewModel>();
+                NavigateWithClick<HomePageViewModel>();
             }
             else
             {
@@ -64,6 +66,12 @@ namespace IECGUI.ViewModel
 
             Username = "";
             Password = "";
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
     }
 }

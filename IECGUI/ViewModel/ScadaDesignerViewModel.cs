@@ -35,6 +35,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
     private bool _restoringUndo;
     private string? _undoBoundarySnapshot;
     private string _savedDesignFingerprint = string.Empty;
+    private readonly ISoundService _soundService;
+
 
     private sealed class DesignerUndoSnapshot
     {
@@ -156,11 +158,13 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         DeviceRuntimeService runtime,
         ScadaLayoutService layouts,
         INavigationService navigation,
+        ISoundService soundService,
         IDialogService dialog)
     {
         _configuration = configuration;
         _runtime = runtime;
         _layouts = layouts;
+        _soundService = soundService;
         _navigation = navigation;
         _sldDefinitionStore = new IndustrialSldDefinitionStore(configuration);
         _sldDefinitions.AddRange(_sldDefinitionStore.Load());
@@ -188,8 +192,8 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         SendToBackCommand = new RelayCommand(() => MoveSelectedToEdge(false));
         AdjustCommand = new RelayCommand<string>(AdjustSelected);
         SaveCommand = new RelayCommand(Save);
-        BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
-        OpenRuntimeCommand = new RelayCommand(() => _navigation.NavigateTo<ScadaRuntimeViewModel>());
+        BackCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
+        OpenRuntimeCommand = new RelayCommand(() => NavigateWithClick<ScadaRuntimeViewModel>());
         ApplyColorCommand = new RelayCommand<string>(ApplyColor);
         CopyCommand = new RelayCommand(CopySelected);
         PasteCommand = new RelayCommand(PasteSelected);
@@ -234,6 +238,11 @@ public sealed class ScadaDesignerViewModel : BaseViewModel
         return JsonSerializer.Serialize(new { Pages, Definitions = _sldDefinitions });
     }
 
+    private void NavigateWithClick<T>() where T : BaseViewModel
+    {
+        _soundService.PlayClick();
+        _navigation.NavigateTo<T>();
+    }
     public void BeginUndoBoundary()
     {
         if (_restoringUndo || _undoBoundaryCaptured) return;

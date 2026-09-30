@@ -15,6 +15,7 @@ public sealed class SoundService : ISoundService, IDisposable
 {
     private readonly MediaPlayer _backgroundPlayer = new();
     private readonly List<MediaPlayer> _effectPlayers = new();
+    private readonly List<MediaPlayer> _alarmPlayers = new();
     private readonly string _soundDirectory = Path.Combine(AppContext.BaseDirectory, "Assets", "Sounds");
     private double _volume = 1.0;
     private bool _disposed;
@@ -30,11 +31,27 @@ public sealed class SoundService : ISoundService, IDisposable
 
     public void PlayNotification() => PlayEffect("notification", SystemSounds.Asterisk.Play);
 
-    public void PlayAlarm() => PlayEffect("alarm", SystemSounds.Exclamation.Play);
+    public void PlayAlarm() => PlayEffect("alarm", SystemSounds.Exclamation.Play, true);
 
     public void PlaySuccess() => PlayEffect("success", SystemSounds.Asterisk.Play);
 
     public void PlayError() => PlayEffect("error", SystemSounds.Hand.Play);
+
+    public void StopAlarm()
+    {
+        RunOnUiThread(() =>
+        {
+            foreach (var player in _alarmPlayers.ToArray())
+            {
+                _effectPlayers.Remove(player);
+                _alarmPlayers.Remove(player);
+                player.Stop();
+                player.Close();
+            }
+
+            _alarmPlayers.Clear();
+        });
+    }
 
     public void StartBackgroundMusic()
     {
@@ -73,7 +90,7 @@ public sealed class SoundService : ISoundService, IDisposable
         });
     }
 
-    private void PlayEffect(string soundName, Action fallback)
+    private void PlayEffect(string soundName, Action fallback, bool isAlarm = false)
     {
         RunOnUiThread(() =>
         {
@@ -86,6 +103,7 @@ public sealed class SoundService : ISoundService, IDisposable
 
             var player = new MediaPlayer { Volume = _volume };
             _effectPlayers.Add(player);
+            if (isAlarm) _alarmPlayers.Add(player);
 
             EventHandler? opened = null;
             EventHandler? ended = null;
@@ -97,6 +115,7 @@ public sealed class SoundService : ISoundService, IDisposable
                 if (ended != null) player.MediaEnded -= ended;
                 if (failed != null) player.MediaFailed -= failed;
                 _effectPlayers.Remove(player);
+                if (isAlarm) _alarmPlayers.Remove(player);
                 player.Close();
             }
 
@@ -104,8 +123,9 @@ public sealed class SoundService : ISoundService, IDisposable
             ended = (_, _) => Cleanup();
             failed = (_, _) =>
             {
+                var shouldFallback = _effectPlayers.Contains(player);
                 Cleanup();
-                fallback();
+                if (shouldFallback) fallback();
             };
 
             player.MediaOpened += opened;
@@ -174,5 +194,6 @@ public sealed class SoundService : ISoundService, IDisposable
         foreach (var player in _effectPlayers)
             player.Close();
         _effectPlayers.Clear();
+        _alarmPlayers.Clear();
     }
 }

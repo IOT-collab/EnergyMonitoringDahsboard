@@ -30,6 +30,7 @@ namespace IECGUI.Services
         private bool _started;
         private AlarmLogEntry? _currentPopupAlarm;
         private Visibility _alarmPopupVisibility = Visibility.Collapsed;
+        private readonly ISoundService _soundService;
 
         public ObservableCollection<AlarmRuleConfig> Rules { get; } = new();
         public ObservableCollection<AlarmLogEntry> AlarmLogs { get; } = new();
@@ -45,16 +46,17 @@ namespace IECGUI.Services
         public int ActiveAlarmCount => AlarmLogs.Count(x => x.State is AlarmState.Active or AlarmState.Acknowledged);
         public int CriticalAlarmCount => AlarmLogs.Count(x => x.Severity >= AlarmSeverity.Critical && x.State is AlarmState.Active or AlarmState.Acknowledged);
 
-        public AlarmMonitoringService(ConfigurationManagerService configuration, IMultiEnergyMeterService meters, DeviceRuntimeService deviceRuntime, IAuthService auth)
+        public AlarmMonitoringService(ConfigurationManagerService configuration, IMultiEnergyMeterService meters, DeviceRuntimeService deviceRuntime,ISoundService soundService, IAuthService auth)
         {
             _configuration = configuration;
             _meters = meters;
             _deviceRuntime = deviceRuntime;
             _auth = auth;
+            _soundService = soundService;
             ReloadRules();
             LoadAuditHistory();
             AcknowledgeCurrentCommand = new RelayCommand(AcknowledgeCurrent);
-            DismissPopupCommand = new RelayCommand(() => AlarmPopupVisibility = Visibility.Collapsed);
+            DismissPopupCommand = new RelayCommand(DismissPopup);
             GenerateTestAlarmCommand = new RelayCommand(GenerateTestAlarm);
             ClearLogsCommand = new RelayCommand(ClearLogs);
             ExportCsvCommand = new RelayCommand(ExportCsv);
@@ -188,6 +190,8 @@ namespace IECGUI.Services
             CurrentPopupAlarm = alarm;
             AlarmPopupVisibility = Visibility.Visible;
             NotifyCounts();
+             _soundService.PlayAlarm();
+            _soundService.StartBackgroundMusic();
         }
 
         private void ClearRuleAlarm(string ruleId)
@@ -218,6 +222,15 @@ namespace IECGUI.Services
             }
             AlarmPopupVisibility = Visibility.Collapsed;
             NotifyCounts();
+            _soundService.StopAlarm();
+            _soundService.StopBackgroundMusic();
+        }
+
+        private void DismissPopup()
+        {
+            AlarmPopupVisibility = Visibility.Collapsed;
+            _soundService.StopAlarm();
+            _soundService.StopBackgroundMusic();
         }
 
         private void ClearLogs()
@@ -232,6 +245,8 @@ namespace IECGUI.Services
             AlarmPopupVisibility = Visibility.Collapsed;
             CurrentPopupAlarm = null;
             NotifyCounts();
+            _soundService.StopAlarm();
+            _soundService.StopBackgroundMusic();
         }
 
         private void ExportCsv()

@@ -7,6 +7,7 @@ public interface ISoundService
     void PlayAlarm();
     void PlaySuccess();
     void PlayError();
+    void StopAlarm();
     void StartBackgroundMusic();
     void StopBackgroundMusic();
     void SetVolume(double volume);

@@ -22,7 +22,7 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
     private ScadaPageConfig _selectedPage;
     private string _status = "Runtime view is locked. Values are read from configured devices.";
     private bool _isFullScreen;
-
+    private readonly ISoundService _soundService;
     public ObservableCollection<ScadaPageConfig> Pages { get; } = new();
     public ObservableCollection<ScadaWidgetViewModel> Widgets { get; } = new();
     public ScadaPageConfig SelectedPage
@@ -68,22 +68,29 @@ public sealed class ScadaRuntimeViewModel : BaseViewModel
         ScadaLayoutService layouts,
         ScadaWriteService writer,
         INavigationService navigation,
+        ISoundService soundService,
         IDialogService dialog)
     {
         _configuration = configuration;
         _runtime = runtime;
         _layouts = layouts;
+        _soundService = soundService;
         _writer = writer;
         _navigation = navigation;
         _dialog = dialog;
         WriteCommand = new RelayCommand<ScadaWidgetViewModel>(async widget => await WriteAsync(widget));
-        BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+        BackCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
         ToggleFullScreenCommand = new RelayCommand(() => IsFullScreen = !IsFullScreen);
 
         _layouts.LayoutSaved += ReloadLayout;
         _runtime.SnapshotUpdated += OnSnapshotUpdated;
         ReloadLayout();
         RefreshLiveValues();
+    }
+    private void NavigateWithClick<T>() where T : BaseViewModel
+    {
+        _soundService.PlayClick();
+        _navigation.NavigateTo<T>();
     }
 
     public void ReloadLayout()

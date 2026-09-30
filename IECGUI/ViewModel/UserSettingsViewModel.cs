@@ -13,6 +13,7 @@ namespace IECGUI.ViewModel
         private readonly IUserSettingsService _userService;
         private readonly IDialogService _dialog;
         private readonly INavigationService _navigation;
+        private readonly ISoundService _soundService;
 
         private UserAccount _selectedUser;
         public UserAccount SelectedUser
@@ -31,10 +32,11 @@ namespace IECGUI.ViewModel
         public ICommand SaveCommand { get; }
         public ICommand HomeCommand { get; }
 
-        public UserSettingsViewModel(INavigationService navigation, IUserSettingsService userService, IDialogService dialog)
+        public UserSettingsViewModel(INavigationService navigation, IUserSettingsService userService, ISoundService soundService, IDialogService dialog)
         {
             _navigation = navigation;
             _userService = userService;
+            _soundService = soundService;
             _dialog = dialog;
 
             // load existing users from user settings file
@@ -54,7 +56,7 @@ namespace IECGUI.ViewModel
             AddUserCommand = new RelayCommand(AddUser);
             DeleteUserCommand = new RelayCommand(DeleteUser);
             SaveCommand = new RelayCommand(Save);
-            HomeCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+            HomeCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
         }
 
         private void AddUser()
@@ -109,6 +111,12 @@ namespace IECGUI.ViewModel
                 _dialog.ShowMessage("User settings saved.", "Saved");
             else
                 _dialog.ShowMessage("Failed to save user settings.", "Error");
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
     }
 }

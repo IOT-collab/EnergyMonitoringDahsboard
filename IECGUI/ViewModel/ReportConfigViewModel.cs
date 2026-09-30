@@ -17,6 +17,7 @@ namespace IECGUI.ViewModel
     {
         private readonly INavigationService _navigation;
         private readonly ConfigurationManagerService _configuration;
+        private readonly ISoundService _soundService;
         public ObservableCollection<ReportFormatConfig> ReportFormats { get; set; } = new();
         public ObservableCollection<string> AvailableColumns { get; set; } = new();
         public ObservableCollection<string> SelectedColumns { get; set; } = new();
@@ -93,9 +94,10 @@ namespace IECGUI.ViewModel
 
         private readonly string _configPath = AppPaths.ReportFormatFile;
 
-        public ReportConfigViewModel(INavigationService navigation, ConfigurationManagerService config)
+        public ReportConfigViewModel(INavigationService navigation, ISoundService soundService, ConfigurationManagerService config)
         {
             _navigation = navigation;
+            _soundService = soundService;
             _configuration = config;
 
             foreach (var meterName in (config.Configuration?.Meters ?? new List<MetersConfig>())
@@ -113,7 +115,7 @@ namespace IECGUI.ViewModel
             DeleteCommand = new RelayCommand(DeleteFormat, () => SelectedFormat != null);
             NewCommand = new RelayCommand(NewFormat);
             EditCommand = new RelayCommand(EditFormat, () => SelectedFormat != null);
-            BackCommand = new RelayCommand(() => _navigation.NavigateTo<ReportViewerViewModel>());
+            BackCommand = new RelayCommand(() => NavigateWithClick<ReportViewerViewModel>());
             RemoveColumnCommand = new RelayCommand(RemoveSelectedColumn, () => SelectedColumnToRemove != null);
 
             LoadReportFormats();
@@ -163,6 +165,12 @@ namespace IECGUI.ViewModel
                 }
             }
             return anyChange;
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         private List<string> GetAvailableColumns(string meterName)

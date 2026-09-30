@@ -29,6 +29,7 @@ namespace IECGUI.ViewModel
         private string _selectedSection = "All Sections";
         private string _selectedUtilityRoom = "All Utility Rooms";
         private bool _mqttStarted;
+        private readonly ISoundService _soundService;
 
         public ObservableCollection<MeterViewModel> Meters { get; }
         public ObservableCollection<string> Sections { get; } = new();
@@ -90,12 +91,14 @@ namespace IECGUI.ViewModel
             ConfigurationManagerService config,
             DeviceRuntimeService deviceRuntime,
             IMqttClientService mqttService,
+            ISoundService soundService,
             MqttConfigurationService mqttConfiguration)
         {
             _navigation = navigation;
             _deviceRuntime = deviceRuntime;
             _mqttService = mqttService;
             _mqttConfiguration = mqttConfiguration;
+            _soundService = soundService;
 
             var configuredMeters = config.Configuration?.Meters?
                 .Where(m => m != null && m.IsEnabled && !string.IsNullOrWhiteSpace(m.MeterName))
@@ -163,6 +166,11 @@ namespace IECGUI.ViewModel
                 foreach (var meter in Meters.Where(m => !_mqttMeterNames.Contains(m.MeterName)))
                     meter.MeterStatus = "Configuration error";
             }
+        }
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         private async Task StartMqttAsync()
@@ -519,7 +527,8 @@ namespace IECGUI.ViewModel
         private void NavigateToHome()
         {
             Dispose();
-            _navigation.NavigateTo<HomePageViewModel>();
+            NavigateWithClick<HomePageViewModel>();
+            //_navigation.NavigateTo<HomePageViewModel>();
         }
 
         public void Dispose()

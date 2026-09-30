@@ -28,6 +28,8 @@ namespace IECGUI.ViewModel
 
         private readonly IDialogService _dialogService;
 
+        private readonly ISoundService _soundService;
+
         private readonly Dictionary<string, DataTable> _perMeterTables = new();
 
         // Optionally expose perMeterTables for export usage
@@ -81,7 +83,7 @@ namespace IECGUI.ViewModel
         private readonly string _configPath = AppPaths.ReportFormatFile;
         private string _prodCsvFolder;
 
-        public ReportViewerViewModel(INavigationService navigation , IDialogService dialogService)
+        public ReportViewerViewModel(INavigationService navigation , ISoundService soundService,IDialogService dialogService)
         {
             LoadReportFormats();
             LoadDataCommand = new RelayCommand(LoadData);
@@ -89,8 +91,9 @@ namespace IECGUI.ViewModel
             RefreshFormatsCommand = new RelayCommand(RefreshFormats);
             _navigation = navigation;
             _dialogService = dialogService;
-            ConfigViewCommand = new RelayCommand(() => _navigation.NavigateTo<ReportConfigViewModel>());
-            MenuCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+            _soundService = soundService;
+            ConfigViewCommand = new RelayCommand(() => NavigateWithClick<ReportConfigViewModel>());
+            MenuCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
        
             _prodCsvFolder = Path.Combine(AppPaths.Data);
         }
@@ -105,6 +108,12 @@ namespace IECGUI.ViewModel
                 SelectedReportFormat = ReportFormats.FirstOrDefault(f => f.Name == currentSelection);
             }
             OnPropertyChanged(nameof(ReportFormats));
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         private void LoadReportFormats()

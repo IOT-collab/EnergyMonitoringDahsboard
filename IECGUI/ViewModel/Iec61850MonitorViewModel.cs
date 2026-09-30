@@ -14,7 +14,7 @@ namespace IECGUI.ViewModel
         private readonly IIec61850MeterService _service;
         private readonly INavigationService _navigation;
         private readonly IecConfigManagerService _configManager;
-
+        private readonly ISoundService _soundService;
         private DispatcherTimer _pollTimer;
 
         // ── Connection Status ──────────────────────────────────
@@ -54,18 +54,19 @@ namespace IECGUI.ViewModel
         public Iec61850MonitorViewModel(
             INavigationService navigation,
             IIec61850MeterService service,
+            ISoundService soundService,
             IecConfigManagerService configManager)
         {
             _navigation = navigation;
             _service = service;
             _configManager = configManager;
+            _soundService = soundService;
 
             BackCommand = new RelayCommand(() =>
-                _navigation.NavigateTo<HomePageViewModel>());
+                NavigateWithClick<HomePageViewModel>());
 
             ConfigurationCommand = new RelayCommand(() =>
-                _navigation.NavigateTo<IecConfigViewModel>());
-
+                NavigateWithClick<IecConfigViewModel>());
 
             ConnectCommand = new RelayCommand(async () => await ConnectAsync());
             DisconnectCommand = new RelayCommand(async () => await DisconnectAsync());
@@ -135,6 +136,12 @@ namespace IECGUI.ViewModel
                 IsOnline = false;
                 StatusMessage = $"Init Failed: {ex.Message}";
             }
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         private async Task PollAsync()

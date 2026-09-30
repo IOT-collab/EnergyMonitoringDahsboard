@@ -32,6 +32,7 @@ public sealed class MqttMonitorViewModel : BaseViewModel
     private bool _publishRetain;
     private MqttSubscriptionConfig? _selectedSubscription;
     private MqttFieldMapping? _selectedFieldMapping;
+    private readonly ISoundService _soundService;
 
     public MqttConfiguration Configuration => _configurationService.Current;
     public ObservableCollection<MqttSubscriptionConfig> Subscriptions { get; } = new();
@@ -107,12 +108,14 @@ public sealed class MqttMonitorViewModel : BaseViewModel
         INavigationService navigation,
         IMqttClientService mqttService,
         MqttConfigurationService configurationService,
+        ISoundService soundService,
         IDialogService dialog)
     {
         _navigation = navigation;
         _mqttService = mqttService;
         _configurationService = configurationService;
         _dialog = dialog;
+        _soundService = soundService;
 
         foreach (var subscription in Configuration.Subscriptions)
             Subscriptions.Add(subscription);
@@ -131,7 +134,7 @@ public sealed class MqttMonitorViewModel : BaseViewModel
                    record.RawPayload.Contains(MessageFilter, StringComparison.OrdinalIgnoreCase);
         };
 
-        BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+        BackCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
         ConnectCommand = new RelayCommand(async () => await ConnectAsync());
         DisconnectCommand = new RelayCommand(async () => await DisconnectAsync());
         SaveConfigurationCommand = new RelayCommand(SaveConfiguration);
@@ -451,6 +454,12 @@ public sealed class MqttMonitorViewModel : BaseViewModel
         var dispatcher = Application.Current?.Dispatcher;
         if (dispatcher == null || dispatcher.CheckAccess()) action();
         else dispatcher.BeginInvoke(action);
+    }
+
+    private void NavigateWithClick<T>() where T : BaseViewModel
+    {
+        _soundService.PlayClick();
+        _navigation.NavigateTo<T>();
     }
 }
 

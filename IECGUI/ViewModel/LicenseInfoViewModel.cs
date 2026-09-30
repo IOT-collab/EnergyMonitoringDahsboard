@@ -15,14 +15,15 @@ public sealed class LicenseInfoViewModel : BaseViewModel
     private readonly LicenseService _license;
     private readonly INavigationService _navigation;
     private LicenseInfo _info;
-
-    public LicenseInfoViewModel(LicenseService license, INavigationService navigation)
+    private readonly ISoundService _soundService;
+    public LicenseInfoViewModel(LicenseService license, ISoundService soundService, INavigationService navigation)
     {
         _license = license;
         _navigation = navigation;
         _info = _license.GetInfo();
+        _soundService = soundService;
 
-        BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+        BackCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
         RefreshCommand = new RelayCommand(Refresh);
         _license.StatusChanged += OnLicenseStatusChanged;
     }
@@ -88,5 +89,11 @@ public sealed class LicenseInfoViewModel : BaseViewModel
         OnPropertyChanged(nameof(ExpiresOn));
         OnPropertyChanged(nameof(TimeRemaining));
         OnPropertyChanged(nameof(ProductKeyInfo));
+    }
+
+    private void NavigateWithClick<T>() where T : BaseViewModel
+    {
+        _soundService.PlayClick();
+        _navigation.NavigateTo<T>();
     }
 }

@@ -22,6 +22,7 @@ namespace IECGUI.ViewModel
     public class EnergyMonitorViewModel : BaseViewModel, IDisposable
     {
         public ICommand ReturnToHome { get; }
+
         private readonly IDialogService _dialogService;
 
         private readonly SafePoller _liveDataTimer;
@@ -31,6 +32,8 @@ namespace IECGUI.ViewModel
         private EnergyLoggingService? _energyLogger;
 
         private readonly ConfigurationManagerService _config;
+
+        private readonly ISoundService _soundService;
 
         // UI expects per-meter properties (VoltageA_N etc.) so expose MeterViewModel collection
         public ObservableCollection<MeterViewModel> Meters { get; }
@@ -58,11 +61,12 @@ namespace IECGUI.ViewModel
 
         private CancellationTokenSource _cts;
 
-        public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, DeviceRuntimeService deviceRuntime, IDialogService dialogService, IAuthService authService)
+        public EnergyMonitorViewModel(INavigationService navigation, ConfigurationManagerService config, DeviceRuntimeService deviceRuntime, IDialogService dialogService, ISoundService soundService, IAuthService authService)
         {
             _deviceRuntime = deviceRuntime;
             _dialogService = dialogService;
             _navigation = navigation;
+            _soundService = soundService;
 
             _energyLogger = new EnergyLoggingService(AppPaths.Data, authService.CurrentUser?.Username);
 
@@ -127,6 +131,12 @@ namespace IECGUI.ViewModel
                 Console.WriteLine($"Energy Monitor runtime unavailable: {ex.Message}");
                 foreach (var vm in Meters) vm.MeterStatus = "Runtime unavailable";
             }
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         public async Task MultiMeterRuntime()
@@ -328,7 +338,8 @@ namespace IECGUI.ViewModel
         {
             _liveDataTimer.Stop();
             _energyLogger?.Stop();
-            _navigation.NavigateTo<HomePageViewModel>();
+           // _navigation.NavigateTo<HomePageViewModel>();
+            NavigateWithClick<HomePageViewModel>();
         }
 
         private static MeterViewModel CreateMeterViewModel(MetersConfig config)

@@ -29,6 +29,7 @@ namespace IECGUI.ViewModel
         private bool _isRuleEnabled = true;
         private string _configurationStatus = "Ready";
         private string _alarmFilter = string.Empty;
+        private readonly ISoundService _soundService;
 
         public AlarmMonitoringService AlarmService { get; }
         public ICollectionView FilteredAlarmLogs { get; }
@@ -74,11 +75,12 @@ namespace IECGUI.ViewModel
         public bool IsRuleEnabled { get => _isRuleEnabled; set => SetProperty(ref _isRuleEnabled, value); }
         public string ConfigurationStatus { get => _configurationStatus; set => SetProperty(ref _configurationStatus, value); }
 
-        public AlarmViewModel(INavigationService navigation, AlarmMonitoringService alarmService, ConfigurationManagerService configuration)
+        public AlarmViewModel(INavigationService navigation, AlarmMonitoringService alarmService, ISoundService soundService,ConfigurationManagerService configuration)
         {
             _navigation = navigation;
             AlarmService = alarmService;
             _configuration = configuration;
+            _soundService = soundService;
             FilteredAlarmLogs = CollectionViewSource.GetDefaultView(AlarmService.AlarmLogs);
             FilteredAlarmLogs.Filter = item =>
             {
@@ -94,7 +96,7 @@ namespace IECGUI.ViewModel
             };
             foreach (var meter in configuration.Configuration.Meters.Where(x => x.IsEnabled)) MeterNames.Add(meter.MeterName);
             foreach (var breaker in configuration.Configuration.SldBreakers.Where(x => x.IsEnabled)) BreakerKeys.Add(breaker.BreakerKey);
-            BackCommand = new RelayCommand(() => _navigation.NavigateTo<HomePageViewModel>());
+            BackCommand = new RelayCommand(() => NavigateWithClick<HomePageViewModel>());
             NewRuleCommand = new RelayCommand(NewRule);
             SaveRuleCommand = new RelayCommand(SaveRule);
             DeleteRuleCommand = new RelayCommand(DeleteRule);
@@ -120,6 +122,11 @@ namespace IECGUI.ViewModel
             SelectedParameterName = ParameterNames.Contains(previous ?? string.Empty) ? previous : ParameterNames.FirstOrDefault();
         }
 
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
+        }
         private void NewRule()
         {
             SelectedRule = null;

@@ -12,6 +12,7 @@ namespace IECGUI.ViewModel
     {
         private readonly IecConfigManagerService _configManager;
         private readonly INavigationService _navigation;
+        private readonly ISoundService _soundService;
 
         // ── Selected Items ─────────────────────────────────────
         private RelayConfig _selectedRelay;
@@ -86,13 +87,13 @@ namespace IECGUI.ViewModel
         public ICommand LoadDefaultMappingsCommand { get; }
 
         public IecConfigViewModel(
-            INavigationService navigation,
+            INavigationService navigation, ISoundService soundService,
             IecConfigManagerService configManager)
         {
             _navigation = navigation;
             _configManager = configManager;
-
-            BackCommand = new RelayCommand(() => _navigation.NavigateTo<Iec61850MonitorViewModel>());
+            _soundService = soundService;
+            BackCommand = new RelayCommand(() => NavigateWithClick<Iec61850MonitorViewModel>());
             SaveCommand = new RelayCommand(Save);
 
             AddRelayCommand = new RelayCommand(AddRelay);
@@ -145,6 +146,12 @@ namespace IECGUI.ViewModel
             };
             Relays.Add(relay);
             SelectedRelay = relay;
+        }
+
+        private void NavigateWithClick<T>() where T : BaseViewModel
+        {
+            _soundService.PlayClick();
+            _navigation.NavigateTo<T>();
         }
 
         private void DeleteRelay()
