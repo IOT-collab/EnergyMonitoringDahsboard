@@ -78,21 +78,22 @@
                     BorderThickness="0,0,0,1"
                     Padding="10,0,172,0">
                 <DockPanel LastChildFill="True">
-                    <Button DockPanel.Dock="Left"
+                    <Button DockPanel.Dock="Right"
                             Content="BACK" Height="50" Width="180" FontSize="21" FontWeight="SemiBold"
-                            Command="{Binding BackCommand}"
+                            Command="{Binding BackCommand}" Margin="0,0,50,0"
                             Style="{StaticResource GlassButton.Cyan}"/>
 
-                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Ellipse Width="10" Height="10" Fill="#FF746D" Margin="0,0,10,0">
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!--<TextBlock Text="Alarm supervision online"
+                                   Foreground="#B8F0FF"
+                                   FontSize="16"
+                                   VerticalAlignment="Center"/>-->
+                        <!--<Ellipse Width="10" Height="10" Fill="#FF746D" Margin="0,0,10,0">
                             <Ellipse.Effect>
                                 <DropShadowEffect Color="#FF746D" BlurRadius="10" ShadowDepth="0" Opacity="0.85"/>
                             </Ellipse.Effect>
-                        </Ellipse>
-                        <TextBlock Text="Alarm supervision online"
-                                   Foreground="#B8F0FF"
-                                   FontSize="16"
-                                   VerticalAlignment="Center"/>
+                        </Ellipse>-->
+
                     </StackPanel>
 
                     <TextBlock Text="ALARM LOGS"

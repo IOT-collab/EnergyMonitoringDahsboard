@@ -15,9 +15,9 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="#102A3E" BorderBrush="#315B73" BorderThickness="0,0,0,1" Padding="20,0,125,0">
             <DockPanel>
-                <Button DockPanel.Dock="Left" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Margin="0,0,100,0" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 <StackPanel Margin="24,0,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="CUSTOM BUILDING VIEW" Foreground="White" FontSize="25" FontWeight="Bold"/>
+                    <TextBlock Text="SLD RUNTIME" Foreground="White" FontSize="25" FontWeight="Bold"/>
                     <TextBlock Text="Live SCADA runtime — operator view" Foreground="#9EDFF2" FontSize="13" Margin="0,3,0,0"/>
                 </StackPanel>
                 <TextBlock DockPanel.Dock="Right" Text="RUNTIME / LOCKED" Foreground="#39E68A" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
@@ -81,7 +81,7 @@
         <Border Grid.Row="3" Background="#122A3D" BorderBrush="#335E78" BorderThickness="1,1,1,0" Padding="18,0">
             <TextBlock Text="Runtime view is read-only. Write buttons require a configured writable mapping and confirmation." Foreground="#BCEFFF" VerticalAlignment="Center" FontSize="13"/>
         </Border>
-        <Button Grid.RowSpan="4" Content="{Binding FullScreenButtonText}" Command="{Binding ToggleFullScreenCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,205,0" Height="40" Padding="14,0" Background="#123B52" Foreground="#BCEFFF" BorderBrush="#4EC9FF" BorderThickness="1" FontSize="12" FontWeight="SemiBold" Cursor="Hand" Panel.ZIndex="20" ToolTip="Toggle runtime full-screen view"/>
+        <Button Grid.RowSpan="4" Content="{Binding FullScreenButtonText}" Command="{Binding ToggleFullScreenCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="400,20,0,0" Height="40" Padding="14,0" Background="#123B52" Foreground="#BCEFFF" BorderBrush="#4EC9FF" BorderThickness="1" FontSize="12" FontWeight="SemiBold" Cursor="Hand" Panel.ZIndex="20" ToolTip="Toggle runtime full-screen view"/>
     </Grid>
 </UserControl>
 

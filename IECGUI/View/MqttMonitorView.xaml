@@ -32,7 +32,7 @@
     <Grid Margin="18">
         <Grid.RowDefinitions><RowDefinition Height="58"/><RowDefinition Height="*"/></Grid.RowDefinitions>
         <DockPanel Grid.Row="0" LastChildFill="True">
-            <Button Content="◄ Back" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+            <Button Content="◄ Back" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" Margin="0,0,200,0" DockPanel.Dock="Right"/>
             <TextBlock Text="{Binding Configuration.DisplayName}" Foreground="White" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="20,0,0,0"/>
             <Border DockPanel.Dock="Right" CornerRadius="14" Padding="14,6">
                 <TextBlock Text="{Binding StatusMessage }" Foreground="{Binding IsConnected, Converter={StaticResource BoolToColorConverter}}" FontSize="20"  HorizontalAlignment="Left" Margin="150,0,0,0" VerticalAlignment="Center"/>

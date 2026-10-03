@@ -17,12 +17,12 @@
             <Button Content="◄ Back"
                     Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}"
                     Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
-                    DockPanel.Dock="Left"
+                    DockPanel.Dock="Right" Margin="0,0,10,0"
                     Foreground="White" />
             <Button Content="💾 Save All"
                     Command="{Binding SaveCommand}" Style="{StaticResource GlassButton.Cyan}"
                     Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
-                    DockPanel.Dock="Right"
+                    DockPanel.Dock="Right" Margin="0,0,20,0"
                     Foreground="White"/>
             <TextBlock Text="IEC 61850 — Configuration"
                        Foreground="White" FontSize="22"
