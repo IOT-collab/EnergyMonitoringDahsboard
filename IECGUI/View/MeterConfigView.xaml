@@ -13,6 +13,7 @@
         <conv:ProtocolToVisibilityConverter x:Key="IsOpcUa" TargetProtocol="OpcUa"/>
         <conv:ProtocolToVisibilityConverter x:Key="IsOpcDa" TargetProtocol="OpcDa"/>
         <conv:ProtocolToVisibilityConverter x:Key="IsMcSlmp" TargetProtocol="McSlmp"/>
+        <conv:ProtocolToVisibilityConverter x:Key="IsProfinetS7" TargetProtocol="ProfinetS7"/>
         <conv:ProtocolSetToVisibilityConverter x:Key="IsModbus" Protocols="ModbusRtu,ModbusTcp"/>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
        
@@ -280,6 +281,30 @@
                                     <TextBlock Text="Port" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
                                     <TextBox Text="{Binding SelectedMeter.Communication.TcpPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E" Width="80" FontSize="18"/>
+                                </StackPanel>
+
+                                <!-- Siemens S7 over the PLC PROFINET Ethernet interface. -->
+                                <StackPanel Margin="0,10,0,0"
+                                            Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsProfinetS7}}">
+                                    <TextBlock Text="PLC IP address" FontSize="20" Foreground="White"/>
+                                    <TextBox Text="{Binding SelectedMeter.Communication.IpAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="0,5,0,0" FontSize="18" Background="#3A3A5E" Foreground="White" BorderBrush="#5A5A8E"
+                                             ToolTip="S7 communication uses ISO-on-TCP port 102"/>
+                                    <TextBlock Text="CPU family" Margin="0,8,0,0" FontSize="18" Foreground="White"/>
+                                    <ComboBox ItemsSource="{Binding DataContext.S7CpuTypes, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              SelectedItem="{Binding SelectedMeter.Communication.S7Cpu, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource GlassComboBox}" Margin="0,5,0,0" FontSize="18"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                        <StackPanel Width="150">
+                                            <TextBlock Text="Rack" FontSize="18" Foreground="White"/>
+                                            <TextBox Text="{Binding SelectedMeter.Communication.S7Rack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="18"/>
+                                        </StackPanel>
+                                        <StackPanel Width="150" Margin="12,0,0,0">
+                                            <TextBlock Text="Slot" FontSize="18" Foreground="White"/>
+                                            <TextBox Text="{Binding SelectedMeter.Communication.S7Slot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="18"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <TextBlock Text="Use S7 address syntax in the mapping tab, e.g. DB1.DBX0.0, DB1.DBW2, DB1.DBD4. PUT/GET access must be enabled in the PLC for S7-1200/1500." TextWrapping="Wrap" Margin="0,10,0,0" FontSize="14" Foreground="#BCEFFF"/>
                                 </StackPanel>
                                 <!-- OPC UA connection settings. UA mappings use a NodeId,
                                      not a Modbus register number/function code. -->
@@ -610,6 +635,36 @@
                             <DataGridTextColumn Header="Unit" Width="80" Binding="{Binding Unit}"/>
                             <DataGridTextColumn Header="Scale" Width="80" Binding="{Binding ScaleFactor}"/>
                             <DataGridTextColumn Header="Length" Width="80" Binding="{Binding Length}"/>
+                            <DataGridCheckBoxColumn Header="Enabled" Width="80" Binding="{Binding IsEnabled}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- S7 mapping: Address stores S7.Net variable syntax. -->
+                    <DataGrid Grid.Row="1" Margin="0,10,0,0"
+                              Visibility="{Binding SelectedMeter.Communication.Protocol, Converter={StaticResource IsProfinetS7}}"
+                              ItemsSource="{Binding SelectedMeter.Registers}"
+                              SelectedItem="{Binding SelectedRegister}"
+                              AutoGenerateColumns="False" CanUserAddRows="False"
+                              HeadersVisibility="Column" RowHeight="32"
+                              Background="#6614263A" Foreground="White"
+                              RowBackground="#4414263A" AlternatingRowBackground="#55203349"
+                              GridLinesVisibility="None" BorderThickness="0" FontSize="16">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#8830536B"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Height" Value="40"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Parameter name" Width="250" Binding="{Binding ParameterName}"/>
+                            <DataGridTextColumn Header="S7 address" Width="300" Binding="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTemplateColumn Header="Data type" Width="140"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+                                <ComboBox ItemsSource="{Binding DataContext.DataTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}" SelectedItem="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource GlassComboBoxAlt}"/>
+                            </DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Unit" Width="90" Binding="{Binding Unit}"/>
+                            <DataGridTextColumn Header="Scale" Width="90" Binding="{Binding ScaleFactor}"/>
                             <DataGridCheckBoxColumn Header="Enabled" Width="80" Binding="{Binding IsEnabled}"/>
                         </DataGrid.Columns>
                     </DataGrid>

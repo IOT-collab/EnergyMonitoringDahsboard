@@ -103,5 +103,12 @@ namespace IEC.Shared.Models
         public string? OpcHost { get; set; }
 
         // Mitsubishi MC/SLMP Ethernet settings reuse IpAddress and TcpPort.
+
+        // Siemens S7 communication over the PLC's PROFINET Ethernet interface.
+        // S7.NetPlus uses ISO-on-TCP port 102 and requires the CPU family,
+        // rack, and slot configured in the PLC hardware project.
+        public S7CpuType S7Cpu { get; set; } = S7CpuType.S71200;
+        public int S7Rack { get; set; } = 0;
+        public int S7Slot { get; set; } = 1;
     }
 }

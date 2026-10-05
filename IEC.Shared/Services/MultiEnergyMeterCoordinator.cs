@@ -15,18 +15,21 @@ namespace IEC.Shared.Services
         private readonly IOpcMeterService _opcDaService;
 
         private readonly McSlmpDeviceService _mcService;
+        private readonly S7ProfinetDeviceService _s7Service;
         public MultiEnergyMeterCoordinator(
             MultiEnergyMeterRtuService rtuService,
             MultiEnergyMeterTcpService tcpService,
             IOpcMeterService? opcUaService = null,
             IOpcMeterService? opcDaService = null,
-            McSlmpDeviceService? mcService = null)
+            McSlmpDeviceService? mcService = null,
+            S7ProfinetDeviceService? s7Service = null)
         {
             _rtuService = rtuService ?? throw new ArgumentNullException(nameof(rtuService));
             _tcpService = tcpService ?? throw new ArgumentNullException(nameof(tcpService));
             _opcUaService = opcUaService ?? new OpcUaDeviceService();
             _opcDaService = opcDaService ?? new OpcDaDeviceService();
             _mcService = mcService ?? new McSlmpDeviceService();
+            _s7Service = s7Service ?? new S7ProfinetDeviceService();
         }
 
         // Accepts mixed meters; split and forward to underlying services
@@ -39,6 +42,7 @@ namespace IEC.Shared.Services
                 await _opcUaService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
                 await _opcDaService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
                 await _mcService.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
+                await _s7Service.Configure(Array.Empty<MetersConfig>()).ConfigureAwait(false);
                 return;
             }
 
@@ -50,6 +54,7 @@ namespace IEC.Shared.Services
             var daMeters = list.Where(m => m.Communication?.Protocol == ProtocolsType.OpcDa);
 
             var mcMeters = list.Where(m => m.Communication?.Protocol == ProtocolsType.McSlmp);
+            var s7Meters = list.Where(m => m.Communication?.Protocol == ProtocolsType.ProfinetS7);
             // Configuration must complete before the caller starts polling.
             // Previously these tasks were fire-and-forget, so ReadAllAsync could
             // run while the RTU service had just cleared its meter dictionaries.
@@ -58,6 +63,7 @@ namespace IEC.Shared.Services
             await _opcUaService.Configure(uaMeters).ConfigureAwait(false);
             await _opcDaService.Configure(daMeters).ConfigureAwait(false);
             await _mcService.Configure(mcMeters).ConfigureAwait(false);
+            await _s7Service.Configure(s7Meters).ConfigureAwait(false);
         }
 
         public async Task<Dictionary<string, MeterReading>> ReadAllAsync()
@@ -126,6 +132,17 @@ namespace IEC.Shared.Services
                 Console.WriteLine($"MC/SLMP ReadAllAsync error: {ex.Message}");
             }
 
+            try
+            {
+                var s7 = await _s7Service.ReadAllAsync().ConfigureAwait(false);
+                if (s7 != null)
+                    foreach (var kv in s7) results[kv.Key] = kv.Value;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PROFINET/S7 ReadAllAsync error: {ex.Message}");
+            }
+
             return results;
         }
 
@@ -149,6 +166,8 @@ namespace IEC.Shared.Services
 
             if (_mcService.HasMeter(meterName))
                 return _mcService.ReadOneAsync(meterName);
+            if (_s7Service.HasMeter(meterName))
+                return _s7Service.ReadOneAsync(meterName);
             throw new InvalidOperationException($"Meter '{meterName}' is not configured in any transport.");
         }
 
@@ -159,6 +178,7 @@ namespace IEC.Shared.Services
             try { await _opcUaService.DisconnectAll().ConfigureAwait(false); } catch { }
             try { await _opcDaService.DisconnectAll().ConfigureAwait(false); } catch { }
             try { await _mcService.DisconnectAll().ConfigureAwait(false); } catch { }
+            try { await _s7Service.DisconnectAll().ConfigureAwait(false); } catch { }
         }
 
         public void Dispose()
@@ -168,6 +188,7 @@ namespace IEC.Shared.Services
             try { _opcUaService.Dispose(); } catch { }
             try { _opcDaService.Dispose(); } catch { }
             try { _mcService.Dispose(); } catch { }
+            try { _s7Service.Dispose(); } catch { }
         }
 
         // New: presence check, required by IMultiEnergyMeterService
@@ -195,6 +216,8 @@ namespace IEC.Shared.Services
                 if (_opcUaService.HasMeter(meterName) || _opcDaService.HasMeter(meterName))
                     return true;
                 if (_mcService.HasMeter(meterName))
+                    return true;
+                if (_s7Service.HasMeter(meterName))
                     return true;
             }
             catch { /* ignore */ }

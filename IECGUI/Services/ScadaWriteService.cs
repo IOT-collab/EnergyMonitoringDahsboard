@@ -13,12 +13,14 @@ public sealed class ScadaWriteService
     private readonly ConfigurationManagerService _configuration;
     private readonly IMultiEnergyMeterService _devices;
     private readonly McSlmpDeviceService _mc;
+    private readonly S7ProfinetDeviceService _s7;
 
-    public ScadaWriteService(ConfigurationManagerService configuration, IMultiEnergyMeterService devices, McSlmpDeviceService mc)
+    public ScadaWriteService(ConfigurationManagerService configuration, IMultiEnergyMeterService devices, McSlmpDeviceService mc, S7ProfinetDeviceService s7)
     {
         _configuration = configuration;
         _devices = devices;
         _mc = mc;
+        _s7 = s7;
     }
 
     public async Task WriteToggleAsync(ScadaWidgetViewModel widget, bool desired)
@@ -54,8 +56,13 @@ public sealed class ScadaWriteService
                 else
                     throw new InvalidOperationException("Only coils and holding registers can be written from a SCADA button.");
                 break;
+            case ProtocolsType.ProfinetS7:
+                if (string.IsNullOrWhiteSpace(mapping.Address))
+                    throw new InvalidOperationException("Configure an S7 address for this mapping before writing.");
+                await _s7.WriteAsync(meter.MeterName, mapping.Address, desired, mapping.DataType).ConfigureAwait(false);
+                break;
             default:
-                throw new InvalidOperationException("Write buttons currently support Modbus and MC/SLMP mappings only.");
+                throw new InvalidOperationException("Write buttons currently support Modbus, MC/SLMP, and Siemens S7 mappings only.");
         }
     }
 }

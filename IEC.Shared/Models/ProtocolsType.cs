@@ -19,6 +19,11 @@ namespace IEC.Shared.Models
         OpcDa,
 
         // Mitsubishi MC protocol over TCP (SLMP / 3E frame).
-        McSlmp
+        McSlmp,
+
+        // Siemens S7 communication over the PLC's PROFINET Ethernet interface
+        // (ISO-on-TCP/S7, normally TCP port 102). This is distinct from a
+        // full PROFINET-IO controller/device stack.
+        ProfinetS7
     }
 }

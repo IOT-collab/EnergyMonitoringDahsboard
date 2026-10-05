@@ -30,13 +30,15 @@ namespace IECGUI
             services.AddSingleton<MultiEnergyMeterRtuService>();           // RTU concrete
             services.AddSingleton<MultiEnergyMeterTcpService>();        // TCP concrete
             services.AddSingleton<McSlmpDeviceService>();              // Mitsubishi MC/SLMP TCP
+            services.AddSingleton<S7ProfinetDeviceService>();         // Siemens S7 over PROFINET Ethernet
 
             // Register coordinator as the app-level IMultiEnergyMeterService
             services.AddSingleton<IMultiEnergyMeterService>(sp =>
                 new MultiEnergyMeterCoordinator(
                     sp.GetRequiredService<MultiEnergyMeterRtuService>(),
                     sp.GetRequiredService<MultiEnergyMeterTcpService>(),
-                    mcService: sp.GetRequiredService<McSlmpDeviceService>()));
+                    mcService: sp.GetRequiredService<McSlmpDeviceService>(),
+                    s7Service: sp.GetRequiredService<S7ProfinetDeviceService>()));
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ConfigurationManagerService>();
             services.AddSingleton<IecConfigManagerService>();

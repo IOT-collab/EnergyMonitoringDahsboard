@@ -80,6 +80,9 @@ namespace IECGUI.ViewModel
         public ObservableCollection<McAccessMode> McAccessModes { get; } = new(
             Enum.GetValues(typeof(McAccessMode)).Cast<McAccessMode>());
 
+        public ObservableCollection<S7CpuType> S7CpuTypes { get; } = new(
+            Enum.GetValues(typeof(S7CpuType)).Cast<S7CpuType>());
+
         public ObservableCollection<ModbusDataArea> SldCommandAreas { get; } = new()
         {
             ModbusDataArea.Coil, ModbusDataArea.HoldingRegister
