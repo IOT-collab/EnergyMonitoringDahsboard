@@ -340,14 +340,14 @@
                                           SelectionMode="Single" SelectionUnit="FullRow"
                                           Background="Transparent" BorderThickness="0"
                                           VerticalScrollBarVisibility="Auto">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Meter" Binding="{Binding MeterName}" Width="1.1*"/>
-                                        <DataGridTextColumn Header="Section" Binding="{Binding Section}" Width="1.0*"/>
-                                        <DataGridTextColumn Header="Utility Room" Binding="{Binding UtilityRoom}" Width="1.15*"/>
-                                        <DataGridTextColumn Header="Current" Binding="{Binding CurrentAvg, StringFormat={}{0:F1} A}" Width="1.0*"/>
-                                        <DataGridTextColumn Header="Voltage" Binding="{Binding VoltageL_N_Avg, StringFormat={}{0:F1} V}" Width="1.0*"/>
-                                        <DataGridTextColumn Header="PF" Binding="{Binding TotalPowerFactor, StringFormat={}{0:F2}}" Width="0.75*"/>
-                                        <DataGridTextColumn Header="Status" Binding="{Binding MeterStatus}" Width="1.15*"/>
+                                    <DataGrid.Columns >
+                                        <DataGridTextColumn Header="Meter" Binding="{Binding MeterName}" Width="1.1*" Foreground="Cyan"/>
+                                        <DataGridTextColumn Header="Section" Binding="{Binding Section}" Width="1.0*" Foreground="Cyan"/>
+                                        <DataGridTextColumn Header="Utility Room" Binding="{Binding UtilityRoom}" Width="1.15*" Foreground="Cyan"/>
+                                        <DataGridTextColumn Header="Current" Binding="{Binding CurrentAvg, StringFormat={}{0:F1} A}" Width="1.0*" Foreground="Cyan"/>
+                                        <DataGridTextColumn Header="Voltage" Binding="{Binding VoltageL_N_Avg, StringFormat={}{0:F1} V}" Width="1.0*" Foreground="Cyan"/>
+                                        <DataGridTextColumn Header="PF" Binding="{Binding TotalPowerFactor, StringFormat={}{0:F2}}" Width="0.75*" Foreground="Cyan"/>
+                                        <DataGridTextColumn Header="Status" Binding="{Binding MeterStatus}" Width="1.15*" Foreground="Cyan"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>

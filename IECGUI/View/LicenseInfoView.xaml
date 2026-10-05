@@ -67,7 +67,7 @@
                             <TextBlock Text="Product key" Foreground="#9ADCF0" FontSize="16"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1">
-                            <TextBlock Text="{Binding Product}" Foreground="White" FontSize="16" Margin="0,0,0,16"/>
+                            <TextBlock Text="{Binding Product,StringFormat={}{0} V1.0.0 }" Foreground="White" FontSize="16" Margin="0,0,0,16"/>
                             <TextBlock Text="{Binding InstallationId}" Foreground="White" FontSize="16" Margin="0,0,0,16"/>
                             <TextBlock Text="{Binding InstalledOn}" Foreground="White" FontSize="16" Margin="0,0,0,16"/>
                             <TextBlock Text="{Binding LicenseType}" Foreground="White" FontSize="16" Margin="0,0,0,16"/>
