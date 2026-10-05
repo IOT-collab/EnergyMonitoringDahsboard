@@ -44,7 +44,7 @@
                     <TextBlock Text="Utility Room" Foreground="#BCEFFF" VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <ComboBox ItemsSource="{Binding UtilityRooms}" SelectedItem="{Binding SelectedUtilityRoom}" Style="{StaticResource GlassComboBoxAlt}" Width="220" Height="34"/>
                 </StackPanel>
-                <Button Grid.Column="2" x:Name="BACK" Content="BACK" Foreground="White" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" Margin="20,0" Style="{StaticResource GlassButton.Cyan}" Command="{Binding ReturnToHome}"/>
+                <!--<Button Grid.Column="2" x:Name="BACK" Content="BACK" Foreground="White" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" Margin="20,0" Style="{StaticResource GlassButton.Cyan}" Command="{Binding ReturnToHome}"/>-->
             </Grid>
         </Border>
         

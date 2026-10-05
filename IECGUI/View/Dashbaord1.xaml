@@ -40,13 +40,13 @@
                            Margin="20,0"
                            VerticalAlignment="Center"/>
 
-                <Button Content="Back"
+                <!--<Button Content="Back"
                         DockPanel.Dock="Right"
                         Margin="20,10,200,0" Height="50" Width="180" FontSize="21" FontWeight="SemiBold"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Command="{Binding MenuCommand}"
-                        Style="{StaticResource GlassButton.Cyan}"/>
+                        Style="{StaticResource GlassButton.Cyan}"/>-->
 
 
             </DockPanel>

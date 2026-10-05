@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="#102A3E" BorderBrush="#315B73" BorderThickness="0,0,0,1" Padding="20,0,125,0">
             <DockPanel>
-                <Button DockPanel.Dock="Right" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Margin="0,0,100,0" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <!--<Button DockPanel.Dock="Right" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Margin="0,0,100,0" Height="50" Width="180" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center"/>-->
                 <StackPanel Margin="24,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="SLD RUNTIME" Foreground="White" FontSize="25" FontWeight="Bold"/>
                     <TextBlock Text="Live SCADA runtime — operator view" Foreground="#9EDFF2" FontSize="13" Margin="0,3,0,0"/>

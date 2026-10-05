@@ -118,10 +118,10 @@
                         <TextBlock Text="Manage application users, access roles, and account status."
                                    FontSize="19" Foreground="{StaticResource MutedTextBrush}" Margin="0,8,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Command="{Binding HomeCommand}"
+                    <!--<Button Grid.Column="1" Command="{Binding HomeCommand}"
                             Style="{StaticResource GlassButton.Cyan}"
                             Width="180" Height="50" FontSize="21" FontWeight="SemiBold"
-                            Content="Back" VerticalAlignment="Center"/>
+                            Content="Back" VerticalAlignment="Center"/>-->
                 </Grid>
 
                 <Border Grid.Row="1" Style="{StaticResource SettingsCard}" Padding="22">

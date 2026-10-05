@@ -24,6 +24,7 @@ namespace IECGUI.ViewModel
         public ICommand DeviceDiagnosticsCommand { get; }
         public ICommand ScadaDesignerCommand { get; }
         public ICommand ScadaRuntimeCommand { get; }
+        public ICommand LogoutCommand { get; set; }
         public ObservableCollection<HomeScreenTile> ScreenTiles { get; } = new();
 
         private readonly IDialogService _dialogService;
@@ -35,6 +36,9 @@ namespace IECGUI.ViewModel
         private string _averageVoltage = "--";
         private string _totalActivePower = "--";
         private string _deviceSummary = "0 / 0";
+        private readonly LicenseService _licenseService;
+
+        public INavigationService Navigation { get; }
 
         public string AverageVoltage { get => _averageVoltage; private set => SetProperty(ref _averageVoltage, value); }
         public string TotalActivePower { get => _totalActivePower; private set => SetProperty(ref _totalActivePower, value); }
@@ -42,16 +46,18 @@ namespace IECGUI.ViewModel
         public int CriticalAlarmCount => _alarmService.CriticalAlarmCount;
         public int ActiveAlarmCount => _alarmService.ActiveAlarmCount;
 
-        public HomePageViewModel(INavigationService navigation, IDialogService dialogService,
+        public HomePageViewModel(INavigationService navigation, IDialogService dialogService, LicenseService licenseService,
             DeviceRuntimeService deviceRuntime, AlarmMonitoringService alarmService,
             ISoundService soundService, IAuthService? auth = null)
         {
+            Navigation = navigation;
             _navigation = navigation;
             _dialogService = dialogService;
             _auth = auth;
             _deviceRuntime = deviceRuntime;
             _alarmService = alarmService;
             _soundService = soundService;
+            _licenseService = licenseService;
 
             SldViewCommand = new RelayCommand(SLDViewLogin);
             EnergyViewCommand = new RelayCommand(() => NavigateWithClick<EnergyMonitorViewModel>());
@@ -66,6 +72,7 @@ namespace IECGUI.ViewModel
             AlarmViewCommand = new RelayCommand(() => NavigateWithClick<AlarmViewModel>());
             UserConfigCommand = new RelayCommand(() => NavigateWithClick<UserSettingsViewModel>());
             LicenseInfoCommand = new RelayCommand(() => NavigateWithClick<LicenseInfoViewModel>());
+            LogoutCommand = new RelayCommand(ExecuteLogout);
             RebuildScreenTiles();
 
             // subscribe to auth changes to update visibility properties
@@ -196,6 +203,22 @@ namespace IECGUI.ViewModel
                 if (CanSeeMainScreens) ScreenTiles.Add(new("License Info", "\uE946", LicenseInfoCommand));
             });
         }
+
+        private void ExecuteLogout()
+        {
+            // This command is also guarded in code so it cannot be invoked by
+            // automation or stale UI while the license gate is active.
+            if (!_licenseService.Validate().CanRun)
+                return;
+
+            if (_dialogService.ShowYesNo("Are you sure you want to logout?", "Confirm Logout") == true)
+            {
+                Navigation.NavigateTo<LoginViewModel>();
+
+            }
+        }
+
+
     }
 
     public class HomeScreenTile
@@ -207,6 +230,8 @@ namespace IECGUI.ViewModel
         public ICommand Command { get; }
         public bool IsDanger { get; }
     }
+
+
 }
 
 

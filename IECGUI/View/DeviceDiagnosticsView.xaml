@@ -43,7 +43,7 @@
 
         <Border Grid.Row="0" Background="#B214263A" BorderBrush="#667ECBE5" BorderThickness="0,0,0,1" Padding="18,0,190,0">
             <DockPanel>
-                <Button DockPanel.Dock="Right" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Width="180" Height="50" FontSize="17"/>
+                <!--<Button DockPanel.Dock="Right" Content="BACK" Command="{Binding BackCommand}" Style="{StaticResource GlassButton.Cyan}" Width="180" Height="50" FontSize="17"/>-->
                 <StackPanel Margin="24,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="DEVICE DIAGNOSTICS / CONTROL" FontSize="26" FontWeight="Bold"/>
                     <TextBlock Text="Read configured tags and perform guarded commissioning writes" Foreground="#9EDFF2" FontSize="14" Margin="0,4,0,0"/>

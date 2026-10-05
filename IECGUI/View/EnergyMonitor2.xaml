@@ -135,10 +135,10 @@
                     BorderThickness="0,0,0,1"
                     Padding="10,0,172,0">
                 <DockPanel LastChildFill="True">
-                    <Button DockPanel.Dock="Right"
+                    <!--<Button DockPanel.Dock="Right"
                             Content="BACK" Height="50" Width="180" FontSize="21" FontWeight="SemiBold"
                             Command="{Binding BackCommand}" Margin="0,0,40,0"
-                            Style="{StaticResource GlassButton.Cyan}"/>
+                            Style="{StaticResource GlassButton.Cyan}"/>-->
 
                     <StackPanel DockPanel.Dock="Right"
                                 Orientation="Horizontal"

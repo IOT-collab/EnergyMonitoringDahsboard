@@ -23,7 +23,7 @@
                         VerticalAlignment="Top"
                         Margin="0,18,24,0"
                         Panel.ZIndex="1000">
-                <Button Command="{Binding LogoutCommand}"
+                <!--<Button Command="{Binding LogoutCommand}"
                         Visibility="{Binding SessionControlsVisibility}"
                         ToolTip="Logout"
                         Width="44"
@@ -34,6 +34,24 @@
                         BorderThickness="1"
                         Cursor="Hand">
                     <Path Data="{StaticResource Icon_Logout}"
+                          Fill="White"
+                          Height="25"
+                          Width="25"
+                          Stretch="Uniform"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                </Button>-->
+                <Button Command="{Binding ReturnCommand}"
+                        Visibility="{Binding SessionControlsVisibility}"
+                        ToolTip="Return To Home"
+                        Width="44"
+                        Height="44"
+                        Margin="0,0,12,0"
+                        Background="#38192D3B"
+                        BorderBrush="#66BFEFFF"
+                        BorderThickness="1"
+                        Cursor="Hand">
+                    <Path Data="{StaticResource Icon_HomeOutline}"
                           Fill="White"
                           Height="25"
                           Width="25"

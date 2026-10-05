@@ -37,7 +37,7 @@ namespace IECGUI.ViewModel
         public AlarmMonitoringService AlarmService { get; }
 
         public ICommand CloseAppCommand { get; set; }
-        public ICommand LogoutCommand { get; set; }
+        public ICommand ReturnCommand { get; set; }
 
         public ICommand MinimizeCommand { get; set; }
         public Visibility SessionControlsVisibility { get; private set; }
@@ -64,14 +64,14 @@ namespace IECGUI.ViewModel
             _licenseService.StatusChanged += OnLicenseStatusChanged;
 
             // Forward NavigationService's CurrentView changes to this ViewModel's bindings
-            Navigation.CurrentViewChanged += () => { OnPropertyChanged(nameof(Navigation)); isLoginView(); }; 
+            Navigation.CurrentViewChanged += () => { OnPropertyChanged(nameof(Navigation)); isHomePageView(); }; 
 
             
 
             _currentView = Navigation.CurrentView;
                         
             CloseAppCommand = new RelayCommand(ExecuteCloseApp);
-            LogoutCommand = new RelayCommand(ExecuteLogout);
+            ReturnCommand = new RelayCommand(ExecuteLogout);
             MinimizeCommand = new RelayCommand(ExecuteMinimize);
 
            
@@ -95,7 +95,7 @@ namespace IECGUI.ViewModel
             // Set initial time immediately
             SystemTime = DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
 
-            isLoginView(); // Initial state
+            isHomePageView(); // Initial state
         }
 
         private async Task StartRuntimeAsync(DeviceRuntimeService deviceRuntime)
@@ -154,16 +154,11 @@ namespace IECGUI.ViewModel
 
         private void ExecuteLogout()
         {
-            // This command is also guarded in code so it cannot be invoked by
-            // automation or stale UI while the license gate is active.
-            if (!_licenseService.Validate().CanRun)
-                return;
+            
 
-            if (_dialogService.ShowYesNo("Are you sure you want to logout?", "Confirm Logout") == true)
-            {
-                Navigation.NavigateTo<LoginViewModel>();
-              
-            }
+            Navigation.NavigateTo<HomePageViewModel>();
+
+  
         }
 
         private void ExecuteMinimize()
@@ -171,9 +166,9 @@ namespace IECGUI.ViewModel
             Application.Current.MainWindow.WindowState = WindowState.Minimized;
         }
 
-        private void isLoginView()
+        private void isHomePageView()
         {
-            SessionControlsVisibility = (Navigation.CurrentView is LoginViewModel) ? Visibility.Collapsed : Visibility.Visible;
+            SessionControlsVisibility = (Navigation.CurrentView is HomePageViewModel or LoginViewModel) ? Visibility.Collapsed : Visibility.Visible;
             OnPropertyChanged(nameof(SessionControlsVisibility));
         }
 

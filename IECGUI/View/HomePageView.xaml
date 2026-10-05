@@ -188,7 +188,7 @@
                                Margin="0,7,0,0"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="30" Foreground="#35E8FF" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding CurrentUsername, StringFormat=User: {0}}" Foreground="{StaticResource HomeText}" FontSize="17" Margin="14,0,42,0" VerticalAlignment="Center"/>
                     <Rectangle Width="1.4" Height="30" Fill="#88A8C3D4" Margin="0,0,42,0"/>
@@ -196,6 +196,26 @@
                     <TextBlock Text="Secure" Foreground="{StaticResource HomeText}" FontSize="17" Margin="14,0,42,0" VerticalAlignment="Center"/>
                     <Rectangle Width="1.4" Height="30" Fill="#88A8C3D4" Margin="0,0,42,0"/>
                     <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" FontSize="36" Foreground="#35E8FF" VerticalAlignment="Center"/>
+                    <Rectangle Width="1.4" Height="30" Fill="#88A8C3D4" Margin="40,0,42,0"/>
+                    <TextBlock Text="Logout" Foreground="{StaticResource HomeText}" FontSize="17" Margin="1,0,12,0" VerticalAlignment="Center"/>
+                    <Button Command="{Binding LogoutCommand}"
+                        Visibility="{Binding SessionControlsVisibility}"
+                        ToolTip="Logout"
+                        Width="44"
+                        Height="44"
+                        Margin="0,0,12,0"
+                        Background="#38192D3B"
+                        BorderBrush="#66BFEFFF"
+                        BorderThickness="1"
+                        Cursor="Hand">
+                        <Path Data="{StaticResource Icon_Logout}"
+                          Fill="White"
+                          Height="25"
+                          Width="25"
+                          Stretch="Uniform"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                    </Button>
                 </StackPanel>
             </Grid>
 

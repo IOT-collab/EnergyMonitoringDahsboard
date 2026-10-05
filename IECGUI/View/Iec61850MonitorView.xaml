@@ -25,26 +25,26 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <DockPanel Grid.Row="0">
-            <Button Content="◄ Back"
+        <DockPanel Grid.Row="0" LastChildFill="False">
+            <!--<Button Content="◄ Back"
                     Command="{Binding BackCommand}"
                     Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
                     DockPanel.Dock="Right" Style="{StaticResource GlassButton.Cyan}"
-                    Foreground="White" Margin="40,0,200,0"/>
-            <Button Content="⚙ Config"
-                    Command="{Binding ConfigurationCommand}"
-                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
-                    DockPanel.Dock="Right" Margin="0,0,0,0" Style="{StaticResource GlassButton.Cyan}"
-                    Foreground="White" />
+                    Foreground="White" Margin="40,0,200,0"/>-->
             <TextBlock Text="Protection Relay Monitor"
                        Foreground="White" FontSize="28"
                        FontWeight="Bold" 
                        VerticalAlignment="Center" Margin="10,0,30,0"/>
             <Button Content="Connect" Command="{Binding ConnectCommand}"
-                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Right"  Margin="0,0,500,0" Style="{StaticResource GlassButton.Green}"
+                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"  Margin="0,0,30,0" Style="{StaticResource GlassButton.Green}"
                     Foreground="White" />
             <Button Content="Disconnect" Command="{Binding DisconnectCommand}"
-                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Right"  Margin="0,0,0,0" Style="{StaticResource GlassButton.Red}"
+                   Height="50" Width="180" FontSize="21" FontWeight="SemiBold"  DockPanel.Dock="Left"  Margin="0,0,30,0" Style="{StaticResource GlassButton.Red}"
+                    Foreground="White" />
+            <Button Content="⚙ Config"
+                    Command="{Binding ConfigurationCommand}"
+                    Height="50" Width="180" FontSize="21" FontWeight="SemiBold" 
+                    DockPanel.Dock="Left" Margin="0,0,0,0" Style="{StaticResource GlassButton.Cyan}"
                     Foreground="White" />
 
         </DockPanel>
