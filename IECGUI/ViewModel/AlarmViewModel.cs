@@ -52,6 +52,7 @@ namespace IECGUI.ViewModel
         public ICommand NewRuleCommand { get; }
         public ICommand SaveRuleCommand { get; }
         public ICommand DeleteRuleCommand { get; }
+        public ICommand TestAlarmCommand { get; }
 
         public AlarmRuleConfig? SelectedRule
         {
@@ -100,6 +101,7 @@ namespace IECGUI.ViewModel
             NewRuleCommand = new RelayCommand(NewRule);
             SaveRuleCommand = new RelayCommand(SaveRule);
             DeleteRuleCommand = new RelayCommand(DeleteRule);
+            TestAlarmCommand = new RelayCommand(() => AlarmService.GenerateTestAlarm(SelectedRule));
             NewRule();
             _ = StartMonitoringAsync();
         }

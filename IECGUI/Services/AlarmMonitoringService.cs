@@ -29,6 +29,7 @@ namespace IECGUI.Services
         private readonly Dictionary<string, DateTime> _conditionSince = new(StringComparer.OrdinalIgnoreCase);
         private bool _started;
         private AlarmLogEntry? _currentPopupAlarm;
+        private AlarmLogEntry? _selectedAlarm;
         private Visibility _alarmPopupVisibility = Visibility.Collapsed;
         private readonly ISoundService _soundService;
 
@@ -37,11 +38,11 @@ namespace IECGUI.Services
 
         public ICommand AcknowledgeCurrentCommand { get; }
         public ICommand DismissPopupCommand { get; }
-        public ICommand GenerateTestAlarmCommand { get; }
         public ICommand ClearLogsCommand { get; }
         public ICommand ExportCsvCommand { get; }
 
         public AlarmLogEntry? CurrentPopupAlarm { get => _currentPopupAlarm; set => SetProperty(ref _currentPopupAlarm, value); }
+        public AlarmLogEntry? SelectedAlarm { get => _selectedAlarm; set => SetProperty(ref _selectedAlarm, value); }
         public Visibility AlarmPopupVisibility { get => _alarmPopupVisibility; set => SetProperty(ref _alarmPopupVisibility, value); }
         public int ActiveAlarmCount => AlarmLogs.Count(x => x.State is AlarmState.Active or AlarmState.Acknowledged);
         public int CriticalAlarmCount => AlarmLogs.Count(x => x.Severity >= AlarmSeverity.Critical && x.State is AlarmState.Active or AlarmState.Acknowledged);
@@ -57,8 +58,7 @@ namespace IECGUI.Services
             LoadAuditHistory();
             AcknowledgeCurrentCommand = new RelayCommand(AcknowledgeCurrent);
             DismissPopupCommand = new RelayCommand(DismissPopup);
-            GenerateTestAlarmCommand = new RelayCommand(GenerateTestAlarm);
-            ClearLogsCommand = new RelayCommand(ClearLogs);
+            ClearLogsCommand = new RelayCommand(ClearSelectedAlarm);
             ExportCsvCommand = new RelayCommand(ExportCsv);
             _poller = new SafePoller(TimeSpan.FromSeconds(1), _ => PollAsync(), ex => Console.WriteLine($"Alarm polling: {ex.Message}"));
         }
@@ -204,9 +204,8 @@ namespace IECGUI.Services
             NotifyCounts();
         }
 
-        private void GenerateTestAlarm()
+        public void GenerateTestAlarm(AlarmRuleConfig? rule)
         {
-            var rule = Rules.FirstOrDefault();
             if (rule == null) return;
             RaiseAlarm(rule, rule.SetValue, string.Empty, $"Test alarm: {rule.ExpressionText}");
         }
@@ -233,20 +232,60 @@ namespace IECGUI.Services
             _soundService.StopBackgroundMusic();
         }
 
-        private void ClearLogs()
+        private void ClearSelectedAlarm()
         {
-            foreach (var log in AlarmLogs.Where(x => x.State != AlarmState.Cleared))
+            var selected = SelectedAlarm;
+            if (selected == null) return;
+
+            var remaining = AlarmLogs.Where(x => !ReferenceEquals(x, selected)).ToList();
+            if (!RewriteAuditFile(remaining)) return;
+
+            AlarmLogs.Remove(selected);
+            if (ReferenceEquals(CurrentPopupAlarm, selected))
             {
-                log.State = AlarmState.Cleared;
-                log.ClearedAt = DateTime.Now;
-                AppendAudit("Cleared", log);
+                AlarmPopupVisibility = Visibility.Collapsed;
+                CurrentPopupAlarm = null;
+                _soundService.StopAlarm();
+                _soundService.StopBackgroundMusic();
             }
-            AlarmLogs.Clear();
-            AlarmPopupVisibility = Visibility.Collapsed;
-            CurrentPopupAlarm = null;
+            SelectedAlarm = null;
             NotifyCounts();
-            _soundService.StopAlarm();
-            _soundService.StopBackgroundMusic();
+        }
+
+        private bool RewriteAuditFile(IEnumerable<AlarmLogEntry> alarms)
+        {
+            try
+            {
+                lock (_auditLock)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(_auditFile)!);
+                    var csv = new StringBuilder();
+                    csv.AppendLine("Audit Time,Action,Alarm ID,Rule ID,Raised At,Alarm Name,Device,Parameter,Value,Unit,Severity,State,Username,Actor,Acknowledged At,Cleared At,Message");
+                    foreach (var alarm in alarms)
+                    {
+                        csv.AppendLine(string.Join(",", new[]
+                        {
+                            Csv(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                            Csv("Snapshot"), Csv(alarm.AlarmId), Csv(alarm.RuleId),
+                            Csv(alarm.RaisedAt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                            Csv(alarm.AlarmName), Csv(alarm.MeterName), Csv(alarm.ParameterName),
+                            Csv(alarm.Value.ToString("G", CultureInfo.InvariantCulture)), Csv(alarm.Unit),
+                            Csv(alarm.SeverityText), Csv(alarm.StateText), Csv(alarm.Username),
+                            Csv(_auth.CurrentUser?.Username ?? "System"),
+                            Csv(alarm.AcknowledgedAt?.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) ?? string.Empty),
+                            Csv(alarm.ClearedAt?.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) ?? string.Empty),
+                            Csv(alarm.Message)
+                        }));
+                    }
+                    File.WriteAllText(_auditFile, csv.ToString(), new UTF8Encoding(true));
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Alarm audit rewrite: {ex.Message}");
+                return false;
+            }
         }
 
         private void ExportCsv()

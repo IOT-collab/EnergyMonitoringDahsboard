@@ -231,12 +231,12 @@
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0"
                                 Content="TEST ALARM"
-                                Command="{Binding AlarmService.GenerateTestAlarmCommand}"
+                                Command="{Binding TestAlarmCommand}"
                                 Style="{StaticResource GlassButton.Cyan}"
                                 Height="54"
                                 Margin="0,0,6,0"/>
                         <Button Grid.Column="1"
-                                Content="CLEAR LOGS"
+                                Content="CLEAR SELECTED"
                                 Command="{Binding AlarmService.ClearLogsCommand}"
                                 Style="{StaticResource GlassButton.Ghost}"
                                 Height="54"
@@ -282,6 +282,7 @@
 
                         <DataGrid Grid.Row="1"
                                   ItemsSource="{Binding FilteredAlarmLogs}"
+                                  SelectedItem="{Binding AlarmService.SelectedAlarm, Mode=TwoWay}"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
                                   CanUserAddRows="False"

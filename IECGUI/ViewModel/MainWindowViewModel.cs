@@ -174,10 +174,10 @@ namespace IECGUI.ViewModel
 
         private void OnLicenseStatusChanged(LicenseStatus status)
         {
-            SessionControlsVisibility = status.CanRun
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-            OnPropertyChanged(nameof(SessionControlsVisibility));
+            //SessionControlsVisibility = status.CanRun
+            //    ? Visibility.Visible
+            //    : Visibility.Collapsed;
+            //OnPropertyChanged(nameof(SessionControlsVisibility));
         }
     }
 }

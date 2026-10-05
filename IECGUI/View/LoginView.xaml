@@ -339,8 +339,8 @@
 
                             <StackPanel Grid.Row="0" Margin="0,0,0,42">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
-                                    <Ellipse Width="10" Height="10" Fill="#4BD050" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                    <TextBlock Text="System Online" Foreground="#AEEFFF" FontSize="15"/>
+                                    <!--<Ellipse Width="10" Height="10" Fill="#4BD050" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="System Online" Foreground="#AEEFFF" FontSize="15"/>-->
                                 </StackPanel>
                                 <TextBlock Text="Welcome Back"
                                            FontSize="48"
@@ -380,7 +380,7 @@
                                                Foreground="#8FDDEA"
                                                FontSize="13"
                                                HorizontalAlignment="Left"/>
-                                    <TextBlock Text="23.40.32"
+                                    <TextBlock Text="Ver. 1.0.0"
                                                Foreground="#8FDDEA"
                                                FontSize="13"
                                                HorizontalAlignment="Right"/>
